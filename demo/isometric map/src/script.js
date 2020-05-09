@@ -1,170 +1,170 @@
 let illoOption = {
   isDragRotate: false,
-  maxZoom:5,
-  minZoom:0.001,
-  stats:false
-};
+  maxZoom: 5,
+  minZoom: 0.001,
+  stats: false
+}
 
 let illo = new Zdog.Illustration({
   element: '.zdog-canvas',
   zoom: 1,
   resize: true
-});
+})
 
 let illoAnchor = new Zdog.Anchor({
   addTo: illo
-});
+})
 
 // drag event
-let dragStartX, dragStartY;
+let dragStartX, dragStartY
 new Zdog.Dragger({
   startElement: illo.element,
-  onDragStart: function(pointer) {
+  onDragStart: function (pointer) {
     if (illoOption.isDragRotate) {
-      dragStartX = illoAnchor.rotate.x;
-      dragStartY = illoAnchor.rotate.y;
+      dragStartX = illoAnchor.rotate.x
+      dragStartY = illoAnchor.rotate.y
     } else {
-      dragStartX = illoAnchor.translate.x;
-      dragStartY = illoAnchor.translate.y;
+      dragStartX = illoAnchor.translate.x
+      dragStartY = illoAnchor.translate.y
     }
   },
-  onDragMove: function(pointer, moveX, moveY) {
+  onDragMove: function (pointer, moveX, moveY) {
     if (illoOption.isDragRotate) {
-      let displaySize = Math.min(illo.width, illo.height);
-      let moveRY = moveX / displaySize * Zdog.TAU;
-      let moveRX = moveY / displaySize * Zdog.TAU;
-      illoAnchor.rotate.x = dragStartX - moveRX;
-      illoAnchor.rotate.y = dragStartY - moveRY;
+      let displaySize = Math.min(illo.width, illo.height)
+      let moveRY = moveX / displaySize * Zdog.TAU
+      let moveRX = moveY / displaySize * Zdog.TAU
+      illoAnchor.rotate.x = dragStartX - moveRX
+      illoAnchor.rotate.y = dragStartY - moveRY
     } else {
-      illoAnchor.translate.x = dragStartX + moveX / illo.zoom;
-      illoAnchor.translate.y = dragStartY + moveY / illo.zoom;
+      illoAnchor.translate.x = dragStartX + moveX / illo.zoom
+      illoAnchor.translate.y = dragStartY + moveY / illo.zoom
     }
   },
-  onDragEnd: function() {},
-});
+  onDragEnd: function () { },
+})
 
 class IsometricMap {
-  constructor(illo, cartAnchor, gridNum){
-    this.illo = illo;
-    this.cartAnchor = cartAnchor;
-    this.isoArr = new Array(gridNum);
+  constructor(illo, cartAnchor, gridNum) {
+    this.illo = illo
+    this.cartAnchor = cartAnchor
+    this.isoArr = new Array(gridNum)
     for (let i = 0; i < gridNum; i++) {
-      this.isoArr[i] = new Array(gridNum).fill(null);
+      this.isoArr[i] = new Array(gridNum).fill(null)
     }
 
     this.isoAnchor = new Zdog.Anchor({
       addTo: cartAnchor,
-      rotate: {x: Zdog.TAU / 6, y: 0, z: Zdog.TAU / 8}
-    });
+      rotate: { x: Zdog.TAU / 6, y: 0, z: Zdog.TAU / 8 }
+    })
 
     this.groudGroup = new Zdog.Group({
       addTo: this.isoAnchor
-    });
+    })
 
-    let len = 100 * gridNum;
-    let thickness = 40;
+    let len = 100 * gridNum
+    let thickness = 40
     new Zdog.Rect({
       addTo: this.groudGroup,
       width: len,
       height: len,
-      translate: {z: -thickness / 2 },
+      translate: { z: -thickness / 2 },
       stroke: thickness,
       color: 'rgba(162,109,57,0.8)',
       fill: true
-    });
+    })
 
     // counter-balanced invisible shape
     new Zdog.Shape({
       addTo: this.groudGroup,
       visible: false,
-      translate: { 
+      translate: {
         z: -len * len
       }
-    });
+    })
 
     new Zdog.Shape({
       addTo: this.isoAnchor,
       path: [
-        {x: -40, y: 0},
-        {x:  40, y: 0},
-        {y: -5, x: 40},
-        {y: 0, x: 45},
-        {y: 5, x: 40},
-        {y: 0, x: 40}
+        { x: -40, y: 0 },
+        { x: 40, y: 0 },
+        { y: -5, x: 40 },
+        { y: 0, x: 45 },
+        { y: 5, x: 40 },
+        { y: 0, x: 40 }
       ],
       closed: false,
       stroke: 3,
       color: 'red',
-    });
+    })
 
     new Zdog.Shape({
       addTo: this.isoAnchor,
       path: [
-        {x: 0, y: -40},
-        {x: 0, y: 40},
-        {x: -5, y: 40},
-        {x: 0, y: 45},
-        {x: 5, y: 40},
-        {x: 0, y: 40}
+        { x: 0, y: -40 },
+        { x: 0, y: 40 },
+        { x: -5, y: 40 },
+        { x: 0, y: 45 },
+        { x: 5, y: 40 },
+        { x: 0, y: 40 }
       ],
       closed: false,
       stroke: 3,
       color: 'yellow',
-    });
+    })
 
     new Zdog.Shape({
       addTo: this.isoAnchor,
       path: [
         {},
-        {z: 40},
-        {x: -5, z: 40},
-        {x: 0, z: 45},
-        {x: 5, z: 40},
-        {x: 0, z: 40}
+        { z: 40 },
+        { x: -5, z: 40 },
+        { x: 0, z: 45 },
+        { x: 5, z: 40 },
+        { x: 0, z: 40 }
       ],
       closed: false,
       stroke: 3,
       color: 'blue',
-    });
+    })
   }
 
-  getScreenToMapVector(offsetX, offsetY){
-    let ramdomColor = '#'+(Math.random()*0xffffff<<0).toString(16);
-    let cartX = offsetX;
-    let cartY = offsetY;
+  getScreenToMapVector(offsetX, offsetY) {
+    let ramdomColor = '#' + (Math.random() * 0xffffff << 0).toString(16)
+    let cartX = offsetX
+    let cartY = offsetY
     if (this.illo.centered) {
-      cartX -= this.illo.width / 2;
-      cartY -= this.illo.height / 2;
+      cartX -= this.illo.width / 2
+      cartY -= this.illo.height / 2
     }
-    cartX = cartX / this.illo.zoom - this.cartAnchor.translate.x;
-    cartY = cartY / this.illo.zoom - this.cartAnchor.translate.y;
+    cartX = cartX / this.illo.zoom - this.cartAnchor.translate.x
+    cartY = cartY / this.illo.zoom - this.cartAnchor.translate.y
 
-    let x00 = new Zdog.Vector({x: 1});
-    let y00 = new Zdog.Vector({y: 1});
-    let z00 = new Zdog.Vector({z: 1});
+    let x00 = new Zdog.Vector({ x: 1 })
+    let y00 = new Zdog.Vector({ y: 1 })
+    let z00 = new Zdog.Vector({ z: 1 })
 
-    let x01 = x00.copy().rotate(this.isoAnchor.rotate);
-    let y01 = y00.copy().rotate(this.isoAnchor.rotate);
-    let z01 = z00.copy().rotate(this.isoAnchor.rotate);
+    let x01 = x00.copy().rotate(this.isoAnchor.rotate)
+    let y01 = y00.copy().rotate(this.isoAnchor.rotate)
+    let z01 = z00.copy().rotate(this.isoAnchor.rotate)
 
     let localToWorldTransformMatrix = [
 
-    ];
+    ]
 
-    let cartAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.cartAnchor.rotate);
-    let isoAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.isoAnchor.rotate);
-    let totalTransposeRotationMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, isoAnchorTransposeRotationMatrix);
-    // let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(totalTransposeRotationMatrix, [[0],[0],[1]]);
-    let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, ZdogUtils.multiplyMatrices(isoAnchorTransposeRotationMatrix, [[0],[0],[1]]));
+    let cartAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.cartAnchor.rotate)
+    let isoAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.isoAnchor.rotate)
+    let totalTransposeRotationMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, isoAnchorTransposeRotationMatrix)
+    // let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(totalTransposeRotationMatrix, [[0],[0],[1]])
+    let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, ZdogUtils.multiplyMatrices(isoAnchorTransposeRotationMatrix, [[0], [0], [1]]))
     let isoAnchorZAxis = new Zdog.Vector({
       x: isoAnchorZAxisMatrix[0][0],
       y: isoAnchorZAxisMatrix[1][0],
       z: isoAnchorZAxisMatrix[2][0]
-    });
-    console.table(isoAnchorZAxis);
+    })
+    console.table(isoAnchorZAxis)
 
-    let cartZ = - (cartX * isoAnchorZAxis.x + cartY * isoAnchorZAxis.y) / isoAnchorZAxis.z;
-    let cartPoint = new Zdog.Vector({x: cartX, y: cartY, z: cartZ});
+    let cartZ = - (cartX * isoAnchorZAxis.x + cartY * isoAnchorZAxis.y) / isoAnchorZAxis.z
+    let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
 
     new Zdog.Shape({
       addTo: this.illo,
@@ -176,7 +176,7 @@ class IsometricMap {
       stroke: 5,
       color: ramdomColor,
       translate: cartPoint
-    });
+    })
 
     let isoPoint = new Zdog.Vector({
       x: cartPoint.x * ZdogUtils.vecDotProduct(x01, x00) + cartPoint.y * ZdogUtils.vecDotProduct(x01, y00) + cartPoint.z * ZdogUtils.vecDotProduct(x01, z00),
@@ -184,93 +184,110 @@ class IsometricMap {
       z: cartPoint.x * ZdogUtils.vecDotProduct(z01, x00) + cartPoint.y * ZdogUtils.vecDotProduct(z01, y00) + cartPoint.z * ZdogUtils.vecDotProduct(z01, z00)
     })
 
-    // let isoPoint = ZdogUtils.getCoordinateTransformatedVector(z00, z01, cartPoint);
+    // let isoPoint = ZdogUtils.getCoordinateTransformatedVector(z00, z01, cartPoint)
 
-    console.log(`cartX: ${cartPoint.x} cartY: ${cartPoint.y} cartZ: ${cartPoint.z}`);
-    console.log(`isoX: ${isoPoint.x} isoY: ${isoPoint.y} isoZ: ${isoPoint.z}`);
-    // isoPoint.rotate({z: - Zdog.TAU / 8});
+    console.log(`cartX: ${cartPoint.x} cartY: ${cartPoint.y} cartZ: ${cartPoint.z}`)
+    console.log(`isoX: ${isoPoint.x} isoY: ${isoPoint.y} isoZ: ${isoPoint.z}`)
+    // isoPoint.rotate({z: - Zdog.TAU / 8})
 
     new Zdog.Shape({
       addTo: this.isoAnchor,
       path: [
         {},
-        {z: 40},
-        {x: -5, z: 40},
-        {x: 0, z: 45},
-        {x: 5, z: 40},
-        {x: 0, z: 40}
+        { z: 40 },
+        { x: -5, z: 40 },
+        { x: 0, z: 45 },
+        { x: 5, z: 40 },
+        { x: 0, z: 40 }
       ],
       closed: false,
       stroke: 3,
       color: ramdomColor,
       translate: isoPoint
-    });
-    console.log(`------------------------------------------------------------------`);
-    return isoPoint;
+    })
+    console.log(`------------------------------------------------------------------`)
+    return isoPoint
   }
 
-  remove(){
-    this.illo = null;
-    this.isoAnchor.remove();
-    this.isoAnchor = null;
-    this.isoArr = null;
-    this.cartAnchor = null;
+  remove() {
+    this.illo = null
+    this.isoAnchor.remove()
+    this.isoAnchor = null
+    this.isoArr = null
+    this.cartAnchor = null
   }
 }
 
-function createOptionGUI(){
-  let gui = new dat.GUI();
-  gui.open();
-  let illoFolder = gui.addFolder('illo');
-  illoFolder.open();
+function createOptionGUI() {
+  let gui = new dat.GUI()
+  gui.open()
+  let illoFolder = gui.addFolder('illo')
+  illoFolder.open()
   // zoom
-  illoFolder.add(illo, 'zoom', illoOption.minZoom, illoOption.maxZoom).listen().onChange(v => illo.zoom = v);
+  illoFolder.add(illo, 'zoom', illoOption.minZoom, illoOption.maxZoom).listen().onChange(v => illo.zoom = v)
   // drag
-  illoFolder.add(illoOption, 'isDragRotate');
+  illoFolder.add(illoOption, 'isDragRotate')
   // stats
   illoFolder.add(illoOption, "stats").onChange(v => {
     if (v) {
-      document.body.appendChild(stats.dom);
+      document.body.appendChild(stats.dom)
     } else {
-      stats.dom.parentNode.removeChild(stats.dom);
+      stats.dom.parentNode.removeChild(stats.dom)
     }
-  });
+  })
 
-  return gui;
+  return gui
 }
 
-let map = new IsometricMap(illo, illoAnchor, 60);
+let map = new IsometricMap(illo, illoAnchor, 10)
 
-illo.element.addEventListener("click", function( event ) {
+illo.element.addEventListener("click", function (event) {
   // if (illoOption.isDragRotate) {
-  //   return;
+  //   return
   // }
-  map.getScreenToMapVector(event.offsetX, event.offsetY);
-}, false);
+  map.getScreenToMapVector(event.offsetX, event.offsetY)
+}, false)
 
-illo.element.addEventListener("wheel", function( event ) {
-  let rate = 1000 / illo.zoom;
-  let zoom = illo.zoom - event.deltaY / rate;
-  if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom;
-  if (zoom < illoOption.minZoom) zoom = illoOption.minZoom;
-  illo.zoom = zoom;
-}, false);
+illo.element.addEventListener("wheel", function (event) {
+  let rate = 1000 / illo.zoom
+  let zoom = illo.zoom - event.deltaY / rate
+  if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom
+  if (zoom < illoOption.minZoom) zoom = illoOption.minZoom
+  illo.zoom = zoom
+}, false)
 
-const stats = new Stats();
-stats.showPanel(0);
-let time = 0;
+const stats = new Stats()
+stats.showPanel(0)
+let time = 0
 function run() {
-  stats.begin();
-  illo.updateRenderGraph();
+  stats.begin()
+  illo.updateRenderGraph()
   // if (time % 60 == 0) {
-  //   console.log(time);
+  //   console.log(time)
   // }
-  ++time;
-  stats.end();
-  requestAnimationFrame(run);
+  ++time
+  stats.end()
+  requestAnimationFrame(run)
 }
 
-createOptionGUI();
-illoAnchor.rotate = new Zdog.Vector({x: -0.1489563611329071, y: 0.11457967569366773, z: 0.3853981633974483});
-run();
+createOptionGUI()
+illoAnchor.rotate = new Zdog.Vector({ x: -0.1489563611329071, y: 0.11457967569366773, z: 0.3853981633974483 })
+run()
+
+let video = document.createElement('video')
+video.muted = true
+
+document.getElementById('test-button').addEventListener("click", async function (event) {
+  this.disabled = true
+  if (document.pictureInPictureElement) {
+    await document.exitPictureInPicture()
+    video.pause()
+    video.srcObject = null
+  } else {
+    video.srcObject = illo.element.captureStream(14)
+    await video.play()
+    await video.requestPictureInPicture()
+  }
+  this.disabled = false
+}, false)
 
