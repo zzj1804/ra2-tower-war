@@ -265,6 +265,11 @@ illo.element.addEventListener("wheel", e => {
 document.addEventListener("keypress", e => {
   console.log(e)
   switch (e.keyCode) {
+    // p -> PiP
+    case 80:
+    case 112:
+      switchPip()
+      break;
     // r -> isDragRotate
     case 82:
     case 114:
@@ -297,8 +302,7 @@ run()
 let video = document.createElement('video')
 video.muted = true
 
-document.getElementById('pip-button').addEventListener("click", async function (event) {
-  this.disabled = true
+async function switchPip(){
   if (document.pictureInPictureElement) {
     await document.exitPictureInPicture()
     video.pause()
@@ -308,6 +312,11 @@ document.getElementById('pip-button').addEventListener("click", async function (
     await video.play()
     await video.requestPictureInPicture()
   }
+}
+
+document.getElementById('pip-button').addEventListener("click", e => {
+  this.disabled = true
+  switchPip()
   this.disabled = false
 }, false)
 
