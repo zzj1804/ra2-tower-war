@@ -277,7 +277,7 @@ run()
 let video = document.createElement('video')
 video.muted = true
 
-document.getElementById('test-button').addEventListener("click", async function (event) {
+document.getElementById('pip-button').addEventListener("click", async function (event) {
   this.disabled = true
   if (document.pictureInPictureElement) {
     await document.exitPictureInPicture()
