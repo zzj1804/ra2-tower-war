@@ -247,14 +247,14 @@ function changeStats(v) {
 
 let map = new IsometricMap(illo, illoAnchor, 10)
 
-illo.element.addEventListener("click", function (event) {
+illo.element.addEventListener("click", e => {
   // if (illoOption.isDragRotate) {
   //   return
   // }
-  map.getScreenToMapVector(event.offsetX, event.offsetY)
+  map.getScreenToMapVector(e.offsetX, e.offsetY)
 }, false)
 
-illo.element.addEventListener("wheel", function (event) {
+illo.element.addEventListener("wheel", e => {
   let rate = 1000 / illo.zoom
   let zoom = illo.zoom - event.deltaY / rate
   if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom
