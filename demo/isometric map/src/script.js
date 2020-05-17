@@ -264,13 +264,17 @@ illo.element.addEventListener("wheel", function (event) {
 
 document.addEventListener("keypress", e => {
   console.log(e)
-  // r -> isDragRotate
-  if (e.keyCode === 82 || e.keyCode === 114) {
-    illoOption.isDragRotate = !illoOption.isDragRotate
-  }
-  // s -> stats
-  if (e.keyCode === 83 || e.keyCode === 115) {
-    changeStats(!illoOption.stats)
+  switch (e.keyCode) {
+    // r -> isDragRotate
+    case 82:
+    case 114:
+      illoOption.isDragRotate = !illoOption.isDragRotate
+      break;
+    // s -> stats
+    case 83:
+    case 115:
+      changeStats(!illoOption.stats)
+      break;
   }
 });
 
