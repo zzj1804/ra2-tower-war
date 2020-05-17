@@ -226,7 +226,7 @@ function createOptionGUI() {
   // zoom
   illoFolder.add(illo, 'zoom', illoOption.minZoom, illoOption.maxZoom).listen().onChange(v => illo.zoom = v)
   // drag
-  illoFolder.add(illoOption, 'isDragRotate')
+  illoFolder.add(illoOption, 'isDragRotate').listen()
   // stats
   illoFolder.add(illoOption, "stats").onChange(v => {
     if (v) {
@@ -255,6 +255,14 @@ illo.element.addEventListener("wheel", function (event) {
   if (zoom < illoOption.minZoom) zoom = illoOption.minZoom
   illo.zoom = zoom
 }, false)
+
+document.addEventListener("keypress", e => {
+  console.log(e)
+  // r -> isDragRotate
+  if (e.keyCode === 82 || e.keyCode === 114) {
+    illoOption.isDragRotate = !illoOption.isDragRotate
+  }
+});
 
 const stats = new Stats()
 stats.showPanel(0)
