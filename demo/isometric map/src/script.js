@@ -218,6 +218,9 @@ class IsometricMap {
   }
 }
 
+const stats = new Stats()
+stats.showPanel(0)
+
 function createOptionGUI() {
   let gui = new dat.GUI()
   gui.open()
@@ -228,15 +231,18 @@ function createOptionGUI() {
   // drag
   illoFolder.add(illoOption, 'isDragRotate').listen()
   // stats
-  illoFolder.add(illoOption, "stats").onChange(v => {
-    if (v) {
-      document.body.appendChild(stats.dom)
-    } else {
-      stats.dom.parentNode.removeChild(stats.dom)
-    }
-  })
+  illoFolder.add(illoOption, "stats").listen().onChange(v => changeStats(v))
 
   return gui
+}
+
+function changeStats(v) {
+  illoOption.stats = v
+  if (illoOption.stats) {
+    document.body.appendChild(stats.dom)
+  } else {
+    stats.dom.parentNode.removeChild(stats.dom)
+  }
 }
 
 let map = new IsometricMap(illo, illoAnchor, 10)
@@ -262,10 +268,12 @@ document.addEventListener("keypress", e => {
   if (e.keyCode === 82 || e.keyCode === 114) {
     illoOption.isDragRotate = !illoOption.isDragRotate
   }
+  // s -> stats
+  if (e.keyCode === 83 || e.keyCode === 115) {
+    changeStats(!illoOption.stats)
+  }
 });
 
-const stats = new Stats()
-stats.showPanel(0)
 let time = 0
 function run() {
   stats.begin()
