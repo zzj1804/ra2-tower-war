@@ -255,8 +255,8 @@ illo.element.addEventListener("click", e => {
 }, false)
 
 illo.element.addEventListener("wheel", e => {
-  let rate = 1000 / illo.zoom
-  let zoom = illo.zoom - event.deltaY / rate
+  let rate = illo.zoom / 20
+  let zoom = illo.zoom - (e.deltaY > 0 ? 1 : -1) * rate
   if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom
   if (zoom < illoOption.minZoom) zoom = illoOption.minZoom
   illo.zoom = zoom
@@ -303,14 +303,18 @@ let video = document.createElement('video')
 video.muted = true
 
 async function switchPip(){
-  if (document.pictureInPictureElement) {
-    await document.exitPictureInPicture()
-    video.pause()
-    video.srcObject = null
-  } else {
-    video.srcObject = illo.element.captureStream(14)
-    await video.play()
-    await video.requestPictureInPicture()
+  try {
+    if (document.pictureInPictureElement) {
+      await document.exitPictureInPicture()
+      video.pause()
+      video.srcObject = null
+    } else {
+      video.srcObject = illo.element.captureStream(14)
+      await video.play()
+      await video.requestPictureInPicture()
+    }
+  } catch (error) {
+    alert('browser not support PictureInPicture')
   }
 }
 
