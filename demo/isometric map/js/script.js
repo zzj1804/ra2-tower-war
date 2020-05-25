@@ -166,17 +166,6 @@ class IsometricMap {
     let cartZ = - (cartX * isoAnchorZAxis.x + cartY * isoAnchorZAxis.y) / isoAnchorZAxis.z
     let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
 
-    new Zdog.Shape({
-      addTo: this.illo,
-      path: [
-        {},
-        isoAnchorZAxis.copy().multiply(80)
-      ],
-      closed: false,
-      stroke: 5,
-      color: ramdomColor,
-      translate: cartPoint
-    })
 
     let isoPoint = new Zdog.Vector({
       x: cartPoint.x * ZdogUtils.vecDotProduct(x01, x00) + cartPoint.y * ZdogUtils.vecDotProduct(x01, y00) + cartPoint.z * ZdogUtils.vecDotProduct(x01, z00),
