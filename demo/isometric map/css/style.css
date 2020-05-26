@@ -1,12 +1,3 @@
-body {
- background-color: rgb(219, 223, 224);
- overflow: hidden;
- text-align:center;
-  display: flex;
-  align-items: center;
-  justify-content: center; 
-}
-
 body,
 html {
  height: 100%;
@@ -14,6 +5,7 @@ html {
  margin: 0;
  padding: 0;
 }
+
 .zdog-canvas {
   background-color: #5398BE;
   width: 100%;
