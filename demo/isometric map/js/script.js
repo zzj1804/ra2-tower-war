@@ -1,6 +1,6 @@
 let illoOption = {
   isDragRotate: false,
-  maxZoom: 5,
+  maxZoom: 15,
   minZoom: 0.001,
   stats: false
 }
@@ -147,15 +147,10 @@ class IsometricMap {
     let y01 = y00.copy().rotate(this.isoAnchor.rotate)
     let z01 = z00.copy().rotate(this.isoAnchor.rotate)
 
-    let localToWorldTransformMatrix = [
-
-    ]
-
     let cartAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.cartAnchor.rotate)
     let isoAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.isoAnchor.rotate)
     let totalTransposeRotationMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, isoAnchorTransposeRotationMatrix)
-    // let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(totalTransposeRotationMatrix, [[0],[0],[1]])
-    let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, ZdogUtils.multiplyMatrices(isoAnchorTransposeRotationMatrix, [[0], [0], [1]]))
+    let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(totalTransposeRotationMatrix, [[0],[0],[1]])
     let isoAnchorZAxis = new Zdog.Vector({
       x: isoAnchorZAxisMatrix[0][0],
       y: isoAnchorZAxisMatrix[1][0],
@@ -173,11 +168,8 @@ class IsometricMap {
       z: cartPoint.x * ZdogUtils.vecDotProduct(z01, x00) + cartPoint.y * ZdogUtils.vecDotProduct(z01, y00) + cartPoint.z * ZdogUtils.vecDotProduct(z01, z00)
     })
 
-    // let isoPoint = ZdogUtils.getCoordinateTransformatedVector(z00, z01, cartPoint)
-
     console.log(`cartX: ${cartPoint.x} cartY: ${cartPoint.y} cartZ: ${cartPoint.z}`)
     console.log(`isoX: ${isoPoint.x} isoY: ${isoPoint.y} isoZ: ${isoPoint.z}`)
-    // isoPoint.rotate({z: - Zdog.TAU / 8})
 
     new Zdog.Shape({
       addTo: this.isoAnchor,
