@@ -242,16 +242,6 @@ illo.element.addEventListener("mousemove", e => {
     map.getScreenToMapVector(e.offsetX, e.offsetY)
 }, false)
 
-illo.element.addEventListener("pointermove", e => {
-  if (isBuildMode)
-    map.getScreenToMapVector(e.offsetX, e.offsetY)
-}, false)
-
-illo.element.addEventListener("touchmove", e => {
-  if (isBuildMode)
-    map.getScreenToMapVector(e.offsetX, e.offsetY)
-}, false)
-
 illo.element.addEventListener("click", e => {
   map.getScreenToMapVector(e.offsetX, e.offsetY)
 }, false)
