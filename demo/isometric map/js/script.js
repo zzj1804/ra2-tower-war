@@ -150,7 +150,7 @@ class IsometricMap {
     let cartAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.cartAnchor.rotate)
     let isoAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.isoAnchor.rotate)
     let totalTransposeRotationMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, isoAnchorTransposeRotationMatrix)
-    let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(totalTransposeRotationMatrix, [[0],[0],[1]])
+    let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(totalTransposeRotationMatrix, [[0], [0], [1]])
     let isoAnchorZAxis = new Zdog.Vector({
       x: isoAnchorZAxisMatrix[0][0],
       y: isoAnchorZAxisMatrix[1][0],
@@ -228,10 +228,31 @@ function changeStats(v) {
 
 let map = new IsometricMap(illo, illoAnchor, 10)
 
+let isBuildMode = false
+function switchBuildMode() {
+  isBuildMode = !isBuildMode
+}
+
+document.getElementById('build-button').addEventListener("click", e => {
+  switchBuildMode()
+}, false)
+
+illo.element.addEventListener("mousemove", e => {
+  if (isBuildMode)
+    map.getScreenToMapVector(e.offsetX, e.offsetY)
+}, false)
+
+illo.element.addEventListener("pointermove", e => {
+  if (isBuildMode)
+    map.getScreenToMapVector(e.offsetX, e.offsetY)
+}, false)
+
+illo.element.addEventListener("touchmove", e => {
+  if (isBuildMode)
+    map.getScreenToMapVector(e.offsetX, e.offsetY)
+}, false)
+
 illo.element.addEventListener("click", e => {
-  // if (illoOption.isDragRotate) {
-  //   return
-  // }
   map.getScreenToMapVector(e.offsetX, e.offsetY)
 }, false)
 
@@ -246,6 +267,11 @@ illo.element.addEventListener("wheel", e => {
 document.addEventListener("keypress", e => {
   console.log(e)
   switch (e.keyCode) {
+    // b -> build
+    case 66:
+    case 98:
+      switchBuildMode()
+      break;
     // p -> PiP
     case 80:
     case 112:
@@ -283,7 +309,7 @@ run()
 let video = document.createElement('video')
 video.muted = true
 
-async function switchPip(){
+async function switchPip() {
   try {
     if (document.pictureInPictureElement) {
       await document.exitPictureInPicture()

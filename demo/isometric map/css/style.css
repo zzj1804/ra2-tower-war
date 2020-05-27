@@ -1,9 +1,9 @@
 body,
 html {
- height: 100%;
- width: 100%;
- margin: 0;
- padding: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .zdog-canvas {
@@ -12,24 +12,48 @@ html {
   height: 100%;
 }
 
-.pip-button{
-  font-weight:bold;
+.pip-button {
+  font-weight: bold;
   padding: 20px 20px;
-    background: rgb(32, 125, 201);
-    border-radius: 9px;
-    color: rgba(241, 241, 243, 0.541);
-    text-decoration: none;
-    box-shadow: 0px 5px 0px rgb(23, 89, 143), 0px 10px 5px -5px #000;
-    text-shadow: 0px 2px 1px rgba(0,0,0,.3);
+  background: rgb(32, 125, 201);
+  border-radius: 9px;
+  color: rgba(241, 241, 243, 0.541);
+  text-decoration: none;
+  box-shadow: 0px 5px 0px rgb(23, 89, 143), 0px 10px 5px -5px #000;
+  text-shadow: 0px 2px 1px rgba(0, 0, 0, .3);
   font-size: 20px;
-  position:absolute;
-  bottom:15%;
-  right:5%;
-  transition:all .15s;
+  position: absolute;
+  bottom: 15%;
+  right: 5%;
+  transition: all .15s;
 }
 
-.pip-button.active,.pip-button:active{
+.pip-button.active,
+.pip-button:active {
   box-shadow: none;
-  transform:translateY(5px);
-  background:rgb(37, 148, 240);
+  transform: translateY(5px);
+  background: rgb(37, 148, 240);
+}
+
+.build-button {
+  font-weight: bold;
+  padding: 20px 20px;
+  background: rgb(91, 228, 12);
+  border-radius: 9px;
+  color: rgba(202, 40, 207, 0.541);
+  text-decoration: none;
+  box-shadow: 0px 5px 0px rgb(67, 158, 95), 0px 10px 5px -5px #000;
+  text-shadow: 0px 2px 1px rgba(39, 168, 177, 0.3);
+  font-size: 20px;
+  position: absolute;
+  bottom: 15%;
+  right: 15%;
+  transition: all .15s;
+}
+
+.build-button.active,
+.build-button:active {
+  box-shadow: none;
+  transform: translateY(5px);
+  background: rgb(51, 180, 25);
 }
