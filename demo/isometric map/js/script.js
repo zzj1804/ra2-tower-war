@@ -1,5 +1,5 @@
 let illoOption = {
-  isDragRotate: false,
+  isDragRotate: true,
   maxZoom: 15,
   minZoom: 0.001,
   stats: false
@@ -14,6 +14,9 @@ let illo = new Zdog.Illustration({
 let illoAnchor = new Zdog.Anchor({
   addTo: illo
 })
+
+let test1Group = getAxis(illo, 0.5)
+test1Group.visible = false
 
 // drag event
 let dragStartX, dragStartY
@@ -39,8 +42,12 @@ new Zdog.Dragger({
       illoAnchor.translate.x = dragStartX + moveX / illo.zoom
       illoAnchor.translate.y = dragStartY + moveY / illo.zoom
     }
+
+    test1(pointer, moveX, moveY)
   },
-  onDragEnd: function () { },
+  onDragEnd: function () {
+    test1Group.visible = false
+  },
 })
 
 class IsometricMap {
@@ -82,50 +89,7 @@ class IsometricMap {
       }
     })
 
-    new Zdog.Shape({
-      addTo: this.isoAnchor,
-      path: [
-        { x: -40, y: 0 },
-        { x: 40, y: 0 },
-        { y: -5, x: 40 },
-        { y: 0, x: 45 },
-        { y: 5, x: 40 },
-        { y: 0, x: 40 }
-      ],
-      closed: false,
-      stroke: 3,
-      color: 'red',
-    })
-
-    new Zdog.Shape({
-      addTo: this.isoAnchor,
-      path: [
-        { x: 0, y: -40 },
-        { x: 0, y: 40 },
-        { x: -5, y: 40 },
-        { x: 0, y: 45 },
-        { x: 5, y: 40 },
-        { x: 0, y: 40 }
-      ],
-      closed: false,
-      stroke: 3,
-      color: 'yellow',
-    })
-
-    new Zdog.Shape({
-      addTo: this.isoAnchor,
-      path: [
-        {},
-        { z: 40 },
-        { x: -5, z: 40 },
-        { x: 0, z: 45 },
-        { x: 5, z: 40 },
-        { x: 0, z: 40 }
-      ],
-      closed: false,
-      stroke: 3,
-      color: 'blue',
-    })
+    getAxis(this.isoAnchor, 1)
   }
 
   getScreenToMapVector(offsetX, offsetY) {
@@ -197,6 +161,60 @@ class IsometricMap {
     this.isoArr = null
     this.cartAnchor = null
   }
+}
+
+function getAxis(addTo, scale) {
+  let axis = new Zdog.Group({
+    addTo: addTo,
+    scale: scale
+  })
+  
+  new Zdog.Shape({
+    addTo: axis,
+    path: [
+      { x: -40, y: 0 },
+      { x: 40, y: 0 },
+      { y: -5, x: 40 },
+      { y: 0, x: 45 },
+      { y: 5, x: 40 },
+      { y: 0, x: 40 }
+    ],
+    closed: false,
+    stroke: 3,
+    color: 'red',
+  })
+  
+  new Zdog.Shape({
+    addTo: axis,
+    path: [
+      { x: 0, y: -40 },
+      { x: 0, y: 40 },
+      { x: -5, y: 40 },
+      { x: 0, y: 45 },
+      { x: 5, y: 40 },
+      { x: 0, y: 40 }
+    ],
+    closed: false,
+    stroke: 3,
+    color: 'yellow',
+  })
+  
+  new Zdog.Shape({
+    addTo: axis,
+    path: [
+      {},
+      { z: 40 },
+      { x: -5, z: 40 },
+      { x: 0, z: 45 },
+      { x: 5, z: 40 },
+      { x: 0, z: 40 }
+    ],
+    closed: false,
+    stroke: 3,
+    color: 'blue',
+  })
+
+  return axis
 }
 
 const stats = new Stats()
@@ -320,4 +338,34 @@ document.getElementById('pip-button').addEventListener("click", e => {
   switchPip()
   this.disabled = false
 }, false)
+
+function test1(pointer, moveX, moveY) {
+  let cartX = pointer.offsetX
+  let cartY = pointer.offsetY
+  if (illo.centered) {
+    cartX -= illo.width / 2
+    cartY -= illo.height / 2
+  }
+
+  let A0 = illoAnchor
+  let A1 = map.isoAnchor
+
+  let getTM = ZdogUtils.getTransposeRotationMatrix
+  let mM = ZdogUtils.multiplyMatrices
+
+  let A0TM = getTM(A0.rotate)
+  let A1TM = getTM(A1.rotate)
+  let A0A1TM = mM(A0TM, A1TM)
+  let A0zM = mM(A0A1TM, [[0], [0], [1]])
+  let A0z = new Zdog.Vector({
+    x: A0zM[0][0],
+    y: A0zM[1][0],
+    z: A0zM[2][0]
+  })
+  test1Group.rotate.set(A0z)
+
+  test1Group.visible = true
+  test1Group.translate.x = cartX / illo.zoom
+  test1Group.translate.y = cartY / illo.zoom
+}
 
