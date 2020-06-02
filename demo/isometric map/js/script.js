@@ -15,6 +15,8 @@ let illoAnchor = new Zdog.Anchor({
   addTo: illo
 })
 
+// getAxis(illoAnchor, 1)
+
 let test1Group = getAxis(illo, 0.5)
 test1Group.visible = false
 
@@ -272,29 +274,46 @@ illo.element.addEventListener("wheel", e => {
   illo.zoom = zoom
 }, false)
 
-document.addEventListener("keypress", e => {
+document.addEventListener("keydown", e => {
   console.log(e)
+  let moveStride = 10 / illo.zoom
   switch (e.keyCode) {
+    // ←
+    case 37:
+      illoAnchor.translate.x -= moveStride
+      break
+    // ↑
+    case 38:
+      illoAnchor.translate.y -= moveStride
+      break
+    // →
+    case 39:
+      illoAnchor.translate.x += moveStride
+      break
+    // ↓
+    case 40:
+      illoAnchor.translate.y += moveStride
+      break
     // b -> build
     case 66:
     case 98:
       switchBuildMode()
-      break;
+      break
     // p -> PiP
     case 80:
     case 112:
       switchPip()
-      break;
+      break
     // r -> isDragRotate
     case 82:
     case 114:
       illoOption.isDragRotate = !illoOption.isDragRotate
-      break;
+      break
     // s -> stats
     case 83:
     case 115:
       changeStats(!illoOption.stats)
-      break;
+      break
   }
 });
 
@@ -350,12 +369,17 @@ function test1(pointer, moveX, moveY) {
   let A0 = illoAnchor
   let A1 = map.isoAnchor
 
+  let getM = ZdogUtils.getRotationMatrix
   let getTM = ZdogUtils.getTransposeRotationMatrix
   let mM = ZdogUtils.multiplyMatrices
 
+  let A0M = getM(A0.rotate)
+  let A2M = getM(A1.rotate)
   let A0TM = getTM(A0.rotate)
   let A1TM = getTM(A1.rotate)
-  let A0A1TM = mM(A0TM, A1TM)
+  // let A0A1TM = mM(A0TM, A1TM)
+  let A0A1TM = mM(A0M, A0TM)
+  console.log(A0A1TM)
   let A0zM = mM(A0A1TM, [[0], [0], [1]])
   let A0z = new Zdog.Vector({
     x: A0zM[0][0],
