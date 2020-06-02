@@ -12,48 +12,65 @@ html {
   height: 100%;
 }
 
-.pip-button {
+#btn-layer {
+  position: absolute;
+  bottom: 15%;
+  right: 5%;
+  z-index: 999;
+}
+
+.blue-button {
   font-weight: bold;
   padding: 20px 20px;
   background: rgb(32, 125, 201);
   border-radius: 9px;
+  border-color: rgba(32, 125, 201, .5);
   color: rgba(241, 241, 243, 0.541);
   text-decoration: none;
   box-shadow: 0px 5px 0px rgb(23, 89, 143), 0px 10px 5px -5px #000;
   text-shadow: 0px 2px 1px rgba(0, 0, 0, .3);
   font-size: 20px;
-  position: absolute;
-  bottom: 15%;
-  right: 5%;
   transition: all .15s;
 }
 
-.pip-button.active,
-.pip-button:active {
+.blue-button.active,
+.blue-button:active {
   box-shadow: none;
   transform: translateY(5px);
   background: rgb(37, 148, 240);
+  color: rgba(253, 253, 253, 0.541);
+  text-shadow: none;
 }
 
-.build-button {
+.blue-button.focus,
+.blue-button:focus {
+  outline: 0;
+}
+
+.green-button {
   font-weight: bold;
   padding: 20px 20px;
-  background: rgb(91, 228, 12);
+  background: rgb(89, 209, 19);
   border-radius: 9px;
-  color: rgba(202, 40, 207, 0.541);
+  border-color: rgba(91, 228, 12, .5);
+  color: rgba(220, 220, 221, 0.841);
   text-decoration: none;
-  box-shadow: 0px 5px 0px rgb(67, 158, 95), 0px 10px 5px -5px #000;
-  text-shadow: 0px 2px 1px rgba(39, 168, 177, 0.3);
+  box-shadow: 0px 5px 0px rgb(61, 145, 86), 0px 10px 5px -5px #000;
+  text-shadow: 0px 2px 1px rgba(0, 0, 0, .3);
   font-size: 20px;
-  position: absolute;
-  bottom: 15%;
-  right: 15%;
   transition: all .15s;
 }
 
-.build-button.active,
-.build-button:active {
+.green-button.active,
+.green-button:active {
   box-shadow: none;
   transform: translateY(5px);
-  background: rgb(51, 180, 25);
+  background: rgb(98, 235, 18);
+  color: rgba(253, 253, 253, 0.541);
+  text-shadow: none;
+}
+
+.green-button.focus,
+.green-button:focus {
+  outline: 0;
 }
