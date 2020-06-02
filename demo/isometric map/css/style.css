@@ -36,6 +36,7 @@ html {
 .blue-button.active,
 .blue-button:active {
   box-shadow: none;
+  outline: 0;
   transform: translateY(5px);
   background: rgb(37, 148, 240);
   color: rgba(253, 253, 253, 0.541);
@@ -45,6 +46,11 @@ html {
 .blue-button.focus,
 .blue-button:focus {
   outline: 0;
+}
+
+.blue-button.hover,
+.blue-button:hover {
+  background: rgb(35, 131, 209);
 }
 
 .green-button {
@@ -64,6 +70,7 @@ html {
 .green-button.active,
 .green-button:active {
   box-shadow: none;
+  outline: 0;
   transform: translateY(5px);
   background: rgb(98, 235, 18);
   color: rgba(253, 253, 253, 0.541);
@@ -73,4 +80,9 @@ html {
 .green-button.focus,
 .green-button:focus {
   outline: 0;
+}
+
+.green-button.hover,
+.green-button:hover {
+  background: rgb(92, 218, 20);
 }
