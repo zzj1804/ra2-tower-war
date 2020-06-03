@@ -394,3 +394,5 @@ function test1(pointer, moveX, moveY) {
   test1Group.translate.y = cartY / illo.zoom
 }
 
+document.getElementById('loading-layer').style.display = 'none'
+
