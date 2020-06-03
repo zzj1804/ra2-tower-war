@@ -372,6 +372,7 @@ function test1(pointer, moveX, moveY) {
   let getM = ZdogUtils.getRotationMatrix
   let getTM = ZdogUtils.getTransposeRotationMatrix
   let mM = ZdogUtils.multiplyMatrices
+  let vDP = ZdogUtils.vecDotProduct
 
   let A0M = getM(A0.rotate)
   let A2M = getM(A1.rotate)
