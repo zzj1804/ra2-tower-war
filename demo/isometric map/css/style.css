@@ -88,6 +88,7 @@ html {
 }
 
 #loading-layer {
+  /* display: flex; */
   display: none;
   position: absolute;
   top: 0%;
@@ -100,12 +101,8 @@ html {
   opacity: .70;
   filter: alpha(opacity=70);
   text-align: center;
-}
-
-#loading-layer-text-container {
-  position: fixed;
-  top: 45%;
-  left: 45%;
+  align-items: center;
+  justify-content: center;
 }
 
 #loading-layer-text {
