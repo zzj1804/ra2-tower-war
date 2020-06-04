@@ -384,6 +384,7 @@ function test1(pointer, moveX, moveY) {
   let getM = ZdogUtils.getRotationMatrix
   let getTM = ZdogUtils.getTransposeRotationMatrix
   let mM = ZdogUtils.multiplyMatrices
+  let vDP = ZdogUtils.vecDotProduct
 
   let A0M = getM(A0.rotate)
   let A2M = getM(A1.rotate)
@@ -404,4 +405,6 @@ function test1(pointer, moveX, moveY) {
   test1Group.translate.x = cartX / illo.zoom
   test1Group.translate.y = cartY / illo.zoom
 }
+
+document.getElementById('loading-layer').style.display = 'none'
 
