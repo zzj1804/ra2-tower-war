@@ -170,7 +170,7 @@ function getAxis(addTo, scale) {
     addTo: addTo,
     scale: scale
   })
-  
+
   new Zdog.Shape({
     addTo: axis,
     path: [
@@ -185,7 +185,7 @@ function getAxis(addTo, scale) {
     stroke: 3,
     color: 'red',
   })
-  
+
   new Zdog.Shape({
     addTo: axis,
     path: [
@@ -200,7 +200,7 @@ function getAxis(addTo, scale) {
     stroke: 3,
     color: 'yellow',
   })
-  
+
   new Zdog.Shape({
     addTo: axis,
     path: [
@@ -250,7 +250,9 @@ let map = new IsometricMap(illo, illoAnchor, 10)
 
 let isBuildMode = false
 function switchBuildMode() {
+  let btn = document.getElementById('build-button')
   isBuildMode = !isBuildMode
+  switchBtnActive(btn, isBuildMode)
 }
 
 document.getElementById('build-button').addEventListener("click", e => {
@@ -315,7 +317,15 @@ document.addEventListener("keydown", e => {
       changeStats(!illoOption.stats)
       break
   }
-});
+})
+
+function switchBtnActive(btn, v) {
+  if (v) {
+    btn.className += ' active'
+  } else {
+    btn.className = btn.className.replace(' active', '')
+  }
+}
 
 let time = 0
 function run() {
@@ -338,14 +348,18 @@ video.muted = true
 
 async function switchPip() {
   try {
+    let btn = document.getElementById('pip-button')
     if (document.pictureInPictureElement) {
+      switchBtnActive(btn, false)
       await document.exitPictureInPicture()
       video.pause()
       video.srcObject = null
     } else {
+      switchBtnActive(btn, true)
       video.srcObject = illo.element.captureStream(14)
       await video.play()
       await video.requestPictureInPicture()
+      return true
     }
   } catch (error) {
     alert('browser not support PictureInPicture')
@@ -353,9 +367,7 @@ async function switchPip() {
 }
 
 document.getElementById('pip-button').addEventListener("click", e => {
-  this.disabled = true
   switchPip()
-  this.disabled = false
 }, false)
 
 function test1(pointer, moveX, moveY) {
