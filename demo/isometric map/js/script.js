@@ -359,7 +359,6 @@ async function switchPip() {
       video.srcObject = illo.element.captureStream(14)
       await video.play()
       await video.requestPictureInPicture()
-      return true
     }
   } catch (error) {
     alert('browser not support PictureInPicture')
