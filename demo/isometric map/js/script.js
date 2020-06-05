@@ -282,19 +282,19 @@ document.addEventListener("keydown", e => {
   switch (e.keyCode) {
     // ←
     case 37:
-      illoAnchor.translate.x -= moveStride
+      illoAnchor.translate.x += moveStride
       break
     // ↑
     case 38:
-      illoAnchor.translate.y -= moveStride
+      illoAnchor.translate.y += moveStride
       break
     // →
     case 39:
-      illoAnchor.translate.x += moveStride
+      illoAnchor.translate.x -= moveStride
       break
     // ↓
     case 40:
-      illoAnchor.translate.y += moveStride
+      illoAnchor.translate.y -= moveStride
       break
     // b -> build
     case 66:
