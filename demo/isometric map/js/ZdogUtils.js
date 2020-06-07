@@ -63,7 +63,7 @@ class ZdogUtils {
 
     let nx = (x * x * dcos + cos) * ox + (x * y * dcos - z * sin) * oy + (x * z * dcos + y * sin) * oz
     let ny = (y * x * dcos + z * sin) * ox + (y * y * dcos + cos) * oy + (y * z * dcos - x * sin) * oz
-    let nz = (x * z * dcos - y * cos) * ox + (y * z * dcos + x * sin) * oy + (z * z * dcos + cos) * oz
+    let nz = (x * z * dcos - y * sin) * ox + (y * z * dcos + x * sin) * oy + (z * z * dcos + cos) * oz
 
     return new Zdog.Vector({x: nx, y: ny, z: nz})
   }
