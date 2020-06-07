@@ -394,7 +394,7 @@ function test1(pointer, moveX, moveY) {
   let getUV = ZdogUtils.getUnitVector
 
   let x00 = new Zdog.Vector({ x: 1 })
-  let y00 = new Zdog.Vector({ y: -1 })
+  let y00 = new Zdog.Vector({ y: 1 })
   let z00 = new Zdog.Vector({ z: 1 })
 
   // let x10 = x00.copy().rotate(A0.rotate)
@@ -413,20 +413,30 @@ function test1(pointer, moveX, moveY) {
   let angleX = A0.rotate.x
   let angleY = A0.rotate.y
   let angleZ = A0.rotate.z
+  // let angleZ = Math.random() * 30
 
-  console.log("1")
-  console.log(testVec.copy().rotate({x: angleX, y: angleY,  z: 0}))
-  console.log("2")
+
+  console.log(
+    '  angleX: ' + (angleX / Zdog.TAU * 360).toFixed(2) + 
+    '  angleY: ' + (angleY / Zdog.TAU * 360).toFixed(2) + 
+    '  angleZ: ' + (angleZ / Zdog.TAU * 360).toFixed(2)
+  )
+  console.log('1')
+  console.log(testVec.copy().rotate({
+    x: angleX,
+    y: angleY,
+    z: angleZ
+  }))
+  console.log('2')
   let testVec1 = testVec.copy()
-  // 绕x轴的时候还是对的
-  testVec1 = rByAxis(angleX, x00, testVec1)
-  // 绕y轴开始出错
+  // z->y->x
+  testVec1 = rByAxis(angleZ, z00, testVec1)
   testVec1 = rByAxis(angleY, y00, testVec1)
-  // testVec1 = rByAxis(angleZ, z00, testVec1)
+  testVec1 = rByAxis(angleX, x00, testVec1)
   console.log(testVec1)
   console.log(" ")
 
-  
+
   // let z10 = z00.copy()
   // z10 = rByAxis(angleX, x00, z10)
   // z10 = rByAxis(angleY, y00, z10)
