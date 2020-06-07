@@ -54,7 +54,7 @@ class ZdogUtils {
     let cos = Math.cos(angle)
     let dcos = 1 - cos
     let x = UnitVectorAxis.x
-    let y = UnitVectorAxis.y
+    let y = -UnitVectorAxis.y
     let z = UnitVectorAxis.z
 
     let ox = oldPoint.x
