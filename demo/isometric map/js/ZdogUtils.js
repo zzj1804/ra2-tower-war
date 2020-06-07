@@ -50,18 +50,22 @@ class ZdogUtils {
   }
 
   static rotateAroundUnitVector(angle, UnitVectorAxis, oldPoint) {
-    let sin = Math.sin(angle);
-    let cos = Math.cos(angle);
-    let dcos = 1 - cos;
-    let x = UnitVectorAxis.x;
-    let y = UnitVectorAxis.y;
-    let z = UnitVectorAxis.z;
+    let sin = Math.sin(angle)
+    let cos = Math.cos(angle)
+    let dcos = 1 - cos
+    let x = UnitVectorAxis.x
+    let y = UnitVectorAxis.y
+    let z = UnitVectorAxis.z
 
-    let nx = (x * x * dcos + cos) * oldPoint.x + (x * y * dcos - z * sin) * oldPoint.y + (x * z * dcos + y * sin) * oldPoint.z;
-    let ny = (y * x * dcos + z * sin) * oldPoint.x + (y * y * dcos + cos) * oldPoint.y + (y * z * dcos - x * sin) * oldPoint.z;
-    let nz = (x * z * dcos - y * cos) * oldPoint.x + (y * z * dcos + x * sin) * oldPoint.y + (z * z * dcos + cos) * oldPoint.z;
+    let ox = oldPoint.x
+    let oy = oldPoint.y
+    let oz = oldPoint.z
 
-    return new Zdog.Vector({x: nx, y: ny, z: nz});
+    let nx = (x * x * dcos + cos) * ox + (x * y * dcos - z * sin) * oy + (x * z * dcos + y * sin) * oz
+    let ny = (y * x * dcos + z * sin) * ox + (y * y * dcos + cos) * oy + (y * z * dcos - x * sin) * oz
+    let nz = (x * z * dcos - y * cos) * ox + (y * z * dcos + x * sin) * oy + (z * z * dcos + cos) * oz
+
+    return new Zdog.Vector({x: nx, y: ny, z: nz})
   }
 
   static getRotationMatrix(rotation) {

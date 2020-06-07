@@ -15,10 +15,11 @@ let illoAnchor = new Zdog.Anchor({
   addTo: illo
 })
 
-// getAxis(illoAnchor, 1)
+getAxis(illoAnchor, 2)
 
-let test1Group = getAxis(illo, 0.5)
-test1Group.visible = false
+let test1Group = new Zdog.Group({
+  addTo: illo
+})
 
 // drag event
 let dragStartX, dragStartY
@@ -48,7 +49,7 @@ new Zdog.Dragger({
     test1(pointer, moveX, moveY)
   },
   onDragEnd: function () {
-    test1Group.visible = false
+    test1Group.removeChild()
   },
 })
 
@@ -265,7 +266,7 @@ illo.element.addEventListener("mousemove", e => {
 }, false)
 
 illo.element.addEventListener("click", e => {
-  map.getScreenToMapVector(e.offsetX, e.offsetY)
+  // map.getScreenToMapVector(e.offsetX, e.offsetY)
 }, false)
 
 illo.element.addEventListener("wheel", e => {
@@ -350,12 +351,10 @@ async function switchPip() {
   try {
     let btn = document.getElementById('pip-button')
     if (document.pictureInPictureElement) {
-      switchBtnActive(btn, false)
       await document.exitPictureInPicture()
       video.pause()
       video.srcObject = null
     } else {
-      switchBtnActive(btn, true)
       video.srcObject = illo.element.captureStream(14)
       await video.play()
       await video.requestPictureInPicture()
@@ -380,29 +379,92 @@ function test1(pointer, moveX, moveY) {
   let A0 = illoAnchor
   let A1 = map.isoAnchor
 
+  // 正确
   let getM = ZdogUtils.getRotationMatrix
+  // 正确
   let getTM = ZdogUtils.getTransposeRotationMatrix
+  // 正确
   let mM = ZdogUtils.multiplyMatrices
   let vDP = ZdogUtils.vecDotProduct
+  // rByAxis 错误?
+  let rByAxis = ZdogUtils.rotateAroundUnitVector
+  // mMV 正确
+  let mMV = ZdogUtils.multiplyMatrixAndVec
+  // 正确
+  let getUV = ZdogUtils.getUnitVector
 
-  let A0M = getM(A0.rotate)
-  let A2M = getM(A1.rotate)
-  let A0TM = getTM(A0.rotate)
-  let A1TM = getTM(A1.rotate)
-  // let A0A1TM = mM(A0TM, A1TM)
-  let A0A1TM = mM(A0M, A0TM)
-  console.log(A0A1TM)
-  let A0zM = mM(A0A1TM, [[0], [0], [1]])
-  let A0z = new Zdog.Vector({
-    x: A0zM[0][0],
-    y: A0zM[1][0],
-    z: A0zM[2][0]
+  let x00 = new Zdog.Vector({ x: 1 })
+  let y00 = new Zdog.Vector({ y: -1 })
+  let z00 = new Zdog.Vector({ z: 1 })
+
+  // let x10 = x00.copy().rotate(A0.rotate)
+  // let y10 = y00.copy().rotate(A0.rotate)
+  // let z10 = z00.copy().rotate(A0.rotate)
+  
+  // let angleX = A0.rotate.x
+  // let angleY = A0.rotate.y
+  // let angleZ = A0.rotate.z
+  
+  let testVec = getUV(new Zdog.Vector({ x: Math.random(), y: Math.random(), z:Math.random() }))
+  // 要验证rByAxis正确性
+  let RM1 = getM(A0.rotate)
+  let z10 = mMV(RM1, z00)
+
+  let angleX = A0.rotate.x
+  let angleY = A0.rotate.y
+  let angleZ = A0.rotate.z
+
+  console.log("1")
+  console.log(testVec.copy().rotate({x: angleX, y: angleY,  z: 0}))
+  console.log("2")
+  let testVec1 = testVec.copy()
+  // 绕x轴的时候还是对的
+  testVec1 = rByAxis(angleX, x00, testVec1)
+  // 绕y轴开始出错
+  testVec1 = rByAxis(angleY, y00, testVec1)
+  // testVec1 = rByAxis(angleZ, z00, testVec1)
+  console.log(testVec1)
+  console.log(" ")
+
+  
+  // let z10 = z00.copy()
+  // z10 = rByAxis(angleX, x00, z10)
+  // z10 = rByAxis(angleY, y00, z10)
+  // z10 = rByAxis(angleZ, z00, z10)
+  
+  
+  // let angleX = A1.rotate.x
+  // let angleY = A1.rotate.y
+  // let angleZ = A1.rotate.z
+
+  // let z20 = z10.copy()
+  // z20 = rByAxis(angleX, x10, z20)
+  // z20 = rByAxis(angleY, y10, z20)
+  // z20 = rByAxis(angleZ, z10, z20)
+
+  let ramdomColor = '#' + (Math.random() * 0xffffff << 0).toString(16)
+  // new Zdog.Shape({
+  //   addTo: illo,
+  //   path: [ {}, { x: z10.x * 80, y: z10.y * 80, z: z10.z * 80 } ],
+  //   stroke: 4,
+  //   color: ramdomColor,
+  // });
+
+  new Zdog.Shape({
+    addTo: illo,
+    path: [ {}, { x: z10.x * 40, y: z10.y * 40, z: z10.z * 40 } ],
+    stroke: 4,
+    color: ramdomColor,
   })
-  test1Group.rotate.set(A0z)
 
-  test1Group.visible = true
-  test1Group.translate.x = cartX / illo.zoom
-  test1Group.translate.y = cartY / illo.zoom
+  // illo.addChild(new Zdog.Shape({
+  //   path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
+  //   stroke: 4,
+  //   color: ramdomColor,
+  // }))
+
+  // console.log(test1Group)
+  // console.log(map)
 }
 
 document.getElementById('loading-layer').style.display = 'none'
