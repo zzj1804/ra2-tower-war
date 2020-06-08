@@ -1,3 +1,7 @@
+window.onerror = function(m, f, l) {
+  alert(m + '\n' + f + '\n' + l)
+}
+
 let illoOption = {
   isDragRotate: true,
   maxZoom: 15,
@@ -15,7 +19,7 @@ let illoAnchor = new Zdog.Anchor({
   addTo: illo
 })
 
-getAxis(illoAnchor, 2)
+// getAxis(illoAnchor, 2)
 
 let test1Group = new Zdog.Group({
   addTo: illo
@@ -397,23 +401,15 @@ function test1(pointer, moveX, moveY) {
   let y00 = new Zdog.Vector({ y: 1 })
   let z00 = new Zdog.Vector({ z: 1 })
 
-  // let x10 = x00.copy().rotate(A0.rotate)
-  // let y10 = y00.copy().rotate(A0.rotate)
-  // let z10 = z00.copy().rotate(A0.rotate)
+  let x10 = x00.copy().rotate(A0.rotate)
+  let y10 = y00.copy().rotate(A0.rotate)
+  let z10 = z00.copy().rotate(A0.rotate)
   
-  // let angleX = A0.rotate.x
-  // let angleY = A0.rotate.y
-  // let angleZ = A0.rotate.z
-  
-  let testVec = getUV(new Zdog.Vector({ x: Math.random(), y: Math.random(), z:Math.random() }))
-  // 要验证rByAxis正确性
-  let RM1 = getM(A0.rotate)
-  let z10 = mMV(RM1, z00)
+  let testVec = new Zdog.Vector({ x: Math.random(), y: Math.random(), z:Math.random() })
 
   let angleX = A0.rotate.x
   let angleY = A0.rotate.y
   let angleZ = A0.rotate.z
-  // let angleZ = Math.random() * 30
 
 
   console.log(
@@ -436,21 +432,11 @@ function test1(pointer, moveX, moveY) {
   console.log(testVec1)
   console.log(" ")
 
-
-  // let z10 = z00.copy()
-  // z10 = rByAxis(angleX, x00, z10)
-  // z10 = rByAxis(angleY, y00, z10)
-  // z10 = rByAxis(angleZ, z00, z10)
-  
-  
-  // let angleX = A1.rotate.x
-  // let angleY = A1.rotate.y
-  // let angleZ = A1.rotate.z
-
-  // let z20 = z10.copy()
-  // z20 = rByAxis(angleX, x10, z20)
-  // z20 = rByAxis(angleY, y10, z20)
-  // z20 = rByAxis(angleZ, z10, z20)
+  // 还是不对
+  let z20 = z10.copy()
+  z20 = rByAxis(A1.rotate.z, z10, z20)
+  z20 = rByAxis(A1.rotate.y, y10, z20)
+  z20 = rByAxis(A1.rotate.x, x10, z20)
 
   let ramdomColor = '#' + (Math.random() * 0xffffff << 0).toString(16)
   // new Zdog.Shape({
@@ -458,20 +444,13 @@ function test1(pointer, moveX, moveY) {
   //   path: [ {}, { x: z10.x * 80, y: z10.y * 80, z: z10.z * 80 } ],
   //   stroke: 4,
   //   color: ramdomColor,
-  // });
+  // })
 
-  new Zdog.Shape({
-    addTo: illo,
-    path: [ {}, { x: z10.x * 40, y: z10.y * 40, z: z10.z * 40 } ],
+  illo.addChild(new Zdog.Shape({
+    path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
     stroke: 4,
     color: ramdomColor,
-  })
-
-  // illo.addChild(new Zdog.Shape({
-  //   path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
-  //   stroke: 4,
-  //   color: ramdomColor,
-  // }))
+  }))
 
   // console.log(test1Group)
   // console.log(map)
