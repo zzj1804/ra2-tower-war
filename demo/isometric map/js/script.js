@@ -281,6 +281,11 @@ document.addEventListener("keydown", e => {
   console.log(e)
   let moveStride = 10 / illo.zoom
   switch (e.keyCode) {
+    // space -> reset move&rotate
+    case 32:
+      illoAnchor.translate = new Zdog.Vector({})
+      illoAnchor.rotate = new Zdog.Vector({})
+      break
     // ←
     case 37:
       illoAnchor.translate.x += moveStride
