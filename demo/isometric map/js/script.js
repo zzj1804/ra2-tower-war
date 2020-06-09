@@ -19,8 +19,6 @@ let illoAnchor = new Zdog.Anchor({
   addTo: illo
 })
 
-// getAxis(illoAnchor, 2)
-
 let test1Group = new Zdog.Group({
   addTo: illo
 })
@@ -446,15 +444,31 @@ function test1(pointer, moveX, moveY) {
   //   color: ramdomColor,
   // })
 
-  illo.addChild(new Zdog.Shape({
+  // new Zdog.Shape({
+  //   addTo: illo,
+  //   path: [ {}, { x: y10.x * 80, y: y10.y * 80, z: y10.z * 80 } ],
+  //   stroke: 4,
+  //   color: ramdomColor,
+  // })
+
+  // new Zdog.Shape({
+  //   addTo: illo,
+  //   path: [ {}, { x: x10.x * 80, y: x10.y * 80, z: x10.z * 80 } ],
+  //   stroke: 4,
+  //   color: ramdomColor,
+  // })
+
+  new Zdog.Shape({
+    addTo: illo,
     path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
     stroke: 4,
     color: ramdomColor,
-  }))
+  })
 
   // console.log(test1Group)
   // console.log(map)
 }
+// getAxis(illoAnchor, 2)
 
 document.getElementById('loading-layer').style.display = 'none'
 
