@@ -381,19 +381,14 @@ function test1(pointer, moveX, moveY) {
   let A0 = illoAnchor
   let A1 = map.isoAnchor
 
-  // 正确
   let getM = ZdogUtils.getRotationMatrix
-  // 正确
   let getTM = ZdogUtils.getTransposeRotationMatrix
-  // 正确
   let mM = ZdogUtils.multiplyMatrices
   let vDP = ZdogUtils.vecDotProduct
-  // rByAxis 错误?
   let rByAxis = ZdogUtils.rotateAroundUnitVector
-  // mMV 正确
   let mMV = ZdogUtils.multiplyMatrixAndVec
-  // 正确
   let getUV = ZdogUtils.getUnitVector
+  let getCoorTransVec = ZdogUtils.getCoordinateTransformatedVector
 
   let x00 = new Zdog.Vector({ x: 1 })
   let y00 = new Zdog.Vector({ y: 1 })
@@ -403,60 +398,12 @@ function test1(pointer, moveX, moveY) {
   let y10 = y00.copy().rotate(A0.rotate)
   let z10 = z00.copy().rotate(A0.rotate)
   
-  let testVec = new Zdog.Vector({ x: Math.random(), y: Math.random(), z:Math.random() })
-
-  let angleX = A0.rotate.x
-  let angleY = A0.rotate.y
-  let angleZ = A0.rotate.z
-
-
-  console.log(
-    '  angleX: ' + (angleX / Zdog.TAU * 360).toFixed(2) + 
-    '  angleY: ' + (angleY / Zdog.TAU * 360).toFixed(2) + 
-    '  angleZ: ' + (angleZ / Zdog.TAU * 360).toFixed(2)
-  )
-  console.log('1')
-  console.log(testVec.copy().rotate({
-    x: angleX,
-    y: angleY,
-    z: angleZ
-  }))
-  console.log('2')
-  let testVec1 = testVec.copy()
-  // z->y->x
-  testVec1 = rByAxis(angleZ, z00, testVec1)
-  testVec1 = rByAxis(angleY, y00, testVec1)
-  testVec1 = rByAxis(angleX, x00, testVec1)
-  console.log(testVec1)
-  console.log(" ")
-
-  // 还是不对
   let z20 = z10.copy()
   z20 = rByAxis(A1.rotate.z, z10, z20)
   z20 = rByAxis(A1.rotate.y, y10, z20)
   z20 = rByAxis(A1.rotate.x, x10, z20)
 
   let ramdomColor = '#' + (Math.random() * 0xffffff << 0).toString(16)
-  // new Zdog.Shape({
-  //   addTo: illo,
-  //   path: [ {}, { x: z10.x * 80, y: z10.y * 80, z: z10.z * 80 } ],
-  //   stroke: 4,
-  //   color: ramdomColor,
-  // })
-
-  // new Zdog.Shape({
-  //   addTo: illo,
-  //   path: [ {}, { x: y10.x * 80, y: y10.y * 80, z: y10.z * 80 } ],
-  //   stroke: 4,
-  //   color: ramdomColor,
-  // })
-
-  // new Zdog.Shape({
-  //   addTo: illo,
-  //   path: [ {}, { x: x10.x * 80, y: x10.y * 80, z: x10.z * 80 } ],
-  //   stroke: 4,
-  //   color: ramdomColor,
-  // })
 
   new Zdog.Shape({
     addTo: illo,
@@ -465,7 +412,6 @@ function test1(pointer, moveX, moveY) {
     color: ramdomColor,
   })
 
-  // console.log(test1Group)
   // console.log(map)
 }
 // getAxis(illoAnchor, 2)
