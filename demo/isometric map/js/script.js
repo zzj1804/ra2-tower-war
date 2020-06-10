@@ -399,14 +399,17 @@ function test1(pointer, moveX, moveY) {
   let y00 = new Zdog.Vector({ y: 1 })
   let z00 = new Zdog.Vector({ z: 1 })
 
-  let x10 = x00.copy().rotate(A0.rotate)
-  let y10 = y00.copy().rotate(A0.rotate)
-  let z10 = z00.copy().rotate(A0.rotate)
-  
-  let z20 = z10.copy()
-  z20 = rByAxis(A1.rotate.z, z10, z20)
-  z20 = rByAxis(A1.rotate.y, y10, z20)
-  z20 = rByAxis(A1.rotate.x, x10, z20)
+  let z21 = z00.copy().rotate(A1.rotate)
+  let z01 = mMV(getTM(A0.rotate), z00)
+  let y01 = mMV(getTM(A0.rotate), y00)
+  let x01 = mMV(getTM(A0.rotate), x00)
+
+  let M01 = [
+    [x01.x, x01.y, x01.z],
+    [y01.x, y01.y, y01.z],
+    [z01.x, z01.y, z01.z]
+  ]
+  let z20 = mMV(M01, z21)
 
   let ramdomColor = '#' + (Math.random() * 0xffffff << 0).toString(16)
 
@@ -416,6 +419,13 @@ function test1(pointer, moveX, moveY) {
     stroke: 4,
     color: ramdomColor,
   })
+
+  // new Zdog.Shape({
+  //   addTo: illo,
+  //   path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
+  //   stroke: 4,
+  //   color: ramdomColor,
+  // })
 
   // console.log(map)
 }
