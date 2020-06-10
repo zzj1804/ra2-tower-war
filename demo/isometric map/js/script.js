@@ -99,7 +99,7 @@ class IsometricMap {
       height: len,
       translate: { z: -thickness / 2 },
       stroke: thickness,
-      color: 'rgba(162,109,57,0.8)',
+      color: 'rgba(240, 248, 255, 0.95)',
       fill: true
     })
 
@@ -112,11 +112,54 @@ class IsometricMap {
       }
     })
 
-    getAxis(this.groudGroup, 1)
+    this.groudGroup.addChild(getAxis(1))
+
+    this.selectionBox = new Zdog.Rect({
+      addTo: this.isoAnchor,
+      width: gridLength * 0.9,
+      height: gridLength * 0.9,
+      translate: { z: 3 },
+      stroke: 1,
+      color: 'green',
+      visible: false
+    })
+
+    let thisMap = this
+    this.illo.element.addEventListener("mousemove", e => {
+      let idx = thisMap.getScreenToMapIndex(e.offsetX, e.offsetY)
+      if (idx) {
+        let model = thisMap.getModelByGrid(idx)
+        let newPoint = thisMap.getScreenToMapIndexCenterPoint(idx)
+        thisMap.selectionBox.translate.x = newPoint.x
+        thisMap.selectionBox.translate.y = newPoint.y
+        if (model) {
+          thisMap.selectionBox.color = 'red'
+        } else {
+          thisMap.selectionBox.color = 'green'
+        }
+        thisMap.selectionBox.visible = true
+      } else {
+        thisMap.selectionBox.visible = false
+      }
+    }, false)
+
+    this.illo.element.addEventListener("click", e => {
+      if (!isBuildMode) return
+      let idx = thisMap.getScreenToMapIndex(e.offsetX, e.offsetY)
+      if (idx) {
+        let model = thisMap.getModelByGrid(idx)
+        if (model) {
+          thisMap.removeModelByGrid(idx)
+          thisMap.selectionBox.color = 'green'
+        } else {
+          thisMap.addModelByGrid(getAxis(0.5), idx)
+          thisMap.selectionBox.color = 'red'
+        }
+      }
+    }, false)
   }
 
   getScreenToMapVector(offsetX, offsetY) {
-    let ramdomColor = '#' + (Math.random() * 0xffffff << 0).toString(16)
     let cartX = offsetX
     let cartY = offsetY
     if (this.illo.centered) {
@@ -153,24 +196,53 @@ class IsometricMap {
     let cartZ = - (cartX * z20.x + cartY * z20.y) / z20.z
     let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
     let isoPoint = mMV(TM1, mMV(TM0, cartPoint))
-
-    new Zdog.Shape({
-      addTo: this.isoAnchor,
-      path: [
-        {},
-        { z: 40 },
-        { x: -5, z: 40 },
-        { x: 0, z: 45 },
-        { x: 5, z: 40 },
-        { x: 0, z: 40 }
-      ],
-      closed: false,
-      stroke: 3,
-      color: ramdomColor,
-      translate: isoPoint
-    })
+    console.debug(`isoPoint: x: ${isoPoint.x} y: ${isoPoint.y} z: ${isoPoint.z}`)
 
     return isoPoint
+  }
+
+  getScreenToMapIndex(offsetX, offsetY) {
+    let vec = this.getScreenToMapVector(offsetX, offsetY)
+    let halfMapLength = MAP_GRID_LENGTH * MAP_GRID_NUM / 2
+    if (Math.abs(vec.x) > halfMapLength || Math.abs(vec.y) > halfMapLength) return
+    let x = vec.x + halfMapLength
+    let y = vec.y + halfMapLength
+    let indexX = Math.floor(x / MAP_GRID_LENGTH)
+    let indexY = Math.floor(y / MAP_GRID_LENGTH)
+    console.debug(`indexX:${indexX} indexY:${indexY}`)
+
+    return { x: indexX, y: indexY }
+  }
+
+  getScreenToMapIndexCenterPoint(index) {
+    let halfMapLength = MAP_GRID_LENGTH * MAP_GRID_NUM / 2
+    return { x: (index.x + 0.5) * MAP_GRID_LENGTH - halfMapLength, y: (index.y + 0.5) * MAP_GRID_LENGTH - halfMapLength }
+  }
+
+
+  getModelByGrid(index) {
+    if (!index) return
+    return this.isoArr[index.y][index.x]
+  }
+
+  addModelByGrid(model, index) {
+    if (!model || !index) return
+    let oldModel = this.isoArr[index.y][index.x]
+    if (oldModel) return
+    this.isoArr[index.y][index.x] = model
+    let { x, y } = this.getScreenToMapIndexCenterPoint(index)
+    let halfMapLength = MAP_GRID_LENGTH * MAP_GRID_NUM / 2
+    model.translate.x += x
+    model.translate.y += y
+    this.isoAnchor.addChild(model)
+  }
+
+  removeModelByGrid(index) {
+    if (!index) return
+    let model = this.isoArr[index.y][index.x]
+    if (!model) return
+    this.isoAnchor.removeChild(model)
+    this.isoArr[index.y][index.x] = null
   }
 
   remove() {
@@ -182,9 +254,8 @@ class IsometricMap {
   }
 }
 
-function getAxis(addTo, scale) {
+function getAxis(scale) {
   let axis = new Zdog.Group({
-    addTo: addTo,
     scale: scale
   })
 
@@ -254,15 +325,6 @@ function switchBuildMode() {
 // switch build mode
 document.getElementById('build-button').addEventListener("click", e => {
   switchBuildMode()
-}, false)
-
-illo.element.addEventListener("mousemove", e => {
-  if (isBuildMode)
-    map.getScreenToMapVector(e.offsetX, e.offsetY)
-}, false)
-
-illo.element.addEventListener("click", e => {
-  map.getScreenToMapVector(e.offsetX, e.offsetY)
 }, false)
 
 // wheel to zoom
