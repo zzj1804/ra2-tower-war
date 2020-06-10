@@ -25,6 +25,7 @@ let illo2 = new Zdog.Illustration({
   onDragEnd: function () {
     isSpinning2 = true;
   },
+  rotate: { x: -Zdog.TAU / 12}
 });
 
 let teslaCoil = new Zdog.Shape({

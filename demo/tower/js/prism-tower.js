@@ -10,6 +10,7 @@ let illo = new Zdog.Illustration({
   onDragEnd: function() {
     isSpinning = true;
   },
+  rotate: { x: -Zdog.TAU / 12}
 });
 class PrismTower {
   constructor(){
@@ -21,8 +22,7 @@ class PrismTower {
   
     let prismTower = new Zdog.Shape({
         addTo: illo,
-        translate: {y: 220},
-        // rotate: { x: TAU / 60 },
+        translate: {y: 220}
     })
     
     let base = new Zdog.Shape({
