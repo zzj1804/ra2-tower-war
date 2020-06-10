@@ -48,7 +48,7 @@ new Zdog.Dragger({
       illoAnchor.translate.y = dragStartY + moveY / illo.zoom
     }
 
-    test1(pointer, moveX, moveY)
+    // test1(pointer, moveX, moveY)
   },
   onDragEnd: function () {
     test1Group.removeChild()
@@ -108,37 +108,33 @@ class IsometricMap {
     cartX = cartX / this.illo.zoom - this.cartAnchor.translate.x
     cartY = cartY / this.illo.zoom - this.cartAnchor.translate.y
 
+    let A0 = this.cartAnchor
+    let A1 = this.isoAnchor
+  
+    let getTM = ZdogUtils.getTransposeRotationMatrix
+    let mMV = ZdogUtils.multiplyMatrixAndVec
+  
     let x00 = new Zdog.Vector({ x: 1 })
     let y00 = new Zdog.Vector({ y: 1 })
     let z00 = new Zdog.Vector({ z: 1 })
-
-    let x01 = x00.copy().rotate(this.isoAnchor.rotate)
-    let y01 = y00.copy().rotate(this.isoAnchor.rotate)
-    let z01 = z00.copy().rotate(this.isoAnchor.rotate)
-
-    let cartAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.cartAnchor.rotate)
-    let isoAnchorTransposeRotationMatrix = ZdogUtils.getTransposeRotationMatrix(this.isoAnchor.rotate)
-    let totalTransposeRotationMatrix = ZdogUtils.multiplyMatrices(cartAnchorTransposeRotationMatrix, isoAnchorTransposeRotationMatrix)
-    let isoAnchorZAxisMatrix = ZdogUtils.multiplyMatrices(totalTransposeRotationMatrix, [[0], [0], [1]])
-    let isoAnchorZAxis = new Zdog.Vector({
-      x: isoAnchorZAxisMatrix[0][0],
-      y: isoAnchorZAxisMatrix[1][0],
-      z: isoAnchorZAxisMatrix[2][0]
-    })
-    console.table(isoAnchorZAxis)
-
-    let cartZ = - (cartX * isoAnchorZAxis.x + cartY * isoAnchorZAxis.y) / isoAnchorZAxis.z
+    let TM0 = getTM(A0.rotate)
+    let TM1 = getTM(A1.rotate)
+  
+    let z21 = z00.copy().rotate(A1.rotate)
+    let z01 = mMV(TM0, z00)
+    let y01 = mMV(TM0, y00)
+    let x01 = mMV(TM0, x00)
+  
+    let M01 = [
+      [x01.x, x01.y, x01.z],
+      [y01.x, y01.y, y01.z],
+      [z01.x, z01.y, z01.z]
+    ]
+    let z20 = mMV(M01, z21)
+  
+    let cartZ = - (cartX * z20.x + cartY * z20.y) / z20.z
     let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
-
-
-    let isoPoint = new Zdog.Vector({
-      x: cartPoint.x * ZdogUtils.vecDotProduct(x01, x00) + cartPoint.y * ZdogUtils.vecDotProduct(x01, y00) + cartPoint.z * ZdogUtils.vecDotProduct(x01, z00),
-      y: cartPoint.x * ZdogUtils.vecDotProduct(y01, x00) + cartPoint.y * ZdogUtils.vecDotProduct(y01, y00) + cartPoint.z * ZdogUtils.vecDotProduct(y01, z00),
-      z: cartPoint.x * ZdogUtils.vecDotProduct(z01, x00) + cartPoint.y * ZdogUtils.vecDotProduct(z01, y00) + cartPoint.z * ZdogUtils.vecDotProduct(z01, z00)
-    })
-
-    console.log(`cartX: ${cartPoint.x} cartY: ${cartPoint.y} cartZ: ${cartPoint.z}`)
-    console.log(`isoX: ${isoPoint.x} isoY: ${isoPoint.y} isoZ: ${isoPoint.z}`)
+    let isoPoint = mMV(TM1, mMV(TM0, cartPoint))
 
     new Zdog.Shape({
       addTo: this.isoAnchor,
@@ -155,7 +151,6 @@ class IsometricMap {
       color: ramdomColor,
       translate: isoPoint
     })
-    console.log(`------------------------------------------------------------------`)
     return isoPoint
   }
 
@@ -417,6 +412,18 @@ function test1(pointer, moveX, moveY) {
     addTo: illo,
     path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
     stroke: 4,
+    color: ramdomColor,
+  })
+
+  let cartZ = - (cartX * z20.x + cartY * z20.y) / z20.z
+  let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
+
+  let isoPoint = getCoorTransVec(z00, z20, cartPoint)
+
+  new Zdog.Shape({
+    addTo: A1,
+    stroke: 10,
+    translate: isoPoint,
     color: ramdomColor,
   })
 
