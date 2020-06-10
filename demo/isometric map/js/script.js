@@ -2,6 +2,19 @@ window.onerror = function (m, f, l) {
   alert(m + '\n' + f + '\n' + l)
 }
 
+window.requestAnimFrame = function () {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function (/* function */ callback) {
+      window.setTimeout(callback, 1000 / 60)
+    }
+  )
+}
+
 const MAP_GRID_NUM = 10
 const MAP_GRID_LENGTH = 100
 
@@ -350,11 +363,6 @@ document.addEventListener("keydown", e => {
   console.log(e)
   let moveStride = 10 / illo.zoom
   switch (e.keyCode) {
-    // space -> reset move&rotate
-    case 32:
-      illoAnchor.translate = new Zdog.Vector({})
-      illoAnchor.rotate = new Zdog.Vector({})
-      break
     // ←
     case 37:
       illoAnchor.translate.x += moveStride
@@ -375,6 +383,12 @@ document.addEventListener("keydown", e => {
     case 66:
     case 98:
       switchBuildMode()
+      break
+    // c -> reset move&rotate
+    case 67:
+    case 99:
+      illoAnchor.translate = new Zdog.Vector({})
+      illoAnchor.rotate = new Zdog.Vector({})
       break
     // p -> PiP
     case 80:
