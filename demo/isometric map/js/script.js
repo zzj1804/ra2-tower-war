@@ -2,8 +2,19 @@ window.onerror = function (m, f, l) {
   alert(m + '\n' + f + '\n' + l)
 }
 
+const MAP_GRID_NUM = 10
+const MAP_GRID_LENGTH = 100
+
+const stats = new Stats()
+stats.showPanel(0)
+
+let map
+let time = 0
+let isBuildMode = false
+let video
+
 let illoOption = {
-  isDragRotate: true,
+  isDragRotate: false,
   maxZoom: 15,
   minZoom: 0.001,
   stats: false
@@ -16,10 +27,6 @@ let illo = new Zdog.Illustration({
 })
 
 let illoAnchor = new Zdog.Anchor({
-  addTo: illo
-})
-
-let test1Group = new Zdog.Group({
   addTo: illo
 })
 
@@ -47,16 +54,27 @@ new Zdog.Dragger({
       illoAnchor.translate.x = dragStartX + moveX / illo.zoom
       illoAnchor.translate.y = dragStartY + moveY / illo.zoom
     }
-
-    // test1(pointer, moveX, moveY)
   },
-  onDragEnd: function () {
-    test1Group.removeChild()
-  },
+  onDragEnd: function () { },
 })
 
+function createOptionGUI() {
+  let gui = new dat.GUI()
+  gui.open()
+  let illoFolder = gui.addFolder('illo')
+  illoFolder.open()
+  // zoom
+  illoFolder.add(illo, 'zoom', illoOption.minZoom, illoOption.maxZoom).listen().onChange(v => illo.zoom = v)
+  // drag
+  illoFolder.add(illoOption, 'isDragRotate').listen()
+  // stats
+  illoFolder.add(illoOption, "stats").listen().onChange(v => changeStats(v))
+
+  return gui
+}
+
 class IsometricMap {
-  constructor(illo, cartAnchor, gridNum) {
+  constructor(illo, cartAnchor, gridNum, gridLength) {
     this.illo = illo
     this.cartAnchor = cartAnchor
     this.isoArr = new Array(gridNum)
@@ -73,7 +91,7 @@ class IsometricMap {
       addTo: this.isoAnchor
     })
 
-    let len = 100 * gridNum
+    let len = gridLength * gridNum
     let thickness = 40
     new Zdog.Rect({
       addTo: this.groudGroup,
@@ -94,7 +112,7 @@ class IsometricMap {
       }
     })
 
-    getAxis(this.isoAnchor, 1)
+    getAxis(this.groudGroup, 1)
   }
 
   getScreenToMapVector(offsetX, offsetY) {
@@ -151,6 +169,7 @@ class IsometricMap {
       color: ramdomColor,
       translate: isoPoint
     })
+
     return isoPoint
   }
 
@@ -217,24 +236,6 @@ function getAxis(addTo, scale) {
   return axis
 }
 
-const stats = new Stats()
-stats.showPanel(0)
-
-function createOptionGUI() {
-  let gui = new dat.GUI()
-  gui.open()
-  let illoFolder = gui.addFolder('illo')
-  illoFolder.open()
-  // zoom
-  illoFolder.add(illo, 'zoom', illoOption.minZoom, illoOption.maxZoom).listen().onChange(v => illo.zoom = v)
-  // drag
-  illoFolder.add(illoOption, 'isDragRotate').listen()
-  // stats
-  illoFolder.add(illoOption, "stats").listen().onChange(v => changeStats(v))
-
-  return gui
-}
-
 function changeStats(v) {
   illoOption.stats = v
   if (illoOption.stats) {
@@ -244,15 +245,13 @@ function changeStats(v) {
   }
 }
 
-let map = new IsometricMap(illo, illoAnchor, 10)
-
-let isBuildMode = false
 function switchBuildMode() {
   let btn = document.getElementById('build-button')
   isBuildMode = !isBuildMode
   switchBtnActive(btn, isBuildMode)
 }
 
+// switch build mode
 document.getElementById('build-button').addEventListener("click", e => {
   switchBuildMode()
 }, false)
@@ -263,9 +262,10 @@ illo.element.addEventListener("mousemove", e => {
 }, false)
 
 illo.element.addEventListener("click", e => {
-  // map.getScreenToMapVector(e.offsetX, e.offsetY)
+  map.getScreenToMapVector(e.offsetX, e.offsetY)
 }, false)
 
+// wheel to zoom
 illo.element.addEventListener("wheel", e => {
   let rate = illo.zoom / 20
   let zoom = illo.zoom - (e.deltaY > 0 ? 1 : -1) * rate
@@ -322,6 +322,10 @@ document.addEventListener("keydown", e => {
   }
 })
 
+document.getElementById('pip-button').addEventListener("click", e => {
+  switchPip()
+}, false)
+
 function switchBtnActive(btn, v) {
   if (v) {
     btn.className += ' active'
@@ -329,25 +333,6 @@ function switchBtnActive(btn, v) {
     btn.className = btn.className.replace(' active', '')
   }
 }
-
-let time = 0
-function run() {
-  stats.begin()
-  illo.updateRenderGraph()
-  // if (time % 60 == 0) {
-  //   console.log(time)
-  // }
-  ++time
-  stats.end()
-  requestAnimationFrame(run)
-}
-
-createOptionGUI()
-illoAnchor.rotate = new Zdog.Vector({ x: -0.1489563611329071, y: 0.11457967569366773, z: 0.3853981633974483 })
-run()
-
-let video = document.createElement('video')
-video.muted = true
 
 async function switchPip() {
   try {
@@ -366,77 +351,29 @@ async function switchPip() {
   }
 }
 
-document.getElementById('pip-button').addEventListener("click", e => {
-  switchPip()
-}, false)
-
-function test1(pointer, moveX, moveY) {
-  let cartX = pointer.offsetX
-  let cartY = pointer.offsetY
-  if (illo.centered) {
-    cartX -= illo.width / 2
-    cartY -= illo.height / 2
+function displayLoadingLayer(p) {
+  if (p) {
+    document.getElementById('loading-layer').style.display = 'display'
+  } else {
+    document.getElementById('loading-layer').style.display = 'none'
   }
-
-  let A0 = illoAnchor
-  let A1 = map.isoAnchor
-
-  let getM = ZdogUtils.getRotationMatrix
-  let getTM = ZdogUtils.getTransposeRotationMatrix
-  let mM = ZdogUtils.multiplyMatrices
-  let vDP = ZdogUtils.vecDotProduct
-  let rByAxis = ZdogUtils.rotateAroundUnitVector
-  let mMV = ZdogUtils.multiplyMatrixAndVec
-  let getUV = ZdogUtils.getUnitVector
-  let getCoorTransVec = ZdogUtils.getCoordinateTransformatedVector
-
-  let x00 = new Zdog.Vector({ x: 1 })
-  let y00 = new Zdog.Vector({ y: 1 })
-  let z00 = new Zdog.Vector({ z: 1 })
-
-  let z21 = z00.copy().rotate(A1.rotate)
-  let z01 = mMV(getTM(A0.rotate), z00)
-  let y01 = mMV(getTM(A0.rotate), y00)
-  let x01 = mMV(getTM(A0.rotate), x00)
-
-  let M01 = [
-    [x01.x, x01.y, x01.z],
-    [y01.x, y01.y, y01.z],
-    [z01.x, z01.y, z01.z]
-  ]
-  let z20 = mMV(M01, z21)
-
-  let ramdomColor = '#' + (Math.random() * 0xffffff << 0).toString(16)
-
-  new Zdog.Shape({
-    addTo: illo,
-    path: [{}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 }],
-    stroke: 4,
-    color: ramdomColor,
-  })
-
-  let cartZ = - (cartX * z20.x + cartY * z20.y) / z20.z
-  let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
-
-  let isoPoint = getCoorTransVec(z00, z20, cartPoint)
-
-  new Zdog.Shape({
-    addTo: A1,
-    stroke: 10,
-    translate: isoPoint,
-    color: ramdomColor,
-  })
-
-  // new Zdog.Shape({
-  //   addTo: illo,
-  //   path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
-  //   stroke: 4,
-  //   color: ramdomColor,
-  // })
-
-  // console.log(map)
 }
-// getAxis(illoAnchor, 2)
 
-document.getElementById('loading-layer').style.display = 'none'
+function run() {
+  stats.begin()
+  illo.updateRenderGraph()
+  // if (time % 60 == 0) {
+  //   console.log(time)
+  // }
+  ++time
+  stats.end()
+  requestAnimationFrame(run)
+}
 
+video = document.createElement('video')
+video.muted = true
+// start the game
+map = new IsometricMap(illo, illoAnchor, MAP_GRID_NUM, MAP_GRID_LENGTH)
+createOptionGUI()
+run()
+displayLoadingLayer(false)
