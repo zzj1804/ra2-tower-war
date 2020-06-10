@@ -132,7 +132,7 @@ class IsometricMap {
         let newPoint = thisMap.getScreenToMapIndexCenterPoint(idx)
         thisMap.selectionBox.translate.x = newPoint.x
         thisMap.selectionBox.translate.y = newPoint.y
-        if (model) {
+        if (model && isBuildMode) {
           thisMap.selectionBox.color = 'red'
         } else {
           thisMap.selectionBox.color = 'green'
@@ -251,6 +251,16 @@ class IsometricMap {
     this.isoAnchor = null
     this.isoArr = null
     this.cartAnchor = null
+  }
+
+  removeAllChild() {
+    for (let i = 0; i < this.isoArr.length; i++) {
+      const arr = this.isoArr[i]
+      for (let j = 0; j < arr.length; j++) {
+        this.isoAnchor.removeChild(arr[j])
+        arr[j] = null
+      }
+    }
   }
 }
 
@@ -386,6 +396,10 @@ document.addEventListener("keydown", e => {
 
 document.getElementById('pip-button').addEventListener("click", e => {
   switchPip()
+}, false)
+
+document.getElementById('restart-button').addEventListener("click", e => {
+  map.removeAllChild()
 }, false)
 
 function switchBtnActive(btn, v) {

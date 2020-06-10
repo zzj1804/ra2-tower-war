@@ -19,13 +19,23 @@ html {
   z-index: 999;
 }
 
+button.focus,
+button:focus {
+  outline: 0;
+}
+
+button.active,
+button:active {
+  outline: 0;
+}
+
 .blue-button {
   font-weight: bold;
   padding: 20px 20px;
   background: rgb(32, 125, 201);
   border-radius: 9px;
   border-color: rgba(32, 125, 201, .5);
-  color: rgba(241, 241, 243, 0.541);
+  color: rgba(241, 241, 243, 0.7);
   text-decoration: none;
   box-shadow: 0px 5px 0px rgb(23, 89, 143), 0px 10px 5px -5px #000;
   text-shadow: 0px 2px 1px rgba(0, 0, 0, .3);
@@ -36,21 +46,43 @@ html {
 .blue-button.active,
 .blue-button:active {
   box-shadow: none;
-  outline: 0;
   transform: translateY(5px);
   background: rgb(37, 148, 240);
-  color: rgba(253, 253, 253, 0.541);
+  color: rgba(253, 253, 253, 0.9);
   text-shadow: none;
-}
-
-.blue-button.focus,
-.blue-button:focus {
-  outline: 0;
 }
 
 .blue-button.hover,
 .blue-button:hover {
   background: rgb(35, 131, 209);
+}
+
+.red-button {
+  font-weight: bold;
+  padding: 20px 20px;
+  background: rgb(240, 64, 40);
+  border-radius: 9px;
+  border-color: rgba(201, 100, 32, 0.5);
+  color: rgba(241, 241, 243, 0.7);
+  text-decoration: none;
+  box-shadow: 0px 5px 0px rgb(128, 60, 20), 0px 10px 5px -5px #000;
+  text-shadow: 0px 2px 1px rgba(0, 0, 0, .3);
+  font-size: 20px;
+  transition: all .15s;
+}
+
+.red-button.active,
+.red-button:active {
+  box-shadow: none;
+  transform: translateY(5px);
+  background: rgb(252, 66, 42);
+  color: rgba(253, 253, 253, 0.9);
+  text-shadow: none;
+}
+
+.red-button.hover,
+.red-button:hover {
+  background: rgb(252, 66, 42);
 }
 
 .green-button {
@@ -59,7 +91,7 @@ html {
   background: rgb(89, 209, 19);
   border-radius: 9px;
   border-color: rgba(91, 228, 12, .5);
-  color: rgba(220, 220, 221, 0.841);
+  color: rgba(241, 241, 243, 0.7);
   text-decoration: none;
   box-shadow: 0px 5px 0px rgb(61, 145, 86), 0px 10px 5px -5px #000;
   text-shadow: 0px 2px 1px rgba(0, 0, 0, .3);
@@ -73,13 +105,8 @@ html {
   outline: 0;
   transform: translateY(5px);
   background: rgb(98, 235, 18);
-  color: rgba(253, 253, 253, 0.541);
+  color: rgba(253, 253, 253, 0.9);
   text-shadow: none;
-}
-
-.green-button.focus,
-.green-button:focus {
-  outline: 0;
 }
 
 .green-button.hover,
