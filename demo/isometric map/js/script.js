@@ -1,4 +1,4 @@
-window.onerror = function(m, f, l) {
+window.onerror = function (m, f, l) {
   alert(m + '\n' + f + '\n' + l)
 }
 
@@ -110,28 +110,28 @@ class IsometricMap {
 
     let A0 = this.cartAnchor
     let A1 = this.isoAnchor
-  
+
     let getTM = ZdogUtils.getTransposeRotationMatrix
     let mMV = ZdogUtils.multiplyMatrixAndVec
-  
+
     let x00 = new Zdog.Vector({ x: 1 })
     let y00 = new Zdog.Vector({ y: 1 })
     let z00 = new Zdog.Vector({ z: 1 })
     let TM0 = getTM(A0.rotate)
     let TM1 = getTM(A1.rotate)
-  
+
     let z21 = z00.copy().rotate(A1.rotate)
     let z01 = mMV(TM0, z00)
     let y01 = mMV(TM0, y00)
     let x01 = mMV(TM0, x00)
-  
+
     let M01 = [
       [x01.x, x01.y, x01.z],
       [y01.x, y01.y, y01.z],
       [z01.x, z01.y, z01.z]
     ]
     let z20 = mMV(M01, z21)
-  
+
     let cartZ = - (cartX * z20.x + cartY * z20.y) / z20.z
     let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
     let isoPoint = mMV(TM1, mMV(TM0, cartPoint))
@@ -410,7 +410,7 @@ function test1(pointer, moveX, moveY) {
 
   new Zdog.Shape({
     addTo: illo,
-    path: [ {}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 } ],
+    path: [{}, { x: z20.x * 40, y: z20.y * 40, z: z20.z * 40 }],
     stroke: 4,
     color: ramdomColor,
   })
