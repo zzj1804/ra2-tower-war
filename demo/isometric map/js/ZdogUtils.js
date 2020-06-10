@@ -73,69 +73,69 @@ class ZdogUtils {
     let cosY = Math.cos(rotation.y)
     let cosZ = Math.cos(rotation.z)
 
-    let MX = [
-      [1, 0, 0],
-      [0, cosX, -sinX],
-      [0, sinX, cosX]
-    ]
+    // let MX = [
+    //   [1, 0, 0],
+    //   [0, cosX, -sinX],
+    //   [0, sinX, cosX]
+    // ]
 
-    let MY = [
-      [cosY, 0, -sinY],
-      [0, 1, 0],
-      [sinY, 0, cosY]
-    ]
+    // let MY = [
+    //   [cosY, 0, -sinY],
+    //   [0, 1, 0],
+    //   [sinY, 0, cosY]
+    // ]
 
-    let MZ = [
-      [cosZ, -sinZ, 0],
-      [sinZ, cosZ, 0],
-      [0, 0, 1]
-    ]
+    // let MZ = [
+    //   [cosZ, -sinZ, 0],
+    //   [sinZ, cosZ, 0],
+    //   [0, 0, 1]
+    // ]
 
-    let m = ZdogUtils.multiplyMatrices(ZdogUtils.multiplyMatrices(MX, MY), MZ)
+    // let m = ZdogUtils.multiplyMatrices(ZdogUtils.multiplyMatrices(MX, MY), MZ)
 
-    // m[0][0] = cosZ * cosY;
-    // m[0][1] = cosZ * sinY * sinX - sinZ * cosX;
-    // m[0][2] = cosZ * sinY * cosX + sinZ * sinX;
-    // m[1][0] = sinZ * cosY;
-    // m[1][1] = sinZ * sinY * sinX + cosZ * cosX;
-    // m[1][2] = sinZ * sinY * cosX - cosZ * sinX;
-    // m[2][0] = -sinY;
-    // m[2][1] = cosY * sinX;
-    // m[2][2] = cosY * cosX;
+    let m = [[], [], []]
+    m[0][0] = cosZ * cosY
+    m[0][1] = -cosY * sinZ
+    m[0][2] = -sinY
+    m[1][0] = -sinX * sinY * cosZ + cosX * sinZ
+    m[1][1] = sinZ * sinY * sinX + cosZ * cosX
+    m[1][2] = -sinX * cosY
+    m[2][0] = cosX * sinY * cosZ + sinX * sinZ
+    m[2][1] = -cosX * sinY * sinZ + sinX * cosZ
+    m[2][2] = cosY * cosX
 
     return m
   }
 
   static getTransposeRotationMatrix(rotation) {
-    // let sinX = Math.sin(rotation.x);
-    // let sinY = Math.sin(rotation.y);
-    // let sinZ = Math.sin(rotation.z);
+    // let matrix = ZdogUtils.getRotationMatrix(rotation)
 
-    // let cosX = Math.cos(rotation.x);
-    // let cosY = Math.cos(rotation.y);
-    // let cosZ = Math.cos(rotation.z);
+    // for (let i = 0; i < matrix.length; i++) {
+    //   for (let j = 0; j < i; j++) {
+    //     const temp = matrix[i][j]
+    //     matrix[i][j] = matrix[j][i]
+    //     matrix[j][i] = temp
+    //   }
+    // }
 
-    // let m = [[],[],[]];
+    let sinX = Math.sin(rotation.x)
+    let sinY = Math.sin(rotation.y)
+    let sinZ = Math.sin(rotation.z)
 
-    // m[0][0] = cosZ * cosY;
-    // m[1][0] = cosZ * sinY * sinX - sinZ * cosX;
-    // m[2][0] = cosZ * sinY * cosX + sinZ * sinX;
-    // m[0][1] = sinZ * cosY;
-    // m[1][1] = sinZ * sinY * sinX + cosZ * cosX;
-    // m[2][1] = sinZ * sinY * cosX - cosZ * sinX;
-    // m[0][2] = -sinY;
-    // m[1][2] = cosY * sinX;
-    // m[2][2] = cosY * cosX;
+    let cosX = Math.cos(rotation.x)
+    let cosY = Math.cos(rotation.y)
+    let cosZ = Math.cos(rotation.z)
 
-    let matrix = ZdogUtils.getRotationMatrix(rotation)
-
-    for (let i = 0; i < matrix.length; i++) {
-      for (let j = 0; j < i; j++) {
-        const temp = matrix[i][j]
-        matrix[i][j] = matrix[j][i]
-        matrix[j][i] = temp
-      }
-    }
+    let matrix = [[], [], []]
+    matrix[0][0] = cosZ * cosY
+    matrix[1][0] = -cosY * sinZ
+    matrix[2][0] = -sinY
+    matrix[0][1] = -sinX * sinY * cosZ + cosX * sinZ
+    matrix[1][1] = sinZ * sinY * sinX + cosZ * cosX
+    matrix[2][1] = -sinX * cosY
+    matrix[0][2] = cosX * sinY * cosZ + sinX * sinZ
+    matrix[1][2] = -cosX * sinY * sinZ + sinX * cosZ
+    matrix[2][2] = cosY * cosX
 
     return matrix
   }
