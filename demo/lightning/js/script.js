@@ -14,20 +14,21 @@ let illo = new Zdog.Illustration({
     resize: true
 })
 
-let explosion
+let lightning
 function render() {
     stats.begin()
 
-    let scale = Math.random() * 2
+    let scale = Math.random() * 20
+    let distance = Math.random() * 200
     let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }
-    if (!explosion) {
-        explosion = new Explosion(illo, translate, scale)
+    if (!lightning) {
+        lightning = new Lightning(illo, translate, scale, distance)
     }
-    if (explosion) {
-        explosion.render()
+    if (lightning) {
+        lightning.render()
     }
-    if (explosion.isEnd) {
-        explosion = new Explosion(illo, translate, scale)
+    if (lightning.isEnd) {
+        lightning = new Lightning(illo, translate, scale, distance)
     }
 
     illo.updateRenderGraph()

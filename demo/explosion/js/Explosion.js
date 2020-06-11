@@ -34,7 +34,7 @@ class Explosion {
       color: 'rgba(255,255,255,0.01)',
       stroke: 185 * scale,
       ease: "expo.out"
-    }, "-=3").call(() => { expl.kill() })
+    }, "-=3").call(() => { expl.remove() })
   }
 
   render() {
@@ -53,7 +53,7 @@ class Explosion {
     }
   }
 
-  kill() {
+  remove() {
     let expl = this
     expl.isEnd = true
     expl.explosion1.remove()
