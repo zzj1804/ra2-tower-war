@@ -18,8 +18,8 @@ let lightning
 function render() {
     stats.begin()
 
-    let scale = 2
-    let distance = 400
+    let scale = 4
+    let distance = 600
     let translate = {}
     if (!lightning) {
         lightning = new Lightning(illo, translate, scale, distance)
