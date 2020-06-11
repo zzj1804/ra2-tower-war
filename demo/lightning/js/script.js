@@ -18,9 +18,9 @@ let lightning
 function render() {
     stats.begin()
 
-    let scale = Math.random() * 20
-    let distance = Math.random() * 200
-    let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }
+    let scale = 2
+    let distance = 400
+    let translate = {}
     if (!lightning) {
         lightning = new Lightning(illo, translate, scale, distance)
     }
@@ -42,5 +42,5 @@ function setGlobalTimeScale(num) {
     ENV.timeScale = num
     return ENV
 }
-
+setGlobalTimeScale(1)
 let renderer = requestAnimationFrame(() => render())

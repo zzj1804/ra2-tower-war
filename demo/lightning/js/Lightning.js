@@ -2,6 +2,7 @@ class Lightning {
   constructor(addTo, translate, scale, distance) {
     let lit = this
     lit.isEnd = false
+    lit.scale = scale
     lit.distance = distance
     lit.lightningGroup = new Zdog.Group({
       addTo: addTo,
@@ -12,38 +13,52 @@ class Lightning {
       addTo: lit.lightningGroup,
       color: 'yellow',
       stroke: scale,
-      path: [{},{},{},{},{},{},{},{},{},{}]
+      path: lit.getPath(),
+      closed: false
     })
 
     lit.lit2 = new Zdog.Shape({
       addTo: lit.lightningGroup,
       color: 'white',
       stroke: scale,
-      path: [{},{},{},{},{},{},{},{},{},{}]
+      path: lit.getPath(),
+      closed: false
     })
 
     lit.lit3 = new Zdog.Shape({
       addTo: lit.lightningGroup,
       color: 'white',
       stroke: scale,
-      path: [{},{},{},{},{},{},{},{},{},{}]
+      path: lit.getPath(),
+      closed: false
     })
 
     lit.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0 })
     lit.tl
-    .call(() => lit.changeLitPath(), null, 0)
-    .call(() => lit.changeLitPath(), null, 1)
-    .call(() => lit.changeLitPath(), null, 2)
+    .call(() => lit.updateLit(), null, 0)
+    .call(() => lit.updateLit(), null, 1)
+    .call(() => lit.updateLit(), null, 2)
     .call(() => lit.remove(), null, 3)
+  }
+
+  getNewLit(color) {
+    let lit = this
+    return new Zdog.Shape({
+      addTo: lit.lightningGroup,
+      color: color,
+      stroke: lit.scale,
+      path: lit.getPath(),
+      closed: false
+    })
   }
 
   render() { }
 
-  changeLitPath(){
+  updateLit(){
     let lit = this
-    lit.lit1.path = lit.getPath()
-    lit.lit2.path = lit.getPath()
-    lit.lit3.path = lit.getPath()
+    lit.lit1 = lit.getNewLit('yellow')
+    lit.lit2 = lit.getNewLit('white')
+    lit.lit3 = lit.getNewLit('white')
   }
 
   remove() {
@@ -59,6 +74,8 @@ class Lightning {
     lit.lightningGroup = null
     lit.tl.kill()
     lit.tl = null
+
+    console.log('removed')
   }
 
   getPath() {
@@ -67,25 +84,24 @@ class Lightning {
     let loop = 10
     let step = distance / loop
     let path = []
-    for (let i = 0; i < loop; i++) {
-      let isStart = i == 0
-      let isEnd = i == (loop - 1)
+    for (let i = 1; i <= loop; i++) {
+      let isStart = i == 1
+      let isEnd = i == loop
       let x
       let y
       if (!isStart && !isEnd) {
-        x = step * i + step * (Math.random() - 0.5) * 0.5
-        y = curve(x) + step * (Math.random() - 0.5) * 0.5
+        x = step * i + step * (Math.random() - 0.5) * 0.7
+        y = curve(step * i) + step * (Math.random() - 0.5) * 0.7
       } else if (isStart) {
         x = 0
         y = 0
       } else {
-        x = 0
-        y = distance
+        x = distance
+        y = 0
       }
       path.push({ x: x, y: y })
     }
 
-    console.log(path)
     return path
   }
 
