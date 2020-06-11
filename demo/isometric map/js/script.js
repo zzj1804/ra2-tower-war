@@ -426,7 +426,6 @@ function switchBtnActive(btn, v) {
 
 async function switchPip() {
   try {
-    let btn = document.getElementById('pip-button')
     if (document.pictureInPictureElement) {
       await document.exitPictureInPicture()
       video.pause()
