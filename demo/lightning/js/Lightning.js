@@ -59,6 +59,8 @@ class Lightning {
     lit.lit1 = lit.getNewLit('yellow')
     lit.lit2 = lit.getNewLit('white')
     lit.lit3 = lit.getNewLit('white')
+
+    console.log('updated')
   }
 
   remove() {
