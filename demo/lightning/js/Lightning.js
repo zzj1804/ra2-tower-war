@@ -92,7 +92,7 @@ class Lightning {
   getPath() {
     let distance = this.distance
     let curve = this.getCurveEquation(distance)
-    let loop = 20
+    let loop = 14
     let step = distance / loop
     let path = []
     for (let i = 1; i <= loop; i++) {
