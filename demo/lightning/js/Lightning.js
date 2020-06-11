@@ -96,12 +96,11 @@ class Lightning {
     let step = distance / loop
     let path = []
     for (let i = 1; i <= loop; i++) {
-      let x = step * i + step * (Math.random() - 0.5) * 0.7
-      let y = curve(step * i) + step * (Math.random() - 0.5) * 0.7
-      let z = step * (Math.random() - 0.5)
+      let x = step * i + step * (Math.random() - 0.5) * 1.5
+      let y = curve(step * i) + step * (Math.random() - 0.5) * 1.5
+      let z = step * (Math.random() - 0.5) * 2
       path.push({ x: x, y: y, z: z})
     }
-
     return path
   }
 
