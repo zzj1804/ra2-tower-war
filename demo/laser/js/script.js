@@ -14,21 +14,21 @@ let illo = new Zdog.Illustration({
     resize: true
 })
 
-let lightning
+let laser
 function render() {
     stats.begin()
 
     let scale = 4
     let distance = 400
     let translate = {}
-    if (!lightning) {
-        lightning = new Lightning(illo, translate, scale, distance)
+    if (!laser) {
+        laser = new Laser(illo, translate, scale, distance)
     }
-    if (lightning) {
-        lightning.render()
+    if (laser) {
+        laser.render()
     }
-    if (lightning.isEnd) {
-        lightning = new Lightning(illo, translate, scale, distance)
+    if (laser.isEnd) {
+        laser = new Laser(illo, translate, scale, distance)
     }
 
     illo.updateRenderGraph()

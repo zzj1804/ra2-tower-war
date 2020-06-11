@@ -1,4 +1,4 @@
-class Lightning {
+class Laser {
   constructor(addTo, translate, scale, distance) {
     let lit = this
     lit.isEnd = false
