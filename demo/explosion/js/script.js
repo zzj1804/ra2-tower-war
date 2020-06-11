@@ -36,7 +36,7 @@ function render() {
     stats.end()
 }
 
-function changeTimeScale(num) {
+function setGlobalTimeScale(num) {
     gsap.globalTimeline.timeScale(num)
     ENV.timeScale = num
     return ENV
