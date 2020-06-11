@@ -23,7 +23,7 @@ class Lightning {
       stroke: scale,
       path: lit.getPath(),
       closed: false,
-      rotate: {x: Zdog.TAU / 72}
+      rotate: { x: Zdog.TAU / 72 }
     })
 
     lit.lit3 = new Zdog.Shape({
@@ -32,7 +32,7 @@ class Lightning {
       stroke: scale,
       path: lit.getPath(),
       closed: false,
-      rotate: {x: -Zdog.TAU / 72}
+      rotate: { x: -Zdog.TAU / 72 }
     })
 
     lit.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0 })
@@ -56,7 +56,7 @@ class Lightning {
 
   render() { }
 
-  updateLit(){
+  updateLit() {
     let lit = this
     lit.lit1.path = lit.getPath()
     lit.setRandomColor(lit.lit1)
@@ -69,7 +69,7 @@ class Lightning {
     lit.setRandomColor(lit.lit3)
   }
 
-  setRandomColor(lit){
+  setRandomColor(lit) {
     let b = Math.random() > 0.66
     lit.color = b ? 'yellow' : 'white'
   }
@@ -92,14 +92,19 @@ class Lightning {
   getPath() {
     let distance = this.distance
     let curve = this.getCurveEquation(distance)
-    let loop = 14
+    let loop = Math.min(Math.max(distance / 30, 3), 40)
     let step = distance / loop
     let path = []
-    for (let i = 1; i <= loop; i++) {
-      let x = step * i + step * (Math.random() - 0.5) * 1.5
-      let y = curve(step * i) + step * (Math.random() - 0.5) * 1.5
-      let z = step * (Math.random() - 0.5) * 2
-      path.push({ x: x, y: y, z: z})
+    let x, y, z
+    for (let i = 0; i <= loop; i++) {
+      if (i == 0) {
+        x = y = z = 0
+      } else {
+        x = step * i + step * (Math.random() - 0.5) * 1.5
+        y = curve(step * i) + step * (Math.random() - 0.5) * 1.5
+        z = step * (Math.random() - 0.5) * 2
+      }
+      path.push({ x: x, y: y, z: z })
     }
     return path
   }
