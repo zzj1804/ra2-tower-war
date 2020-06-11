@@ -14,8 +14,7 @@ class Explosion {
 
     expl.aObj2 = {
       color: 'red',
-      stroke: 1,
-      pathY: 10
+      stroke: 1
     }
 
     expl.explosion1 = new Zdog.Shape({
