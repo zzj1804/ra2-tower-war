@@ -27,7 +27,7 @@ function render() {
     stats.begin()
 
     let height = 30
-    let hwRatio = 1
+    let hwRatio = 0.5
     let feq = 10
     let duration = 5
     let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }

@@ -35,7 +35,7 @@ class Lightning {
       rotate: { x: -Zdog.TAU / 72 }
     })
 
-    lit.tl = new TimelineMax({ repeat: 1, delay: 0 })
+    lit.tl = new TimelineMax()
     let feq = 15
     for (let i = 1; i < feq; i++) {
       lit.tl.call(() => lit.updateLit(), null, i / feq)

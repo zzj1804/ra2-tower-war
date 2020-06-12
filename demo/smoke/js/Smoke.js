@@ -24,7 +24,7 @@ class Smoke {
       stroke: scale * 0.3
     }
 
-    smoke.tl = new TimelineMax({ repeat: 1, onUpdate: () => { smoke.render() }, delay: 0, onComplete: () => { smoke.remove() } })
+    smoke.tl = new TimelineMax({ onUpdate: () => { smoke.render() }, onComplete: () => { smoke.remove() } })
     smoke.tl.to(smoke.aObj, {
       color: 'rgba(93,93,84,0.8)',
       stroke: scale,
