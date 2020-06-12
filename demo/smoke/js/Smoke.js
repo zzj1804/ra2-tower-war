@@ -1,5 +1,5 @@
 class Smoke {
-  constructor(addTo, translate, scale) {
+  constructor(addTo, translate, scale, smokeNum, raiseSpeed, duration) {
     let smoke = this
     smoke.isEnd = false
     smoke.smokeGroup = new Zdog.Group({
@@ -7,66 +7,86 @@ class Smoke {
       translate: translate
     })
 
-
-
-    smoke.aObj1 = {
-      color: 'orange',
-      stroke: 1
+    smoke.modelArr = []
+    for (let i = 0; i < smokeNum; i++) {
+      smoke.modelArr[i] = new Zdog.Shape({
+        addTo: smoke.smokeGroup,
+        translate: {
+          x: (Math.random() - 0.5) * scale * Math.log(i),
+          y: (Math.random() - 0.9) * scale * Math.log(i),
+          z: (Math.random() - 0.5) * scale * Math.log(i)
+        }
+      })
     }
-
-    smoke.aObj2 = {
-      color: 'red',
-      stroke: 1
+    smoke.aObj = {
+      color: 'rgba(93,93,84,0)',
+      add_translate_y: -raiseSpeed,
+      stroke: scale * 0.3
     }
-
-    smoke.smokeosion1 = new Zdog.Shape({
-      addTo: smoke.smokeosionGroup
-    })
-
-    smoke.smokeosion2 = new Zdog.Shape({
-      addTo: smoke.smokeosionGroup
-    })
 
     smoke.tl = new TimelineMax({ repeat: 1, onUpdate: () => { smoke.render() }, delay: 0, onComplete: () => { smoke.remove() } })
-    smoke.tl.to(smoke.aObj1, 3, {
-      color: 'rgba(255,255,255,0.01)',
-      stroke: 300 * scale,
-      ease: "expo.out"
-    }).to(smoke.aObj2, 3, {
-      color: 'rgba(255,255,255,0.01)',
-      stroke: 185 * scale,
-      ease: "expo.out"
-    }, "-=3").call(() => { smoke.remove() })
+    smoke.tl.to(smoke.aObj, {
+      color: 'rgba(93,93,84,0.8)',
+      stroke: scale,
+      ease: "power4.out",
+      duration: duration / 2
+    }).to(smoke.aObj, {
+      color: 'rgba(93,93,84,0)',
+      stroke: scale * 0.3,
+      ease: "none",
+      duration: duration / 2
+    })
   }
 
   render() {
     let smoke = this
     if (!smoke.isEnd) {
-      smoke.changeAnimeValue(smoke.smokeosion1, smoke.aObj1)
-      smoke.changeAnimeValue(smoke.smokeosion2, smoke.aObj2)
+      for (let i = 0; i < smoke.modelArr.length; i++) {
+        smoke.changeAnimeValue(smoke.modelArr[i], smoke.aObj)
+      }
     }
   }
 
   changeAnimeValue(model, animeObject) {
     for (const key in animeObject) {
-      if (animeObject.hasOwnProperty(key) && model.hasOwnProperty(key)) {
-        model[key] = animeObject[key]
+      if (animeObject.hasOwnProperty(key)) {
+        let aObjVal = animeObject[key]
+        const keyArr = key.split('_')
+        let isAdd = keyArr[0] === 'add'
+        let start = isAdd ? 1 : 0
+        let element = model
+        for (let i = start; i < keyArr.length; i++) {
+          let k = keyArr[i]
+          if (element.hasOwnProperty(k)) {
+            if (i === keyArr.length - 1) {
+              if (isAdd) {
+                element[k] += aObjVal
+              } else {
+                element[k] = aObjVal
+              }
+            } else {
+              element = element[k]
+            }
+          } else {
+            break
+          }
+        }
       }
     }
   }
 
   remove() {
     let smoke = this
+    if (smoke.isEnd) return
     smoke.isEnd = true
-    smoke.smokeosion1.remove()
-    smoke.smokeosion1 = null
-    smoke.smokeosion2.remove()
-    smoke.smokeosion2 = null
-    smoke.smokeosionGroup.remove()
-    smoke.smokeosionGroup = null
+    for (let i = 0; i < smoke.modelArr.length; i++) {
+      smoke.modelArr[i].remove()
+    }
+    smoke.modelArr.length = 0
+    smoke.aObjArr = null
+    smoke.smokeGroup.remove()
+    smoke.smokeGroup = null
     smoke.tl.kill()
     smoke.tl = null
-    smoke.aObj1 = null
-    smoke.aObj2 = null
   }
 }

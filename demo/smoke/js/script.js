@@ -23,17 +23,17 @@ let illo = new Zdog.Illustration({
     resize: true
 })
 
-let smoke
 function render() {
     stats.begin()
 
-    let scale = Math.random() * 2
+    let scale = 30
+    let num = 30
+    let speed = 0.5
+    let duration = 20
     let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }
-    if (!smoke) {
-        smoke = new Smoke(illo, translate, scale)
-    }
-    if (smoke.isEnd) {
-        smoke = new Smoke(illo, translate, scale)
+
+    if(ENV.time % 20 === 0) {
+        new Smoke(illo, translate, scale, num, speed, duration)
     }
 
     illo.updateRenderGraph()
