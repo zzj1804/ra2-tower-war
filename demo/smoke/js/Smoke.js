@@ -7,7 +7,7 @@ class Smoke {
       translate: translate
     })
 
-    
+
 
     smoke.aObj1 = {
       color: 'orange',
@@ -27,7 +27,7 @@ class Smoke {
       addTo: smoke.smokeosionGroup
     })
 
-    smoke.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0 })
+    smoke.tl = new TimelineMax({ repeat: 1, onUpdate: () => { smoke.render() }, delay: 0, onComplete: () => { smoke.remove() } })
     smoke.tl.to(smoke.aObj1, 3, {
       color: 'rgba(255,255,255,0.01)',
       stroke: 300 * scale,

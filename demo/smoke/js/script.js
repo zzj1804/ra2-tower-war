@@ -1,3 +1,12 @@
+window.requestAnimFrame = (function () {
+    return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        function (callback) {
+            window.setTimeout(callback, 1000 / 60)
+        }
+})()
+
 const stats = new Stats()
 stats.showPanel(0)
 document.body.appendChild(stats.dom)
@@ -23,9 +32,6 @@ function render() {
     if (!smoke) {
         smoke = new Smoke(illo, translate, scale)
     }
-    if (smoke) {
-        smoke.render()
-    }
     if (smoke.isEnd) {
         smoke = new Smoke(illo, translate, scale)
     }
@@ -34,6 +40,7 @@ function render() {
     ENV.time += ENV.timeScale
 
     stats.end()
+    requestAnimFrame(render)
 }
 
 function setGlobalTimeScale(num) {
@@ -42,4 +49,4 @@ function setGlobalTimeScale(num) {
     return ENV
 }
 
-let renderer = requestAnimationFrame(() => render())
+render()

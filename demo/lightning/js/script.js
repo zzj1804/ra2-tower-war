@@ -1,3 +1,12 @@
+window.requestAnimFrame = (function () {
+    return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        function (callback) {
+            window.setTimeout(callback, 1000 / 60)
+        }
+})()
+
 const stats = new Stats()
 stats.showPanel(0)
 document.body.appendChild(stats.dom)
@@ -24,9 +33,6 @@ function render() {
     if (!lightning) {
         lightning = new Lightning(illo, translate, scale, distance)
     }
-    if (lightning) {
-        lightning.render()
-    }
     if (lightning.isEnd) {
         lightning = new Lightning(illo, translate, scale, distance)
     }
@@ -35,6 +41,7 @@ function render() {
     ENV.time += ENV.timeScale
 
     stats.end()
+    requestAnimFrame(render)
 }
 
 function setGlobalTimeScale(num) {
@@ -43,4 +50,4 @@ function setGlobalTimeScale(num) {
     return ENV
 }
 setGlobalTimeScale(1)
-let renderer = requestAnimationFrame(() => render())
+render()

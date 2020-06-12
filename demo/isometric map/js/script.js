@@ -2,18 +2,14 @@ window.onerror = function (m, f, l) {
   alert(m + '\n' + f + '\n' + l)
 }
 
-window.requestAnimFrame = function () {
-  return (
-    window.requestAnimationFrame ||
+window.requestAnimFrame = (function () {
+  return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    window.msRequestAnimationFrame ||
-    function (/* function */ callback) {
+    function (callback) {
       window.setTimeout(callback, 1000 / 60)
     }
-  )
-}
+})()
 
 const MAP_GRID_NUM = 10
 const MAP_GRID_LENGTH = 100
@@ -448,7 +444,7 @@ function displayLoadingLayer(p) {
   }
 }
 
-function run() {
+function render() {
   stats.begin()
   illo.updateRenderGraph()
   // if (time % 60 == 0) {
@@ -456,7 +452,7 @@ function run() {
   // }
   ++time
   stats.end()
-  requestAnimationFrame(run)
+  requestAnimFrame(render)
 }
 
 video = document.createElement('video')
@@ -464,5 +460,5 @@ video.muted = true
 // start the game
 map = new IsometricMap(illo, illoAnchor, MAP_GRID_NUM, MAP_GRID_LENGTH)
 createOptionGUI()
-run()
+render()
 displayLoadingLayer(false)

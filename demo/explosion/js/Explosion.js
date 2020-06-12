@@ -25,7 +25,7 @@ class Explosion {
       addTo: expl.explosionGroup
     })
 
-    expl.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0, onComplete: () => { expl.remove() } })
+    expl.tl = new TimelineMax({ repeat: 1, onUpdate: () => { expl.render() }, delay: 0, onComplete: () => { expl.remove() } })
     expl.tl.to(expl.aObj1, 3, {
       color: 'rgba(250,250,155,0)',
       stroke: 300 * scale,
