@@ -1,7 +1,3 @@
-window.onerror = function (m, f, l) {
-  alert(m + '\n' + f + '\n' + l)
-}
-
 window.requestAnimFrame = (function () {
   return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
@@ -438,7 +434,7 @@ async function switchPip() {
 
 function displayLoadingLayer(p) {
   if (p) {
-    document.getElementById('loading-layer').style.display = 'display'
+    document.getElementById('loading-layer').style.display = 'flex'
   } else {
     document.getElementById('loading-layer').style.display = 'none'
   }
