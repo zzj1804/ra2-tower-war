@@ -50,10 +50,10 @@ class Smoke {
   changeAnimeValue(model, animeObject) {
     for (const key in animeObject) {
       if (animeObject.hasOwnProperty(key)) {
-        let aObjVal = animeObject[key]
+        const aObjVal = animeObject[key]
         const keyArr = key.split('_')
-        let isAdd = keyArr[0] === 'add'
-        let start = isAdd ? 1 : 0
+        const isAdd = keyArr[0] === 'add'
+        const start = isAdd ? 1 : 0
         let element = model
         for (let i = start; i < keyArr.length; i++) {
           let k = keyArr[i]
