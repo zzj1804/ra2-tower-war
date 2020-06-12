@@ -18,7 +18,7 @@ let laser
 function render() {
     stats.begin()
 
-    let scale = 4
+    let scale = 50
     let distance = 400
     let translate = {}
     if (!laser) {
