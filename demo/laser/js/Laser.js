@@ -11,13 +11,13 @@ class Laser {
 
     laser.laser1 = new Zdog.Shape({
       addTo: laser.laserGroup,
-      path: [{},{x: distance}],
+      path: [{}, { x: distance }],
       closed: false
     })
 
     laser.laser2 = new Zdog.Shape({
       addTo: laser.laserGroup,
-      path: [{},{x: distance}],
+      path: [{}, { x: distance }],
       closed: false
     })
 
@@ -31,7 +31,7 @@ class Laser {
       stroke: scale * 1.2
     }
 
-    laser.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0 })
+    laser.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0, onComplete: () => { laser.remove() } })
     laser.tl.to(laser.aObj1, {
       color: 'rgba(157,240,250,0)',
       stroke: scale * 0.9,
@@ -42,7 +42,7 @@ class Laser {
       stroke: scale * 1.1,
       ease: "expo.out",
       duration: 3
-    }, 'begin').call(() => { laser.remove() })
+    }, 'begin')
   }
 
   changeAnimeValue(model, animeObject) {

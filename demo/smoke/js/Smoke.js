@@ -1,47 +1,49 @@
 class Smoke {
   constructor(addTo, translate, scale) {
-    let expl = this
-    expl.isEnd = false
-    expl.explosionGroup = new Zdog.Group({
+    let smoke = this
+    smoke.isEnd = false
+    smoke.smokeGroup = new Zdog.Group({
       addTo: addTo,
       translate: translate
     })
 
-    expl.aObj1 = {
+    
+
+    smoke.aObj1 = {
       color: 'orange',
       stroke: 1
     }
 
-    expl.aObj2 = {
+    smoke.aObj2 = {
       color: 'red',
       stroke: 1
     }
 
-    expl.explosion1 = new Zdog.Shape({
-      addTo: expl.explosionGroup
+    smoke.smokeosion1 = new Zdog.Shape({
+      addTo: smoke.smokeosionGroup
     })
 
-    expl.explosion2 = new Zdog.Shape({
-      addTo: expl.explosionGroup
+    smoke.smokeosion2 = new Zdog.Shape({
+      addTo: smoke.smokeosionGroup
     })
 
-    expl.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0 })
-    expl.tl.to(expl.aObj1, 3, {
+    smoke.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0 })
+    smoke.tl.to(smoke.aObj1, 3, {
       color: 'rgba(255,255,255,0.01)',
       stroke: 300 * scale,
       ease: "expo.out"
-    }).to(expl.aObj2, 3, {
+    }).to(smoke.aObj2, 3, {
       color: 'rgba(255,255,255,0.01)',
       stroke: 185 * scale,
       ease: "expo.out"
-    }, "-=3").call(() => { expl.remove() })
+    }, "-=3").call(() => { smoke.remove() })
   }
 
   render() {
-    let expl = this
-    if (!expl.isEnd) {
-      expl.changeAnimeValue(expl.explosion1, expl.aObj1)
-      expl.changeAnimeValue(expl.explosion2, expl.aObj2)
+    let smoke = this
+    if (!smoke.isEnd) {
+      smoke.changeAnimeValue(smoke.smokeosion1, smoke.aObj1)
+      smoke.changeAnimeValue(smoke.smokeosion2, smoke.aObj2)
     }
   }
 
@@ -54,17 +56,17 @@ class Smoke {
   }
 
   remove() {
-    let expl = this
-    expl.isEnd = true
-    expl.explosion1.remove()
-    expl.explosion1 = null
-    expl.explosion2.remove()
-    expl.explosion2 = null
-    expl.explosionGroup.remove()
-    expl.explosionGroup = null
-    expl.tl.kill()
-    expl.tl = null
-    expl.aObj1 = null
-    expl.aObj2 = null
+    let smoke = this
+    smoke.isEnd = true
+    smoke.smokeosion1.remove()
+    smoke.smokeosion1 = null
+    smoke.smokeosion2.remove()
+    smoke.smokeosion2 = null
+    smoke.smokeosionGroup.remove()
+    smoke.smokeosionGroup = null
+    smoke.tl.kill()
+    smoke.tl = null
+    smoke.aObj1 = null
+    smoke.aObj2 = null
   }
 }
