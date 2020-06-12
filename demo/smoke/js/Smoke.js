@@ -13,7 +13,7 @@ class Smoke {
         addTo: smoke.smokeGroup,
         translate: {
           x: (Math.random() - 0.5) * scale * Math.log(i),
-          y: (Math.random() - 0.9) * scale * Math.log(i),
+          y: (Math.random() - 0.5) * scale * Math.log(i),
           z: (Math.random() - 0.5) * scale * Math.log(i)
         }
       })
