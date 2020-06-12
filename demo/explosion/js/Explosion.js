@@ -27,11 +27,11 @@ class Explosion {
 
     expl.tl = new TimelineMax({ repeat: 1, onUpdate: render, delay: 0 })
     expl.tl.to(expl.aObj1, 3, {
-      color: 'rgba(255,255,255,0.01)',
+      color: 'rgba(250,250,155,0)',
       stroke: 300 * scale,
       ease: "expo.out"
     }).to(expl.aObj2, 3, {
-      color: 'rgba(255,255,255,0.01)',
+      color: 'rgba(255,255,255,0)',
       stroke: 185 * scale,
       ease: "expo.out"
     }, "-=3").call(() => { expl.remove() })
