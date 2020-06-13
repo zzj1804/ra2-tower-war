@@ -55,4 +55,8 @@ class TeslaCoil {
         BUILDING: 'building',
         DESTROYED: 'destroyed'
     }
+
+    static EVENT = {
+        BUILD: 'build'
+    }
   }
