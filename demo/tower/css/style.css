@@ -9,3 +9,15 @@
     cursor: move;
     width: 140;
 }
+
+#illo3 {
+    background: #ADF;
+    cursor: move;
+    width: 200;
+}
+
+#illo4 {
+    background: rgb(235, 222, 43);
+    cursor: move;
+    width: 200;
+}

@@ -157,13 +157,8 @@ class PrismTower {
         rotate: { x: TAU4 },
         color: black,
       });
-    
-      let color;
-      if (0 === i % 2) {
-        color = '#FF00FF';
-      } else {
-        color = '#8A2BE2';
-      }
+
+      let color = 0 === i % 2 ? 'rgba(215, 60, 229, 0.9)' : 'rgba(172, 33, 237, 0.9)';
       let sidePillar = new Zdog.Cylinder({
         addTo: anchor,
         diameter: 15,
