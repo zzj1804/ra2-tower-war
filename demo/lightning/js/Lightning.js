@@ -4,6 +4,10 @@ class Lightning {
     lit.isEnd = false
     lit.scale = scale
     lit.distance = distance
+    
+    let loop = Math.min(Math.max(distance / 30, 3), 40)
+    let step = distance / loop
+    let rotateAngel = step / distance
     lit.lightningGroup = new Zdog.Group({
       addTo: addTo,
       translate: translate
@@ -23,7 +27,7 @@ class Lightning {
       stroke: scale,
       path: lit.getPath(),
       closed: false,
-      rotate: { x: Zdog.TAU / 72 }
+      rotate: { x: rotateAngel }
     })
 
     lit.lit3 = new Zdog.Shape({
@@ -32,7 +36,7 @@ class Lightning {
       stroke: scale,
       path: lit.getPath(),
       closed: false,
-      rotate: { x: -Zdog.TAU / 72 }
+      rotate: { x: -rotateAngel }
     })
 
     lit.tl = new TimelineMax()
@@ -98,9 +102,9 @@ class Lightning {
       if (i == 0) {
         x = y = z = 0
       } else {
-        x = step * i + step * (Math.random() - 0.5) * 1.5
-        y = curve(step * i) + step * (Math.random() - 0.5) * 1.5
-        z = step * (Math.random() - 0.5) * 2
+        x = step * i + step * (Math.random() - 0.5) * 0.7
+        y = curve(step * i) + step * (Math.random() - 0.5) * 0.7
+        z = step * (Math.random() - 0.5) * 0.7
       }
       path.push({ x: x, y: y, z: z })
     }
@@ -108,8 +112,16 @@ class Lightning {
   }
 
   getCurveEquation(distance) {
-    return function (x) {
-      return x * x / distance - x
+    let r = Math.random()
+    if(r > 0.7) {
+      return function (x) {
+        return 0
+      }
+    } else {
+      let e = 1 / Math.sqrt(distance)
+      return function (x) {
+        return 4 * e * (x * x / distance - x)
+      }
     }
   }
 }
