@@ -5,9 +5,6 @@ class Lightning {
     lit.scale = scale
     lit.distance = distance
     
-    let loop = Math.min(Math.max(distance / 30, 3), 40)
-    let step = distance / loop
-    let rotateAngel = step / distance
     lit.lightningGroup = new Zdog.Group({
       addTo: addTo,
       translate: translate
@@ -27,7 +24,7 @@ class Lightning {
       stroke: scale,
       path: lit.getPath(),
       closed: false,
-      rotate: { x: rotateAngel }
+      rotate: { x: Zdog.TAU / 3 }
     })
 
     lit.lit3 = new Zdog.Shape({
@@ -36,7 +33,7 @@ class Lightning {
       stroke: scale,
       path: lit.getPath(),
       closed: false,
-      rotate: { x: -rotateAngel }
+      rotate: { x: -Zdog.TAU / 3 }
     })
 
     lit.tl = new TimelineMax()
@@ -113,7 +110,7 @@ class Lightning {
 
   getCurveEquation(distance) {
     let r = Math.random()
-    if(r > 0.7) {
+    if(r > 0.2) {
       return function (x) {
         return 0
       }
