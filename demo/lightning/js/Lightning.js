@@ -68,7 +68,7 @@ class Lightning {
   }
 
   setRandomColor(lit) {
-    let b = Math.random() > 0.66
+    let b = Math.random() > 0.5
     lit.color = b ? 'yellow' : 'white'
   }
 
