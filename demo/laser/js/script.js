@@ -27,15 +27,20 @@ let laser
 function render() {
     stats.begin()
 
-    let scale = 50
-    let distance = 400
+    let scale = 100 * Math.random()
+    let distance = 800 * Math.random()
     let translate = {}
 
     if (laser === undefined) {
-        laser = new Laser(illo, translate, scale, distance)
+        laser = new Laser(illo, translate, {}, scale, distance)
     }
     if (laser.isEnd) {
-        laser = new Laser(illo, translate, scale, distance)
+        let rotate = {
+            x: Zdog.TAU * (0.5 - Math.random()),
+            y: Zdog.TAU * (0.5 - Math.random()),
+            z: Zdog.TAU * (0.5 - Math.random())
+        }
+        laser = new Laser(illo, translate, rotate, scale, distance)
     }
 
     illo.updateRenderGraph()

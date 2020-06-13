@@ -27,14 +27,19 @@ let lightning
 function render() {
     stats.begin()
 
-    let scale = 4
-    let distance = 600
+    let scale = 4 * Math.random()
+    let distance = 800 * Math.random()
     let translate = {}
     if (!lightning) {
-        lightning = new Lightning(illo, translate, scale, distance)
+        lightning = new Lightning(illo, translate, {}, scale, distance)
     }
     if (lightning.isEnd) {
-        lightning = new Lightning(illo, translate, scale, distance)
+        let rotate = {
+            x: Zdog.TAU * (0.5 - Math.random()),
+            y: Zdog.TAU * (0.5 - Math.random()),
+            z: Zdog.TAU * (0.5 - Math.random())
+        }
+        lightning = new Lightning(illo, translate, rotate, scale, distance)
     }
 
     illo.updateRenderGraph()

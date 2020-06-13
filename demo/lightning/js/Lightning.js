@@ -1,13 +1,14 @@
 class Lightning {
-  constructor(addTo, translate, scale, distance) {
+  constructor(addTo, translate, rotate, scale, distance) {
     let lit = this
     lit.isEnd = false
     lit.scale = scale
     lit.distance = distance
-    
+
     lit.lightningGroup = new Zdog.Group({
       addTo: addTo,
-      translate: translate
+      translate: translate,
+      rotate: rotate
     })
 
     lit.lit1 = new Zdog.Shape({

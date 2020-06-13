@@ -1,12 +1,13 @@
 class Laser {
-  constructor(addTo, translate, scale, distance) {
+  constructor(addTo, translate, rotate, scale, distance) {
     let laser = this
     laser.isEnd = false
     laser.scale = scale
     laser.distance = distance
     laser.laserGroup = new Zdog.Group({
       addTo: addTo,
-      translate: translate
+      translate: translate,
+      rotate: rotate
     })
 
     laser.laser1 = new Zdog.Shape({
