@@ -407,6 +407,8 @@ document.getElementById('pip-button').addEventListener("click", e => {
 
 document.getElementById('restart-button').addEventListener("click", e => {
   map.removeAllChild()
+  illoAnchor.translate = new Zdog.Vector({})
+  illoAnchor.rotate = new Zdog.Vector({})
 }, false)
 
 function switchBtnActive(btn, v) {
