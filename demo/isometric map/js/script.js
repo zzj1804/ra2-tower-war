@@ -8,7 +8,7 @@ window.requestAnimFrame = (function () {
 })()
 
 const MAP_GRID_NUM = 10
-const MAP_GRID_LENGTH = 400
+const MAP_GRID_LENGTH = 100
 
 const stats = new Stats()
 stats.showPanel(0)
@@ -79,7 +79,7 @@ function createOptionGUI() {
 }
 
 class IsometricMap {
-  constructor(illo, cartAnchor, gridNum, gridLength) {
+  constructor(illo, cartAnchor, gridNum, gridLength, mapColor) {
     this.illo = illo
     this.cartAnchor = cartAnchor
     this.isoArr = new Array(gridNum)
@@ -104,7 +104,7 @@ class IsometricMap {
       height: len,
       translate: { z: -thickness / 2 },
       stroke: thickness,
-      color: 'rgba(240, 248, 255, 0.95)',
+      color: mapColor,
       fill: true
     })
 
@@ -157,7 +157,7 @@ class IsometricMap {
           thisMap.removeModelByGrid(idx)
           thisMap.selectionBox.color = 'green'
         } else {
-          let c = new TeslaCoil(thisMap.isoAnchor, {}, { x: -Zdog.TAU / 4 }, 1)
+          let c = new TeslaCoil(thisMap.isoAnchor, {}, { x: -Zdog.TAU / 4 }, 0.25)
           thisMap.addModelByGrid(c.model, idx)
           thisMap.selectionBox.color = 'red'
         }
@@ -455,7 +455,7 @@ function render() {
 video = document.createElement('video')
 video.muted = true
 // start the game
-map = new IsometricMap(illo, illoAnchor, MAP_GRID_NUM, MAP_GRID_LENGTH)
+map = new IsometricMap(illo, illoAnchor, MAP_GRID_NUM, MAP_GRID_LENGTH, 'rgba(240, 200, 255, 0.95)')
 createOptionGUI()
 render()
 displayLoadingLayer(false)
