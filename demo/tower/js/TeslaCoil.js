@@ -314,6 +314,8 @@ class TeslaCoil {
         color: '#FEE',
         fill: false,
       })
+
     }
+    return teslaCoil
   }
 }

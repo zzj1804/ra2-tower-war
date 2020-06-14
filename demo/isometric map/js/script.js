@@ -8,7 +8,7 @@ window.requestAnimFrame = (function () {
 })()
 
 const MAP_GRID_NUM = 10
-const MAP_GRID_LENGTH = 100
+const MAP_GRID_LENGTH = 400
 
 const stats = new Stats()
 stats.showPanel(0)
@@ -157,7 +157,8 @@ class IsometricMap {
           thisMap.removeModelByGrid(idx)
           thisMap.selectionBox.color = 'green'
         } else {
-          thisMap.addModelByGrid(getAxis(0.5), idx)
+          let c = new TeslaCoil(thisMap.isoAnchor, {}, { x: -Zdog.TAU / 4 }, 1)
+          thisMap.addModelByGrid(c.model, idx)
           thisMap.selectionBox.color = 'red'
         }
       }
