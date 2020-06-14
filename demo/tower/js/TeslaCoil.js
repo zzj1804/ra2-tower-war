@@ -1,6 +1,8 @@
 class TeslaCoil {
   constructor(addTo, translate, rotate, scale) {
     let coil = this
+    coil.partArr = []
+    coil.aniObjArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
 
     coil.tl = new TimelineMax({ onUpdate: () => { coil.render() } })

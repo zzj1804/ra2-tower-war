@@ -18,6 +18,7 @@ const TAU8 = TAU / 8;
 let illo2 = new Zdog.Illustration({
   element: '#battlefield2',
   dragRotate: true,
+  zoom: 0.7,
   // stop spinning when drag starts
   onDragStart: function () {
     isSpinning2 = false;
