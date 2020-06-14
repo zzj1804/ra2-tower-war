@@ -14,7 +14,7 @@ const ENV = {
 
 let illo3 = new Zdog.Illustration({
     element: '#illo3',
-    zoom: 0.4,
+    zoom: 1,
     resize: true,
     dragRotate: true,
     rotate: { x: -Zdog.TAU / 12 }
@@ -41,5 +41,6 @@ function setGlobalTimeScale(num) {
     return ENV
 }
 setGlobalTimeScale(1)
-let c = new TeslaCoil(illo3, {y: 300}, {}, 1)
+scale1 = 0.3
+let c = new TeslaCoil(illo3, {y: 300 * scale1}, {}, scale1)
 render()

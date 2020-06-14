@@ -71,15 +71,8 @@ class TeslaCoil {
   getModel(addTo, translate, rotate, scale) {
     // colors
     const red = '#FF0000'
-    const green = '#00FF00'
-    const black = '#000000'
     const silver = '#DFDFDF'
-    const midnight = '#313'
-    const eggplant = '#525'
-    const magenta = '#936'
-    const amber = '#D65'
     const gold = '#FA6'
-    const white = '#FFF'
 
     const TAU = Zdog.TAU
     const TAU4 = TAU / 4
@@ -89,11 +82,12 @@ class TeslaCoil {
       addTo: addTo,
       translate: translate,
       rotate: rotate,
+      color: 'rgba(255,255,255,0)',
       scale: scale
     })
 
     let base = new Zdog.Shape({
-      addTo: teslaCoil,
+      addTo: teslaCoil
     })
 
     new Zdog.Cylinder({
@@ -104,7 +98,7 @@ class TeslaCoil {
       length: 100,
       color: '#ADADAF',
       fill: true,
-      stroke: 20,
+      stroke: 20 * scale,
     })
 
     // fans
@@ -128,7 +122,7 @@ class TeslaCoil {
           { x: fanRadius + 0, y: -100, z: 30 },
         ],
         color: red,
-        stroke: 10,
+        stroke: 10 * scale,
         fill: true,
       })
 
@@ -141,7 +135,7 @@ class TeslaCoil {
           { x: fanRadius + 0, y: -100, z: -30 },
         ],
         color: red,
-        stroke: 10,
+        stroke: 10 * scale,
         fill: true,
       })
 
@@ -154,7 +148,7 @@ class TeslaCoil {
           { x: fanRadius + 0, y: -90, z: -15 },
         ],
         color: gold,
-        stroke: 20,
+        stroke: 20 * scale,
         fill: true,
       })
 
@@ -167,7 +161,7 @@ class TeslaCoil {
           { x: fanRadius + 0, y: -90, z: 15 },
         ],
         color: gold,
-        stroke: 20,
+        stroke: 20 * scale,
         fill: true,
       })
 
@@ -180,7 +174,7 @@ class TeslaCoil {
           { x: fanRadius + 0, y: -90, z: 0 },
         ],
         color: gold,
-        stroke: 20,
+        stroke: 20 * scale,
         fill: true,
       })
 
@@ -201,7 +195,7 @@ class TeslaCoil {
           },
         ],
         color: '#BBBBBB',
-        stroke: 35,
+        stroke: 35 * scale,
         closed: false,
       })
 
@@ -213,7 +207,7 @@ class TeslaCoil {
         length: 30,
         color: '#AAAAAA',
         fill: true,
-        stroke: 10,
+        stroke: 10 * scale,
       })
 
       let pipe3 = new Zdog.Shape({
@@ -229,7 +223,7 @@ class TeslaCoil {
           },
         ],
         color: '#CCCCCC',
-        stroke: 35,
+        stroke: 35 * scale,
         closed: false,
       })
 
@@ -239,7 +233,7 @@ class TeslaCoil {
         diameter: 80,
         translate: { y: -210 },
         rotate: { x: TAU4 },
-        stroke: 35,
+        stroke: 35 * scale,
         color: '#CCCCCC',
         fill: true,
       })
@@ -247,14 +241,14 @@ class TeslaCoil {
       new Zdog.Shape({
         addTo: base,
         translate: { y: -150 },
-        stroke: 100,
-        color: silver,
+        stroke: 100 * scale,
+        color: silver
       })
 
       let coil = new Zdog.Anchor({
         addTo: teslaCoil,
         // rotate: { x: TAU4 / 16 },
-        translate: { y: -200 },
+        translate: { y: -200 }
       })
 
       new Zdog.Shape({
@@ -264,15 +258,15 @@ class TeslaCoil {
           { y: -40 },
           { y: -400 },
         ],
-        stroke: 35,
-        color: silver,
+        stroke: 35 * scale,
+        color: silver
       })
 
       new Zdog.Shape({
         addTo: coil,
         translate: { y: -475 },
-        stroke: 140,
-        color: '#EEE',
+        stroke: 140 * scale,
+        color: '#EEE'
       })
 
       new Zdog.Ellipse({
@@ -280,9 +274,9 @@ class TeslaCoil {
         diameter: 50,
         translate: { y: -70 },
         rotate: { x: TAU4 },
-        stroke: 20,
+        stroke: 20 * scale,
         color: '#EEE',
-        fill: false,
+        fill: false
       })
 
       new Zdog.Ellipse({
@@ -290,9 +284,9 @@ class TeslaCoil {
         diameter: 200,
         translate: { y: -150 },
         rotate: { x: TAU4 },
-        stroke: 20,
+        stroke: 20 * scale,
         color: '#EEF',
-        fill: false,
+        fill: false
       })
 
       new Zdog.Ellipse({
@@ -300,9 +294,9 @@ class TeslaCoil {
         diameter: 150,
         translate: { y: -250 },
         rotate: { x: TAU4 },
-        stroke: 20,
+        stroke: 20 * scale,
         color: '#EFE',
-        fill: false,
+        fill: false
       })
 
       new Zdog.Ellipse({
@@ -310,9 +304,9 @@ class TeslaCoil {
         diameter: 100,
         translate: { y: -350 },
         rotate: { x: TAU4 },
-        stroke: 20,
+        stroke: 20 * scale,
         color: '#FEE',
-        fill: false,
+        fill: false
       })
 
     }
