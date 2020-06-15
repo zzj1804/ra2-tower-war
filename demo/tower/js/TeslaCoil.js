@@ -132,9 +132,9 @@ class TeslaCoil {
     return coil.hp < TeslaCoil.MAX_HP * 0.5
   }
 
-  isCanAttack() {
+  isCD() {
     let coil = this
-    return coil.loadingTime >= TeslaCoil.ATTACK_CD
+    return coil.loadingTime < TeslaCoil.ATTACK_CD
   }
 
   isRepairing = false
@@ -226,25 +226,21 @@ class TeslaCoil {
       stroke: 20 * scale,
     })
 
-    // fans
-    let fanNum = 4;
-    let fanRadius = 80;
-    for (let i = 0; i < fanNum; i++) {
-      let anchor = new Zdog.Anchor({
-        addTo: base,
-        rotate: { y: TAU * i / fanNum },
-      });
-      let fan = new Zdog.Shape({
-        addTo: anchor,
+    let frameNum = 4
+    let frameRadius = 80
+    for (let i = 0; i < frameNum; i++) {
+      let frameAnchor = new Zdog.Anchor({
+        addTo: teslaCoil,
+        rotate: { y: TAU * i / frameNum }
       })
 
       let fan1 = new Zdog.Shape({
-        addTo: anchor,
+        addTo: frameAnchor,
         path: [
-          { x: fanRadius + 0, y: 0, z: 30 },
-          { x: fanRadius + 86, y: 0, z: 30 },
-          { x: fanRadius + 20, y: -100, z: 30 },
-          { x: fanRadius + 0, y: -100, z: 30 },
+          { x: frameRadius + 0, y: 0, z: 30 },
+          { x: frameRadius + 86, y: 0, z: 30 },
+          { x: frameRadius + 20, y: -100, z: 30 },
+          { x: frameRadius + 0, y: -100, z: 30 },
         ],
         color: red,
         stroke: 10 * scale,
@@ -252,12 +248,12 @@ class TeslaCoil {
       })
 
       let fan2 = new Zdog.Shape({
-        addTo: anchor,
+        addTo: frameAnchor,
         path: [
-          { x: fanRadius + 0, y: 0, z: -30 },
-          { x: fanRadius + 86, y: 0, z: -30 },
-          { x: fanRadius + 20, y: -100, z: -30 },
-          { x: fanRadius + 0, y: -100, z: -30 },
+          { x: frameRadius + 0, y: 0, z: -30 },
+          { x: frameRadius + 86, y: 0, z: -30 },
+          { x: frameRadius + 20, y: -100, z: -30 },
+          { x: frameRadius + 0, y: -100, z: -30 },
         ],
         color: red,
         stroke: 10 * scale,
@@ -265,12 +261,12 @@ class TeslaCoil {
       })
 
       let fan3 = new Zdog.Shape({
-        addTo: anchor,
+        addTo: frameAnchor,
         path: [
-          { x: fanRadius + 0, y: -5, z: -15 },
-          { x: fanRadius + 76, y: -5, z: -15 },
-          { x: fanRadius + 15, y: -90, z: -15 },
-          { x: fanRadius + 0, y: -90, z: -15 },
+          { x: frameRadius + 0, y: -5, z: -15 },
+          { x: frameRadius + 76, y: -5, z: -15 },
+          { x: frameRadius + 15, y: -90, z: -15 },
+          { x: frameRadius + 0, y: -90, z: -15 },
         ],
         color: gold,
         stroke: 20 * scale,
@@ -278,12 +274,12 @@ class TeslaCoil {
       })
 
       let fan4 = new Zdog.Shape({
-        addTo: anchor,
+        addTo: frameAnchor,
         path: [
-          { x: fanRadius + 0, y: -5, z: 15 },
-          { x: fanRadius + 76, y: -5, z: 15 },
-          { x: fanRadius + 15, y: -90, z: 15 },
-          { x: fanRadius + 0, y: -90, z: 15 },
+          { x: frameRadius + 0, y: -5, z: 15 },
+          { x: frameRadius + 76, y: -5, z: 15 },
+          { x: frameRadius + 15, y: -90, z: 15 },
+          { x: frameRadius + 0, y: -90, z: 15 },
         ],
         color: gold,
         stroke: 20 * scale,
@@ -291,12 +287,12 @@ class TeslaCoil {
       })
 
       let fan5 = new Zdog.Shape({
-        addTo: anchor,
+        addTo: frameAnchor,
         path: [
-          { x: fanRadius + 0, y: -5, z: 0 },
-          { x: fanRadius + 76, y: -5, z: 0 },
-          { x: fanRadius + 15, y: -90, z: 0 },
-          { x: fanRadius + 0, y: -90, z: 0 },
+          { x: frameRadius + 0, y: -5, z: 0 },
+          { x: frameRadius + 76, y: -5, z: 0 },
+          { x: frameRadius + 15, y: -90, z: 0 },
+          { x: frameRadius + 0, y: -90, z: 0 },
         ],
         color: gold,
         stroke: 20 * scale,
@@ -305,17 +301,17 @@ class TeslaCoil {
 
       let anchor2 = new Zdog.Anchor({
         addTo: base,
-        rotate: { y: TAU * i / fanNum + TAU8 },
+        rotate: { y: TAU * i / frameNum + TAU8 },
       })
 
       let pipe1 = new Zdog.Shape({
         addTo: anchor2,
         path: [
-          { x: fanRadius + 50, y: -40 },
+          { x: frameRadius + 50, y: -40 },
           {
             arc: [
-              { x: fanRadius + 45, y: -75 },
-              { x: fanRadius, y: -90 },
+              { x: frameRadius + 45, y: -75 },
+              { x: frameRadius, y: -90 },
             ]
           },
         ],
@@ -327,7 +323,7 @@ class TeslaCoil {
       let pipe2 = new Zdog.Cylinder({
         addTo: anchor2,
         diameter: 50,
-        translate: { x: fanRadius + 50, y: -15 },
+        translate: { x: frameRadius + 50, y: -15 },
         rotate: { x: TAU4 },
         length: 30,
         color: '#AAAAAA',
@@ -336,14 +332,14 @@ class TeslaCoil {
       })
 
       let pipe3 = new Zdog.Shape({
-        addTo: anchor,
+        addTo: frameAnchor,
         path: [
-          { x: fanRadius + 10, y: -110 },
-          { x: fanRadius + 10, y: -160 },
+          { x: frameRadius + 10, y: -110 },
+          { x: frameRadius + 10, y: -160 },
           {
             arc: [
-              { x: fanRadius + 5, y: -205 },
-              { x: fanRadius - 20, y: -210 },
+              { x: frameRadius + 5, y: -205 },
+              { x: frameRadius - 20, y: -210 },
             ]
           },
         ],
