@@ -39,7 +39,7 @@ class TeslaCoil {
     }
 
     // TODO repair anime
-    if (coil.isRepairing) {
+    if (!coil.isEnd() && coil.isRepairing) {
 
     } else {
 
@@ -91,7 +91,9 @@ class TeslaCoil {
     if (coil.target) {
       // TODO attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
-      coil.target.getDamage(coil.DAMAGE)
+      if (!coil.target.isEnd()) {
+        coil.target.getDamage(coil.DAMAGE)
+      }
     }
   }
 
