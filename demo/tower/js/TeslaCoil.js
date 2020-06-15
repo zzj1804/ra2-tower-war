@@ -1,11 +1,156 @@
 class TeslaCoil {
   constructor(addTo, translate, rotate, scale) {
     let coil = this
+    coil.status = TeslaCoil.STATUS.CREATED
+    coil.hp = TeslaCoil.MAX_HP
     coil.partArr = []
     coil.aniObjArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
 
     coil.tl = new TimelineMax({ onUpdate: () => { coil.render() } })
+  }
+
+  render() {
+    let coil = this
+    if (coil.isEnd()) return
+    if (coil.hp <= 0) coil.status = TeslaCoil.STATUS.DESTROYED
+
+    switch (coil.status) {
+      case TeslaCoil.STATUS.BUILDING:
+        break
+      case TeslaCoil.STATUS.DESTROYED:
+        // TODO explosion
+        coil.status = TeslaCoil.STATUS.END
+        break
+      case TeslaCoil.STATUS.STANDBY:
+        coil.standby()
+        break
+      case TeslaCoil.STATUS.LOADING:
+        if (!coil.target || coil.target.isEnd()) {
+          coil.status = TeslaCoil.STATUS.STANDBY
+        }
+        break
+      case TeslaCoil.STATUS.ATTACKING:
+        break
+      case TeslaCoil.STATUS.SELLING:
+        coil.status = TeslaCoil.STATUS.END
+        break
+      case TeslaCoil.STATUS.END:
+        coil.remove()
+        break
+    }
+
+    // TODO repair anime
+    if (coil.isRepairing) {
+
+    } else {
+
+    }
+  }
+
+  build() {
+    let coil = this
+    if (coil.status !== TeslaCoil.STATUS.CREATED) return
+    // TODO build anime
+    coil.status = TeslaCoil.STATUS.BUILDING
+  }
+
+  standby() {
+    let coil = this
+    if (coil.isLean()) {
+      // TODO lean the tower
+    }
+    // TODO charge anime
+  }
+
+  repair() {
+    let coil = this
+    if (coil.hp >= TeslaCoil.MAX_HP) return
+    coil.isRepairing = true
+  }
+
+  cancelRepair() {
+    let coil = this
+    coil.isRepairing = false
+  }
+
+  getDamage(damage) {
+    let coil = this
+    coil.hp -= damage
+  }
+
+  toAttack(target) {
+    let coil = this
+    if (target && !target.isEnd()) {
+      coil.target = target
+      // TODO loading anime
+      coil.status = TeslaCoil.STATUS.LOADING
+    }
+  }
+
+  attack() {
+    let coil = this
+    if (coil.target) {
+      // TODO attack anime
+      coil.status = TeslaCoil.STATUS.ATTACKING
+      coil.target.getDamage(coil.DAMAGE)
+    }
+  }
+
+  sell() {
+    let coil = this
+    if (!(
+      coil.status === TeslaCoil.STATUS.STANDBY ||
+      coil.status === TeslaCoil.STATUS.LOADING ||
+      coil.status === TeslaCoil.STATUS.ATTACKING
+    )) return
+    // TODO selling anime
+    coil.status = TeslaCoil.STATUS.SELLING
+  }
+
+  remove() {
+    let coil = this
+    if (coil.isEnd()) return
+    // TODO remove
+    coil.status = TeslaCoil.STATUS.END
+  }
+
+  isEnd() {
+    let coil = this
+    return coil.status === TeslaCoil.END
+  }
+
+  isLean() {
+    let coil = this
+    return coil.hp < TeslaCoil.MAX_HP * 0.5
+  }
+
+  isRepairing = false
+
+  target = null
+  idx = null
+  MAX_HP = 800
+  DAMAGE = 200
+  ATTACK_CD = 8
+
+
+  static STATUS = {
+    CREATED: 'created',
+    BUILDING: 'building',
+    DESTROYED: 'destroyed',
+    STANDBY: 'standby',
+    LOADING: 'loading',
+    ATTACKING: 'attacking',
+    SELLING: 'selling',
+    END: 'end'
+  }
+
+  static EVENT = {
+    BUILD: 'build',
+    TO_ATTACK: 'to_attack',
+    ATTACKED: 'attacked',
+    SELL: 'sell',
+    REPAIR: 'repair'
   }
 
   changeAnimeValue(model, animeObject) {
@@ -36,40 +181,6 @@ class TeslaCoil {
     }
   }
 
-  render() {
-    let coil = this
-    if (!coil.isEnd) {
-    }
-  }
-
-  remove() {
-    let coil = this
-    coil.isEnd = true
-  }
-
-  isEnd = false
-  isRepairing = false
-  isDamaged = false
-
-  static STATUS = {
-    CREATED: 'created',
-    BUILDING: 'building',
-    DESTROYED: 'destroyed',
-    STANDBY: 'standby',
-    LOADING: 'loading',
-    ATTACKING: 'attacking',
-    SELLING: 'selling',
-    END: 'end'
-  }
-
-  static EVENT = {
-    BUILD: 'build',
-    TO_ATTACK: 'to_attack',
-    ATTACKED: 'attacked',
-    SELL: 'sell',
-    REPAIR: 'repair'
-  }
-
   getModel(addTo, translate, rotate, scale) {
     // colors
     const red = '#FF0000'
@@ -84,7 +195,6 @@ class TeslaCoil {
       addTo: addTo,
       translate: translate,
       rotate: rotate,
-      color: 'rgba(255,255,255,0)',
       scale: scale
     })
 
