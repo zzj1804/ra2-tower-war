@@ -59,6 +59,8 @@ class TeslaCoil {
       // TODO lean the tower
     }
     // TODO charge anime
+
+    // TODO find target
   }
 
   repair() {
