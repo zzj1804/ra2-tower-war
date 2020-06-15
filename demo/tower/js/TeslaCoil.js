@@ -135,7 +135,8 @@ class TeslaCoil {
   isRepairing = false
 
   target = null
-  idx = null
+  centerPoint = null
+  loadingTime = 0
   MAX_HP = 800
   DAMAGE = 200
   ATTACK_CD = 8
