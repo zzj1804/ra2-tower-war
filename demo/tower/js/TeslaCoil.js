@@ -132,6 +132,11 @@ class TeslaCoil {
     return coil.hp < TeslaCoil.MAX_HP * 0.5
   }
 
+  isCanAttack() {
+    let coil = this
+    return coil.loadingTime >= TeslaCoil.ATTACK_CD
+  }
+
   isRepairing = false
 
   target = null
