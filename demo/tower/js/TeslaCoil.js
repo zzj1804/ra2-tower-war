@@ -19,7 +19,8 @@ class TeslaCoil {
       case TeslaCoil.STATUS.BUILDING:
         break
       case TeslaCoil.STATUS.DESTROYED:
-        // TODO explosion
+        coil.destroyed()
+        coil.remove()
         coil.status = TeslaCoil.STATUS.END
         break
       case TeslaCoil.STATUS.STANDBY:
@@ -34,9 +35,6 @@ class TeslaCoil {
         break
       case TeslaCoil.STATUS.SELLING:
         coil.status = TeslaCoil.STATUS.END
-        break
-      case TeslaCoil.STATUS.END:
-        coil.remove()
         break
     }
 
@@ -106,6 +104,10 @@ class TeslaCoil {
     )) return
     // TODO selling anime
     coil.status = TeslaCoil.STATUS.SELLING
+  }
+
+  destroyed() {
+    // TODO explosion
   }
 
   remove() {
