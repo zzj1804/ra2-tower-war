@@ -39,9 +39,7 @@ class TeslaCoil {
     }
 
     // TODO repair anime
-    if (!coil.isEnd() && coil.isRepairing) {
-
-    } else {
+    if (coil.isRepairing) {
 
     }
   }
@@ -119,6 +117,9 @@ class TeslaCoil {
     if (coil.isEnd()) return
     // TODO remove
     coil.status = TeslaCoil.STATUS.END
+    coil.isRepairing = false
+    coil.target = null
+    coil.idx = null
   }
 
   isEnd() {
