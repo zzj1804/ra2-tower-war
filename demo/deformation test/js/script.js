@@ -30,7 +30,7 @@ let model = new Zdog.Cylinder({
     translate: { y: -55 },
     rotate: { x: Zdog.TAU / 8 },
     length: 100,
-    color: '#ADADAF',
+    color: 'red',
     backface: '#E62',
     stroke: 0
 })
@@ -40,7 +40,7 @@ let aniArr = []
 let animeObj1 = {
     length: 100,
     diameter: 150,
-    color: '#ADADAF',
+    color: 'red',
     stroke: 0,
 }
 
