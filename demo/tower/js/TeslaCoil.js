@@ -74,7 +74,13 @@ class TeslaCoil {
 
   getDamage(damage) {
     let coil = this
-    coil.hp -= damage
+    let hp = coil.hp - damage
+    if (hp > TeslaCoil.MAX_HP) {
+      hp = TeslaCoil.MAX_HP
+    } else if (hp < 0) {
+      hp = 0
+    }
+    coil.hp = hp
   }
 
   toAttack(target) {
