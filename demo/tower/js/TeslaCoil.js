@@ -48,13 +48,13 @@ class TeslaCoil {
     let coil = this
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
     // TODO build anime
-    coil.partArr.forEach(arr => {
-      arr.forEach(part => {
-        part.visible = true
-      })
-    })
     let tl = new TimelineMax({delay: 10}).call(() => {
       coil.status = TeslaCoil.STATUS.STANDBY
+      coil.partArr.forEach(arr => {
+        arr.forEach(part => {
+          part.visible = true
+        })
+      })
       tl.kill()
     })
     coil.status = TeslaCoil.STATUS.BUILDING
