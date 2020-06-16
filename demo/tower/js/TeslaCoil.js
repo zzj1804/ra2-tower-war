@@ -40,7 +40,7 @@ class TeslaCoil {
 
     // TODO repair anime
     if (coil.isRepairing) {
-
+      
     }
   }
 
