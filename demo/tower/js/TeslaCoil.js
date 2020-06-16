@@ -40,7 +40,7 @@ class TeslaCoil {
 
     // TODO repair anime
     if (coil.isRepairing) {
-      
+
     }
   }
 
@@ -48,6 +48,11 @@ class TeslaCoil {
     let coil = this
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
     // TODO build anime
+    coil.partArr.forEach(arr => {
+      arr.forEach(part => {
+        part.visible = true
+      })
+    })
     coil.status = TeslaCoil.STATUS.BUILDING
   }
 
@@ -201,6 +206,7 @@ class TeslaCoil {
   }
 
   getModel(addTo, translate, rotate, scale) {
+    let thisCoil = this
     // colors
     const red = '#FF0000'
     const silver = '#DFDFDF'
@@ -209,20 +215,18 @@ class TeslaCoil {
     const TAU = Zdog.TAU
     const TAU4 = TAU / 4
     const TAU8 = TAU / 8
+    const isVisible = false
 
     let teslaCoil = new Zdog.Shape({
       addTo: addTo,
       translate: translate,
       rotate: rotate,
-      scale: scale
+      scale: scale,
+      visible: isVisible
     })
 
-    let base = new Zdog.Shape({
-      addTo: teslaCoil
-    })
-
-    new Zdog.Cylinder({
-      addTo: base,
+    let base = new Zdog.Cylinder({
+      addTo: teslaCoil,
       diameter: 150,
       translate: { y: -55 },
       rotate: { x: TAU4 },
@@ -230,17 +234,42 @@ class TeslaCoil {
       color: '#ADADAF',
       fill: true,
       stroke: 20 * scale,
+      visible: isVisible
     })
+
+    // parts
+    // use Shape because of perspective bug
+    let frame = new Zdog.Shape({ addTo: teslaCoil })
+    let bottomPipe = new Zdog.Shape({ addTo: teslaCoil })
+    let middlePart = new Zdog.Shape({ addTo: teslaCoil })
+    let coil = new Zdog.Shape({ addTo: teslaCoil })
+    let baseArr = []
+    let frameArr = []
+    let middlePartArr = []
+    let bottomPipeArr = []
+    let coilArr = []
+    baseArr.push(base)
+    frameArr.push(frame)
+    bottomPipeArr.push(bottomPipe)
+    middlePartArr.push(middlePart)
+    coilArr.push(coil)
+
+    thisCoil.partArr.push(baseArr)
+    thisCoil.partArr.push(bottomPipeArr)
+    thisCoil.partArr.push(frameArr)
+    thisCoil.partArr.push(middlePartArr)
+    thisCoil.partArr.push(coilArr)
 
     let frameNum = 4
     let frameRadius = 80
     for (let i = 0; i < frameNum; i++) {
+      // 1.frame:
       let frameAnchor = new Zdog.Anchor({
-        addTo: teslaCoil,
+        addTo: frame,
         rotate: { y: TAU * i / frameNum }
       })
-
-      let fan1 = new Zdog.Shape({
+      // 1.frame:frame1
+      let frame1 = new Zdog.Shape({
         addTo: frameAnchor,
         path: [
           { x: frameRadius + 0, y: 0, z: 30 },
@@ -251,9 +280,10 @@ class TeslaCoil {
         color: red,
         stroke: 10 * scale,
         fill: true,
+        visible: isVisible
       })
-
-      let fan2 = new Zdog.Shape({
+      // 1.frame:frame2
+      let frame2 = new Zdog.Shape({
         addTo: frameAnchor,
         path: [
           { x: frameRadius + 0, y: 0, z: -30 },
@@ -264,9 +294,10 @@ class TeslaCoil {
         color: red,
         stroke: 10 * scale,
         fill: true,
+        visible: isVisible
       })
-
-      let fan3 = new Zdog.Shape({
+      // 1.frame:frame3
+      let frame3 = new Zdog.Shape({
         addTo: frameAnchor,
         path: [
           { x: frameRadius + 0, y: -5, z: -15 },
@@ -277,9 +308,10 @@ class TeslaCoil {
         color: gold,
         stroke: 20 * scale,
         fill: true,
+        visible: isVisible
       })
-
-      let fan4 = new Zdog.Shape({
+      // 1.frame:frame4
+      let frame4 = new Zdog.Shape({
         addTo: frameAnchor,
         path: [
           { x: frameRadius + 0, y: -5, z: 15 },
@@ -290,9 +322,10 @@ class TeslaCoil {
         color: gold,
         stroke: 20 * scale,
         fill: true,
+        visible: isVisible
       })
-
-      let fan5 = new Zdog.Shape({
+      // 1.frame:frame5
+      let frame5 = new Zdog.Shape({
         addTo: frameAnchor,
         path: [
           { x: frameRadius + 0, y: -5, z: 0 },
@@ -303,14 +336,21 @@ class TeslaCoil {
         color: gold,
         stroke: 20 * scale,
         fill: true,
+        visible: isVisible
       })
+      frameArr.push(frame1)
+      frameArr.push(frame2)
+      frameArr.push(frame3)
+      frameArr.push(frame4)
+      frameArr.push(frame5)
 
+      // 2.bottomPipes:
       let anchor2 = new Zdog.Anchor({
-        addTo: base,
+        addTo: bottomPipe,
         rotate: { y: TAU * i / frameNum + TAU8 },
       })
-
-      let pipe1 = new Zdog.Shape({
+      // 2.bottomPipes:pipe connector
+      let bottomPipeConnector = new Zdog.Shape({
         addTo: anchor2,
         path: [
           { x: frameRadius + 50, y: -40 },
@@ -324,9 +364,10 @@ class TeslaCoil {
         color: '#BBBBBB',
         stroke: 35 * scale,
         closed: false,
+        visible: isVisible
       })
-
-      let pipe2 = new Zdog.Cylinder({
+      // 2.bottomPipes:pipe
+      let bottomPipePipe = new Zdog.Cylinder({
         addTo: anchor2,
         diameter: 50,
         translate: { x: frameRadius + 50, y: -15 },
@@ -335,10 +376,18 @@ class TeslaCoil {
         color: '#AAAAAA',
         fill: true,
         stroke: 10 * scale,
+        visible: isVisible
       })
+      bottomPipeArr.push(bottomPipeConnector)
+      bottomPipeArr.push(bottomPipePipe)
 
-      let pipe3 = new Zdog.Shape({
-        addTo: frameAnchor,
+      // 3.middlePart:pipe
+      let middlePartAnchor = new Zdog.Anchor({
+        addTo: middlePart,
+        rotate: { y: TAU * i / frameNum }
+      })
+      let middlePartPipe = new Zdog.Shape({
+        addTo: middlePartAnchor,
         path: [
           { x: frameRadius + 10, y: -110 },
           { x: frameRadius + 10, y: -160 },
@@ -352,91 +401,111 @@ class TeslaCoil {
         color: '#CCCCCC',
         stroke: 35 * scale,
         closed: false,
+        visible: isVisible
       })
-
-
-      new Zdog.Ellipse({
-        addTo: base,
-        diameter: 80,
-        translate: { y: -210 },
-        rotate: { x: TAU4 },
-        stroke: 35 * scale,
-        color: '#CCCCCC',
-        fill: true,
-      })
-
-      new Zdog.Shape({
-        addTo: base,
-        translate: { y: -150 },
-        stroke: 100 * scale,
-        color: silver
-      })
-
-      let coil = new Zdog.Anchor({
-        addTo: teslaCoil,
-        // rotate: { x: TAU4 / 16 },
-        translate: { y: -200 }
-      })
-
-      new Zdog.Shape({
-        addTo: coil,
-        translate: { y: 0 },
-        path: [
-          { y: -40 },
-          { y: -400 },
-        ],
-        stroke: 35 * scale,
-        color: silver
-      })
-
-      new Zdog.Shape({
-        addTo: coil,
-        translate: { y: -475 },
-        stroke: 140 * scale,
-        color: '#EEE'
-      })
-
-      new Zdog.Ellipse({
-        addTo: coil,
-        diameter: 50,
-        translate: { y: -70 },
-        rotate: { x: TAU4 },
-        stroke: 20 * scale,
-        color: '#EEE',
-        fill: false
-      })
-
-      new Zdog.Ellipse({
-        addTo: coil,
-        diameter: 200,
-        translate: { y: -150 },
-        rotate: { x: TAU4 },
-        stroke: 20 * scale,
-        color: '#EEF',
-        fill: false
-      })
-
-      new Zdog.Ellipse({
-        addTo: coil,
-        diameter: 150,
-        translate: { y: -250 },
-        rotate: { x: TAU4 },
-        stroke: 20 * scale,
-        color: '#EFE',
-        fill: false
-      })
-
-      new Zdog.Ellipse({
-        addTo: coil,
-        diameter: 100,
-        translate: { y: -350 },
-        rotate: { x: TAU4 },
-        stroke: 20 * scale,
-        color: '#FEE',
-        fill: false
-      })
-
+      middlePartArr.push(middlePartPipe)
     }
+
+    // 3.middlePart:pan
+    let middlePartPan = new Zdog.Ellipse({
+      addTo: middlePart,
+      diameter: 80,
+      translate: { y: -210 },
+      rotate: { x: TAU4 },
+      stroke: 35 * scale,
+      color: '#CCCCCC',
+      fill: true,
+      visible: isVisible
+    })
+    // 3.middlePart:ball
+    let middlePartBall = new Zdog.Shape({
+      addTo: middlePart,
+      translate: { y: -150 },
+      stroke: 100 * scale,
+      color: silver,
+      visible: isVisible
+    })
+    middlePartArr.push(middlePartPan)
+    middlePartArr.push(middlePartBall)
+
+    // 4.coil:anchor
+    let coilAnchor = new Zdog.Anchor({
+      addTo: coil,
+      translate: { y: -200 }
+    })
+    // 4.coil:pillar
+    let pillar = new Zdog.Shape({
+      addTo: coilAnchor,
+      translate: { y: 0 },
+      path: [
+        { y: -40 },
+        { y: -400 },
+      ],
+      stroke: 35 * scale,
+      color: silver,
+      visible: isVisible
+    })
+    // 4.coil:top ball
+    let topBall = new Zdog.Shape({
+      addTo: coilAnchor,
+      translate: { y: -475 },
+      stroke: 140 * scale,
+      color: '#EEE',
+      visible: isVisible
+    })
+    // 4.coil:bottom little coil
+    let littleCoil = new Zdog.Ellipse({
+      addTo: coilAnchor,
+      diameter: 50,
+      translate: { y: -70 },
+      rotate: { x: TAU4 },
+      stroke: 20 * scale,
+      color: '#EEE',
+      fill: false,
+      visible: isVisible
+    })
+    // 4.coil:big coil
+    let bigCoil = new Zdog.Ellipse({
+      addTo: coilAnchor,
+      diameter: 200,
+      translate: { y: -150 },
+      rotate: { x: TAU4 },
+      stroke: 20 * scale,
+      color: '#EEF',
+      fill: false,
+      visible: isVisible
+    })
+    // 4.coil:middle coil
+    let middleCoil = new Zdog.Ellipse({
+      addTo: coilAnchor,
+      diameter: 150,
+      translate: { y: -250 },
+      rotate: { x: TAU4 },
+      stroke: 20 * scale,
+      color: '#EFE',
+      fill: false,
+      visible: isVisible
+    })
+    // 4.coil:top coil
+    let topCoil = new Zdog.Ellipse({
+      addTo: coilAnchor,
+      diameter: 100,
+      translate: { y: -350 },
+      rotate: { x: TAU4 },
+      stroke: 20 * scale,
+      color: '#FEE',
+      fill: false,
+      visible: isVisible
+    })
+
+    coilArr.push(coil)
+    coilArr.push(pillar)
+    coilArr.push(littleCoil)
+    coilArr.push(bigCoil)
+    coilArr.push(middleCoil)
+    coilArr.push(topCoil)
+    coilArr.push(topBall)
+
     return teslaCoil
   }
 }
