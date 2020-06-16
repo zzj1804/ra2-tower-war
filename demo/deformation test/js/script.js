@@ -40,12 +40,14 @@ let aniArr = []
 let animeObj1 = {
     length: 100,
     diameter: 150,
+    color: '#ADADAF',
     stroke: 0,
 }
 
 let animeObj2 = {
     translate_y: 0,
-    add_rotate_y: 0.01
+    add_rotate_y: 0.03,
+    backface: '#E62'
 }
 
 aniArr.push(animeObj1)
@@ -58,8 +60,8 @@ let tl = gsap.timeline({
     }
 })
 tl.addLabel('start')
-tl.to(animeObj1, { duration: 10, length: 10, diameter: 300, stroke: 20 }, 'start')
-tl.to(animeObj2, { duration: 10, translate_y: 200 }, 'start')
+tl.to(animeObj1, { duration: 10, length: 10, diameter: 300, stroke: 20, color: '#000' }, 'start')
+tl.to(animeObj2, { duration: 10, translate_y: 200, backface: 'white' }, 'start')
 
 function render() {
     stats.begin()
