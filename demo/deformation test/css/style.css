@@ -1,0 +1,13 @@
+body,
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#illo {
+  background-color: #15c5f1;
+  width: 100%;
+  height: 100%;
+}
