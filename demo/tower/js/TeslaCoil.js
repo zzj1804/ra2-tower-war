@@ -92,7 +92,7 @@ class TeslaCoil {
       // TODO attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
       if (!coil.target.isEnd()) {
-        coil.target.getDamage(coil.DAMAGE)
+        coil.target.getDamage(TeslaCoil.AP)
       }
     }
   }
@@ -142,8 +142,8 @@ class TeslaCoil {
   target = null
   centerPoint = null
   loadingTime = 0
-  MAX_HP = 800
-  DAMAGE = 200
+  static MAX_HP = 800
+  static AP = 200
   ATTACK_CD = 8
 
 
