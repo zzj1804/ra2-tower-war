@@ -380,8 +380,7 @@ document.addEventListener("keydown", e => {
     // c -> reset move&rotate
     case 67:
     case 99:
-      illoAnchor.translate = new Zdog.Vector({})
-      illoAnchor.rotate = new Zdog.Vector({})
+      resetPosition()
       break
     // p -> PiP
     case 80:
@@ -410,9 +409,13 @@ document.getElementById('restart-button').addEventListener("click", e => {
 }, false)
 
 document.getElementById('reset-button').addEventListener("click", e => {
+  resetPosition()
+}, false)
+
+function resetPosition() {
   illoAnchor.translate = new Zdog.Vector({})
   illoAnchor.rotate = new Zdog.Vector({})
-}, false)
+}
 
 function switchBtnActive(btn, v) {
   if (v) {
