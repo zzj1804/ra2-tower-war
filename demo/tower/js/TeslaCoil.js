@@ -53,6 +53,10 @@ class TeslaCoil {
         part.visible = true
       })
     })
+    let tl = new TimelineMax({delay: 10}).call(() => {
+      coil.status = TeslaCoil.STATUS.STANDBY
+      tl.kill()
+    })
     coil.status = TeslaCoil.STATUS.BUILDING
   }
 
