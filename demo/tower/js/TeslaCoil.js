@@ -12,13 +12,26 @@ class TeslaCoil {
     coil.partArr = []
     coil.aniObjArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
-    coil.tl = gsap.timeline({ onUpdate: () => { coil.render() } })
+    coil.tl = gsap.timeline({ repeat: -1 })
+      .to(1, { duration: 0.1 })
+      .call(() => { coil.render() })
   }
 
   render() {
     let coil = this
     if (coil.isEnd()) return
     if (coil.hp <= 0) coil.status = TeslaCoil.STATUS.DESTROYED
+
+    // TODO repair anime
+    if (coil.isRepairing) {
+
+    }
+    // TODO lean the tower
+    if (coil.isLean()) {
+      coil.partArr[4][6].rotate = new Zdog.Vector({ z: Zdog.TAU / 20 })
+    } else {
+      coil.partArr[4][6].rotate = new Zdog.Vector({})
+    }
 
     switch (coil.status) {
       case TeslaCoil.STATUS.BUILDING:
@@ -40,33 +53,21 @@ class TeslaCoil {
         coil.destroyed()
         break
     }
-
-    // TODO repair anime
-    if (coil.isRepairing) {
-
-    }
-    // TODO lean the tower
-    if (coil.isLean()) {
-    }
   }
 
   build() {
     let coil = this
     let part = coil.partArr
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
-    let tl = gsap.timeline({
+    coil.build_tl = gsap.timeline({
       onStart: () => { coil.status = TeslaCoil.STATUS.BUILDING },
-      onComplete: () => {
-        coil.status = TeslaCoil.STATUS.STANDBY
-        tl.kill()
-      }
+      onComplete: () => { coil.status = TeslaCoil.STATUS.STANDBY }
     })
-
+    let tl = coil.build_tl
     // build anime
     // 1.frame
     let frameAniObj = { translate_y: 40 }
-    tl
-      .call(() => { part[2].forEach(ele => { ele.visible = !ele.visible }) })
+    tl.call(() => { part[2].forEach(ele => { ele.visible = !ele.visible }) })
       .to(frameAniObj,
         { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[2][0], frameAniObj) } })
     // 2.base
@@ -188,6 +189,8 @@ class TeslaCoil {
     let coil = this
     if (coil.isEnd()) return
     // TODO remove
+    coil.build_tl.kill()
+    coil.build_tl = null
     coil.status = TeslaCoil.STATUS.END
     coil.isRepairing = false
     coil.target = null
@@ -242,7 +245,7 @@ class TeslaCoil {
         let element = model
         for (let i = start; i < keyArr.length; i++) {
           let k = keyArr[i]
-          if (element.hasOwnProperty(k)) {
+          if (element && element.hasOwnProperty(k)) {
             if (i === keyArr.length - 1) {
               if (isAdd) {
                 element[k] += aObjVal
@@ -564,6 +567,7 @@ class TeslaCoil {
     coilArr.push(middleCoil)
     coilArr.push(topCoil)
     coilArr.push(topBall)
+    coilArr.push(coilAnchor)
 
     return teslaCoil
   }
