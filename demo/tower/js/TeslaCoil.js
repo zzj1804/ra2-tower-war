@@ -59,7 +59,7 @@ class TeslaCoil {
 
     // TODO build anime
     // 1.frame
-    let frameAniObj = { translate_y: 100 * scale }
+    let frameAniObj = { translate_y: 40 }
     tl
       .call(() => { part[2].forEach(ele => { ele.visible = !ele.visible }) })
       .to(frameAniObj,
@@ -72,13 +72,22 @@ class TeslaCoil {
         { translate_y: -55, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[0][0], baseAniObj) } },
         'baseStart')
     // 3.middlePart
-    let middlePartAniObj = { translate_y: 160 * scale }
+    let middlePartAniObj = { translate_y: 65 }
     tl.addLabel('middlePartStart', 'baseStart+=1')
       .call(() => { part[3].forEach(ele => { ele.visible = !ele.visible }) }, null, 'middlePartStart')
       .to(middlePartAniObj,
         { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[3][0], middlePartAniObj) } },
         'middlePartStart')
-    // 4.coil
+    // 4.bottomPipe
+    let bottomPipeAniObj = { translate_y: 40 }
+    tl.addLabel('bottomPipeStart', 'baseStart+=0.5')
+      .call(() => { part[1].forEach(ele => { ele.visible = !ele.visible }) }, null, 'bottomPipeStart')
+      .to(bottomPipeAniObj,
+        { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[1][0], bottomPipeAniObj) } },
+        'bottomPipeStart')
+    // 5.coil
+    tl.addLabel('coilStart', '>')
+
 
     coil.status = TeslaCoil.STATUS.BUILDING
   }
