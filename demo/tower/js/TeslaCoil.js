@@ -77,17 +77,17 @@ class TeslaCoil {
         'baseStart')
     // 3.middlePart
     let middlePartAniObj = { translate_y: 65 }
-    tl.addLabel('middlePartStart', 'baseStart+=1')
+    tl.addLabel('middlePartStart', 'baseStart+=0.5')
       .call(() => { part[3].forEach(ele => { ele.visible = !ele.visible }) }, null, 'middlePartStart')
       .to(middlePartAniObj,
-        { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[3][0], middlePartAniObj) } },
+        { translate_y: 0, duration: 1, ease: 'power4', onUpdate: () => { coil.changeAnimeValue(part[3][0], middlePartAniObj) } },
         'middlePartStart')
     // 4.bottomPipe
     let bottomPipeAniObj = { translate_y: 40 }
     tl.addLabel('bottomPipeStart', 'baseStart+=0.5')
       .call(() => { part[1].forEach(ele => { ele.visible = !ele.visible }) }, null, 'bottomPipeStart')
       .to(bottomPipeAniObj,
-        { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[1][0], bottomPipeAniObj) } },
+        { translate_y: 0, duration: 1, ease: 'power4', onUpdate: () => { coil.changeAnimeValue(part[1][0], bottomPipeAniObj) } },
         'bottomPipeStart')
     // 5.coil
     let coilAniObj = {
@@ -98,7 +98,7 @@ class TeslaCoil {
       '5_translate_y': 0,
       '6_translate_y': 0,
     }
-    tl.addLabel('coilStart', '>')
+    tl.addLabel('coilStart', 'baseStart+=0.75')
       .call(() => { part[4].forEach(ele => { ele.visible = !ele.visible }) }, null, 'coilStart')
       .to(coilAniObj,
         {
@@ -108,7 +108,8 @@ class TeslaCoil {
           '4_translate_y': -250,
           '5_translate_y': -350,
           '6_translate_y': -475,
-          duration: 1,
+          ease: 'power4',
+          duration: 0.75,
           onUpdate: () => {
             coil.changeAnimeValue(part[4], coilAniObj)
             part[4][1].updatePath()
@@ -119,9 +120,20 @@ class TeslaCoil {
 
   standby() {
     let coil = this
-    // TODO charge anime
+    if (coil.findAndSetTarget()) {
+      coil.status = TeslaCoil.ATTACKING
+    } else if (!coil.lightning || coil.lightning.isEnd) {
+      let anchor = coil.partArr[4][7]
+      let distance = 350
+      coil.lightning = new Lightning(anchor, { y: -400 }, { z: Zdog.TAU / 4 },
+        10 * coil.scale, distance, 8,
+        function (x) { return (25 / Math.sqrt(distance) * (x * x / distance - x)) })
+    }
+  }
 
-    // TODO find target
+  findAndSetTarget() {
+    let coil = this
+    return false
   }
 
   repair(v) {
@@ -575,7 +587,7 @@ class TeslaCoil {
       translate: { y: -250 },
       rotate: { x: TAU4 },
       stroke: 20 * scale,
-      color: '#EFE',
+      color: '#EEF',
       fill: false,
       visible: isVisible
     })
@@ -586,7 +598,7 @@ class TeslaCoil {
       translate: { y: -350 },
       rotate: { x: TAU4 },
       stroke: 20 * scale,
-      color: '#FEE',
+      color: '#EEF',
       fill: false,
       visible: isVisible
     })

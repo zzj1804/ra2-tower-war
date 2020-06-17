@@ -14,12 +14,13 @@ class Lightning {
     })
 
     lit.lit1 = lit.getNewLit('yellow')
+    lit.setRandomRotate(lit.lit1)
 
     lit.lit2 = lit.getNewLit('white')
-    lit.lit2.rotate = { x: Zdog.TAU / 3 }
+    lit.setRandomRotate(lit.lit2)
 
     lit.lit3 = lit.getNewLit('white')
-    lit.lit3.rotate = { x: -Zdog.TAU / 3 }
+    lit.setRandomRotate(lit.lit3)
 
     lit.tl = new TimelineMax()
     let feq = 15
@@ -44,24 +45,30 @@ class Lightning {
     let lit = this
     lit.lit1.path = lit.getPath()
     lit.setRandomColor(lit.lit1)
+    lit.setRandomRotate(lit.lit1)
     lit.lit1.updatePath()
     lit.lit2.path = lit.getPath()
     lit.lit2.updatePath()
     lit.setRandomColor(lit.lit2)
+    lit.setRandomRotate(lit.lit2)
     lit.lit3.path = lit.getPath()
     lit.lit3.updatePath()
     lit.setRandomColor(lit.lit3)
+    lit.setRandomRotate(lit.lit3)
   }
 
   setRandomColor(lit) {
     let r = Math.random()
-    if (r < 0.33) {
+    if (r < 0.5) {
       lit.color = 'yellow'
-    } else if (r < 0.67) {
+    } else{
       lit.color = 'white'
-    } else {
-      lit.color = 'red'
     }
+  }
+
+  setRandomRotate(lit){
+    let r = Math.random()
+    lit.rotate.x = Zdog.TAU * r
   }
 
   remove() {
