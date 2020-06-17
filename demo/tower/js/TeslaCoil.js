@@ -192,12 +192,14 @@ class TeslaCoil {
       let midCoil = coil.partArr[4][4]
       let bottomCoil = coil.partArr[4][3]
       if (coil.isLean()) {
-        anchor.rotate.z = Zdog.TAU / 20
+        anchor.rotate.z = Zdog.TAU / 36
+        anchor.rotate.x = Zdog.TAU / 36
         topCoil.rotate.y = -Zdog.TAU / 20
         midCoil.translate.x = 10
         bottomCoil.rotate.y = Zdog.TAU / 20
       } else {
         anchor.rotate.z = 0
+        anchor.rotate.x = 0
         topCoil.rotate.y = 0
         midCoil.translate.x = 0
         bottomCoil.rotate.y = 0
@@ -243,6 +245,10 @@ class TeslaCoil {
     if (coil.build_tl) {
       coil.build_tl.kill()
       coil.build_tl = null
+    }
+    if (coil.lightning) {
+      coil.lightning.remove()
+      coil.lightning = null
     }
   }
 
