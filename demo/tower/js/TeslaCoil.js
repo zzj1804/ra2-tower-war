@@ -24,7 +24,7 @@ class TeslaCoil {
 
     // TODO repair anime
     if (coil.isRepairing) {
-
+      coil.repair(1)
     }
     // TODO lean the tower
     if (coil.isLean()) {
@@ -126,15 +126,16 @@ class TeslaCoil {
     // TODO find target
   }
 
-  repair() {
-    let coil = this
-    if (coil.hp >= TeslaCoil.MAX_HP) return
-    coil.isRepairing = true
+  repair(v) {
+    this.getDamage(-v)
   }
 
-  cancelRepair() {
-    let coil = this
-    coil.isRepairing = false
+  switchRepair() {
+    if (coil.hp >= TeslaCoil.MAX_HP || coil.hp <= 0) {
+      coil.isRepairing = false
+      return false
+    }
+    return coil.isRepairing = !coil.isRepairing
   }
 
   getDamage(damage) {
@@ -189,8 +190,6 @@ class TeslaCoil {
     let coil = this
     if (coil.isEnd()) return
     // TODO remove
-    coil.build_tl.kill()
-    coil.build_tl = null
     coil.status = TeslaCoil.STATUS.END
     coil.isRepairing = false
     coil.target = null
@@ -203,6 +202,10 @@ class TeslaCoil {
     coil.model = null
     coil.tl.kill()
     coil.tl = null
+    if (coil.build_tl) {
+      coil.build_tl.kill()
+      coil.build_tl = null
+    }
   }
 
   isEnd() {
