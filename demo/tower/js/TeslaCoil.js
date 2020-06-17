@@ -80,14 +80,14 @@ class TeslaCoil {
     tl.addLabel('middlePartStart', 'baseStart+=0.5')
       .call(() => { part[3].forEach(ele => { ele.visible = !ele.visible }) }, null, 'middlePartStart')
       .to(middlePartAniObj,
-        { translate_y: 0, duration: 1, ease: 'power4', onUpdate: () => { coil.changeAnimeValue(part[3][0], middlePartAniObj) } },
+        { translate_y: 0, duration: 1, ease: 'power4.out', onUpdate: () => { coil.changeAnimeValue(part[3][0], middlePartAniObj) } },
         'middlePartStart')
     // 4.bottomPipe
     let bottomPipeAniObj = { translate_y: 40 }
     tl.addLabel('bottomPipeStart', 'baseStart+=0.5')
       .call(() => { part[1].forEach(ele => { ele.visible = !ele.visible }) }, null, 'bottomPipeStart')
       .to(bottomPipeAniObj,
-        { translate_y: 0, duration: 1, ease: 'power4', onUpdate: () => { coil.changeAnimeValue(part[1][0], bottomPipeAniObj) } },
+        { translate_y: 0, duration: 1, ease: 'power4.out', onUpdate: () => { coil.changeAnimeValue(part[1][0], bottomPipeAniObj) } },
         'bottomPipeStart')
     // 5.coil
     let coilAniObj = {
@@ -108,7 +108,7 @@ class TeslaCoil {
           '4_translate_y': -250,
           '5_translate_y': -350,
           '6_translate_y': -475,
-          ease: 'power4',
+          ease: 'power4.out',
           duration: 0.75,
           onUpdate: () => {
             coil.changeAnimeValue(part[4], coilAniObj)
@@ -214,8 +214,66 @@ class TeslaCoil {
       coil.status === TeslaCoil.STATUS.LOADING ||
       coil.status === TeslaCoil.STATUS.ATTACKING
     )) return
-    // TODO selling anime
-    coil.status = TeslaCoil.STATUS.SELLING
+    let part = coil.partArr
+    coil.sell_tl = gsap.timeline({
+      onStart: () => { coil.status = TeslaCoil.STATUS.SELLING },
+      onComplete: () => { coil.remove() }
+    })
+    let tl = coil.sell_tl
+    // sell anime
+    // 1.coil
+    let coilAniObj = {
+      '1_path_1_y': -400,
+      '2_translate_y': -70,
+      '3_translate_y': -150,
+      '4_translate_y': -250,
+      '5_translate_y': -350,
+      '6_translate_y': -475,
+    }
+    tl.addLabel('coilStart', 0)
+      .to(coilAniObj,
+        {
+          '1_path_1_y': -50,
+          '2_translate_y': 0,
+          '3_translate_y': 0,
+          '4_translate_y': 0,
+          '5_translate_y': 0,
+          '6_translate_y': 0,
+          ease: 'power4.in',
+          duration: 0.75,
+          onUpdate: () => {
+            coil.changeAnimeValue(part[4], coilAniObj)
+            part[4][1].updatePath()
+          }
+        },
+        'coilStart')
+      .call(() => { part[4].forEach(ele => { ele.visible = !ele.visible }) })
+    // 2.bottomPipe
+    let bottomPipeAniObj = { translate_y: 0 }
+    tl.addLabel('bottomPipeStart', 0.5)
+      .to(bottomPipeAniObj,
+        { translate_y: 40, duration: 1, ease: 'power4.in', onUpdate: () => { coil.changeAnimeValue(part[1][0], bottomPipeAniObj) } },
+        'bottomPipeStart')
+      .call(() => { part[1].forEach(ele => { ele.visible = !ele.visible }) })
+    // 3.middlePart
+    let middlePartAniObj = { translate_y: 0 }
+    tl.addLabel('middlePartStart', 0.5)
+      .to(middlePartAniObj,
+        { translate_y: 65, duration: 1, ease: 'power4.in', onUpdate: () => { coil.changeAnimeValue(part[3][0], middlePartAniObj) } },
+        'middlePartStart')
+      .call(() => { part[3].forEach(ele => { ele.visible = !ele.visible }) })
+    // 4.base
+    let baseAniObj = { translate_y: -55 }
+    tl.addLabel('baseStart', 1)
+      .to(baseAniObj,
+        { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[0][0], baseAniObj) } },
+        'baseStart')
+      .call(() => { part[0].forEach(ele => { ele.visible = !ele.visible }) })
+    // 5.frame
+    let frameAniObj = { translate_y: 0 }
+    tl.to(frameAniObj,
+      { translate_y: 40, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[2][0], frameAniObj) } }, 1.5)
+      .call(() => { part[2].forEach(ele => { ele.visible = !ele.visible }) })
   }
 
   destroyed() {
@@ -234,6 +292,7 @@ class TeslaCoil {
     coil.centerPoint = null
     coil.topPoint = null
     coil.loadTime = 0
+    coil.hp = 0
     coil.partArr.length = 0
     coil.aniObjArr.length = 0
     coil.anchor.remove()
@@ -245,6 +304,10 @@ class TeslaCoil {
     if (coil.build_tl) {
       coil.build_tl.kill()
       coil.build_tl = null
+    }
+    if (coil.sell_tl) {
+      coil.sell_tl.kill()
+      coil.sell_tl = null
     }
     if (coil.lightning) {
       coil.lightning.remove()
