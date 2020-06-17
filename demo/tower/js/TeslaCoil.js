@@ -58,10 +58,7 @@ class TeslaCoil {
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
     coil.build_tl = gsap.timeline({
       onStart: () => { coil.status = TeslaCoil.STATUS.BUILDING },
-      onComplete: () => {
-        coil.status = TeslaCoil.STATUS.STANDBY
-        coil.build_tl = null
-      }
+      onComplete: () => { coil.status = TeslaCoil.STATUS.STANDBY }
     })
     let tl = coil.build_tl
     // build anime
