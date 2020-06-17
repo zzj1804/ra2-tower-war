@@ -167,6 +167,7 @@ class TeslaCoil {
 
   lean() {
     let coil = this
+    if (coil.isEnd()) return
     try {
       let anchor = coil.partArr[4][7]
       let topCoil = coil.partArr[4][5]
