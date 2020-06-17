@@ -171,7 +171,7 @@ class TeslaCoil {
     })
     let tl = coil.loading_tl
 
-    // TODO loading anime
+    // loading anime
     let sliver = '#EEF'
     let white = 'white'
     let duration = 0.2
@@ -201,9 +201,8 @@ class TeslaCoil {
       // TODO attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
       coil.target.getDamage(TeslaCoil.AP)
-    } else {
-      coil.status = TeslaCoil.STATUS.STANDBY
     }
+    coil.status = TeslaCoil.STATUS.STANDBY
   }
 
   lean() {
