@@ -238,7 +238,13 @@ class TeslaCoil {
     )) return
     let part = coil.partArr
     coil.sell_tl = gsap.timeline({
-      onStart: () => { coil.status = TeslaCoil.STATUS.SELLING },
+      onStart: () => {
+        coil.status = TeslaCoil.STATUS.SELLING
+        if (coil.lightning) {
+          coil.lightning.remove()
+          coil.lightning = null
+        }
+      },
       onComplete: () => { coil.remove() }
     })
     let tl = coil.sell_tl
