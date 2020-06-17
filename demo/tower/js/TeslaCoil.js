@@ -174,24 +174,25 @@ class TeslaCoil {
     // TODO loading anime
     let sliver = '#EEF'
     let white = 'white'
+    let duration = 0.2
     let bottomCoilAniObj = { color: silver }
     let midCoilAniObj = { color: silver }
     let topCoilAniObj = { color: silver }
     let ballAniObj = { color: silver }
 
     // 1.bottomCoil
-    tl.to(bottomCoilAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'midCoilStart')
-      .to(bottomCoilAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'topCoilStart')
+    tl.to(bottomCoilAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'midCoilStart')
+      .to(bottomCoilAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'topCoilStart')
     // 2.midCoil
-    tl.to(midCoilAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } }, 'midCoilStart')
-      .to(midCoilAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } })
+    tl.to(midCoilAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } }, 'midCoilStart')
+      .to(midCoilAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } })
     // 3.topCoil
-    tl.to(topCoilAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } }, 'topCoilStart')
+    tl.to(topCoilAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } }, 'topCoilStart')
     tl.addLabel('ballStart')
-      .to(topCoilAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } })
+      .to(topCoilAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } })
     // 4.ball
-    tl.to(ballAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } }, 'ballStart')
-      .to(ballAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } })
+    tl.to(ballAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } }, 'ballStart')
+      .to(ballAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } })
   }
 
   attack() {
