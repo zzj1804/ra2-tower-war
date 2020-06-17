@@ -26,12 +26,8 @@ class TeslaCoil {
     if (coil.isRepairing) {
       coil.repair(1)
     }
-    // TODO lean the tower
-    if (coil.isLean()) {
-      coil.partArr[4][6].rotate = new Zdog.Vector({ z: Zdog.TAU / 20 })
-    } else {
-      coil.partArr[4][6].rotate = new Zdog.Vector({})
-    }
+
+    coil.lean()
 
     switch (coil.status) {
       case TeslaCoil.STATUS.BUILDING:
@@ -167,6 +163,27 @@ class TeslaCoil {
         coil.target.getDamage(TeslaCoil.AP)
       }
     }
+  }
+
+  lean() {
+    let coil = this
+    try {
+      let anchor = coil.partArr[4][7]
+      let topCoil = coil.partArr[4][5]
+      let midCoil = coil.partArr[4][4]
+      let bottomCoil = coil.partArr[4][3]
+      if (coil.isLean()) {
+        anchor.rotate.z = Zdog.TAU / 20
+        topCoil.rotate.y = -Zdog.TAU / 20
+        midCoil.translate.x = 10
+        bottomCoil.rotate.y = Zdog.TAU / 20
+      } else {
+        anchor.rotate.z = 0
+        topCoil.rotate.y = 0
+        midCoil.translate.x = 0
+        bottomCoil.rotate.y = 0
+      }
+    } catch (e) { }
   }
 
   sell() {
