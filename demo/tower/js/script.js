@@ -53,6 +53,7 @@ function displayLoadingLayer(p) {
 setGlobalTimeScale(1)
 scale1 = 0.4
 let c = new TeslaCoil(illo3, { y: 300 * scale1 }, {}, scale1)
+c.build()
 new Zdog.Polygon({
     addTo: illo3,
     radius: 200,

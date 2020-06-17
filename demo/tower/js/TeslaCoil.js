@@ -52,7 +52,6 @@ class TeslaCoil {
 
   build() {
     let coil = this
-    let scale = coil.scale
     let part = coil.partArr
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
     let tl = gsap.timeline({
@@ -63,7 +62,7 @@ class TeslaCoil {
       }
     })
 
-    // TODO build anime
+    // build anime
     // 1.frame
     let frameAniObj = { translate_y: 40 }
     tl
