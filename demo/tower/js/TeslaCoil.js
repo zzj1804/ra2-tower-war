@@ -10,6 +10,7 @@ class TeslaCoil {
     coil.loadTime = 0
     coil.partArr = []
     coil.aniObjArr = []
+    coil.anchor = new Zdog.Anchor({ addTo: addTo, translate: translate, rotate: rotate })
     coil.model = coil.getModel(addTo, translate, rotate, scale)
     coil.centerPoint = coil.model.translate.copy().subtract({ y: 200 * scale })
     coil.topPoint = coil.model.translate.copy().subtract({ y: 400 * scale })
@@ -25,7 +26,7 @@ class TeslaCoil {
 
     // TODO repair anime
     if (coil.isAutoRepairMode) {
-      coil.repair(1)
+      coil.repair(TeslaCoil.AUTO_REPAIR_VAL)
     }
 
     coil.lean()
@@ -128,11 +129,13 @@ class TeslaCoil {
   }
 
   switchAutoRepair() {
+    let coil = this
     if (coil.hp >= TeslaCoil.MAX_HP || coil.hp <= 0) {
       coil.isAutoRepairMode = false
       return false
     }
-    return coil.isAutoRepairMode = !coil.isAutoRepairMode
+    coil.isAutoRepairMode = !coil.isAutoRepairMode
+    return coil.isAutoRepairMode
   }
 
   getDamage(damage) {
@@ -219,6 +222,8 @@ class TeslaCoil {
     coil.loadTime = 0
     coil.partArr.length = 0
     coil.aniObjArr.length = 0
+    coil.anchor.remove()
+    coil.anchor = null
     coil.model.remove()
     coil.model = null
     coil.tl.kill()
@@ -247,6 +252,7 @@ class TeslaCoil {
   static MAX_HP = 800
   static AP = 200
   static ATTACK_CD = 8
+  static AUTO_REPAIR_VAL = 1
 
   static STATUS = {
     CREATED: 'created',
