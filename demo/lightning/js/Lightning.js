@@ -13,31 +13,13 @@ class Lightning {
       rotate: rotate
     })
 
-    lit.lit1 = new Zdog.Shape({
-      addTo: lit.lightningGroup,
-      color: 'yellow',
-      stroke: scale,
-      path: lit.getPath(),
-      closed: false
-    })
+    lit.lit1 = lit.getNewLit('yellow')
 
-    lit.lit2 = new Zdog.Shape({
-      addTo: lit.lightningGroup,
-      color: 'white',
-      stroke: scale,
-      path: lit.getPath(),
-      closed: false,
-      rotate: { x: Zdog.TAU / 3 }
-    })
+    lit.lit2 = lit.getNewLit('white')
+    lit.lit2.rotate = { x: Zdog.TAU / 3 }
 
-    lit.lit3 = new Zdog.Shape({
-      addTo: lit.lightningGroup,
-      color: 'white',
-      stroke: scale,
-      path: lit.getPath(),
-      closed: false,
-      rotate: { x: -Zdog.TAU / 3 }
-    })
+    lit.lit3 = lit.getNewLit('white')
+    lit.lit3.rotate = { x: -Zdog.TAU / 3 }
 
     lit.tl = new TimelineMax()
     let feq = 15
@@ -72,8 +54,14 @@ class Lightning {
   }
 
   setRandomColor(lit) {
-    let b = Math.random() > 0.5
-    lit.color = b ? 'yellow' : 'white'
+    let r = Math.random()
+    if (r < 0.33) {
+      lit.color = 'yellow'
+    } else if (r < 0.67) {
+      lit.color = 'white'
+    } else {
+      lit.color = 'red'
+    }
   }
 
   remove() {
