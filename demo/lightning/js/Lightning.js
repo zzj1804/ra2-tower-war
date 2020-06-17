@@ -61,18 +61,19 @@ class Lightning {
     let r = Math.random()
     if (r < 0.5) {
       lit.color = 'yellow'
-    } else{
+    } else {
       lit.color = 'white'
     }
   }
 
-  setRandomRotate(lit){
+  setRandomRotate(lit) {
     let r = Math.random()
     lit.rotate.x = Zdog.TAU * r
   }
 
   remove() {
     let lit = this
+    if (lit.isEnd) return
     lit.isEnd = true
     lit.lit1.remove()
     lit.lit1 = null

@@ -64,6 +64,7 @@ class Laser {
 
   remove() {
     let laser = this
+    if (laser.isEnd) return
     laser.isEnd = true
     laser.laser1.remove()
     laser.laser1 = null

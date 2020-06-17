@@ -59,6 +59,7 @@ class Explosion {
 
   remove() {
     let expl = this
+    if (expl.isEnd) return
     expl.isEnd = true
     expl.explosion1.remove()
     expl.explosion1 = null
