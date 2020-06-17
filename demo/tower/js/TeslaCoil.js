@@ -3,10 +3,14 @@ class TeslaCoil {
     let coil = this
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
+    coil.isRepairing = false
+    coil.target = null
+    coil.centerPoint = null
+    coil.topPoint = null
+    coil.loadTime = 0
     coil.partArr = []
     coil.aniObjArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
-
     coil.tl = new TimelineMax({ onUpdate: () => { coil.render() } })
   }
 
@@ -134,7 +138,15 @@ class TeslaCoil {
     coil.status = TeslaCoil.STATUS.END
     coil.isRepairing = false
     coil.target = null
-    coil.idx = null
+    coil.centerPoint = null
+    coil.topPoint = null
+    coil.loadTime = 0
+    coil.partArr.length = 0
+    coil.aniObjArr.length = 0
+    coil.model.remove()
+    coil.model = null
+    coil.tl.kill()
+    coil.tl = null
   }
 
   isEnd() {
@@ -149,18 +161,12 @@ class TeslaCoil {
 
   isCD() {
     let coil = this
-    return coil.loadingTime < TeslaCoil.ATTACK_CD
+    return coil.loadTime < TeslaCoil.ATTACK_CD
   }
 
-  isRepairing = false
-
-  target = null
-  centerPoint = null
-  loadingTime = 0
   static MAX_HP = 800
   static AP = 200
-  ATTACK_CD = 8
-
+  static ATTACK_CD = 8
 
   static STATUS = {
     CREATED: 'created',
@@ -171,14 +177,6 @@ class TeslaCoil {
     ATTACKING: 'attacking',
     SELLING: 'selling',
     END: 'end'
-  }
-
-  static EVENT = {
-    BUILD: 'build',
-    TO_ATTACK: 'to_attack',
-    ATTACKED: 'attacked',
-    SELL: 'sell',
-    REPAIR: 'repair'
   }
 
   changeAnimeValue(model, animeObject) {
@@ -258,10 +256,15 @@ class TeslaCoil {
     middlePartArr.push(middlePart)
     coilArr.push(coil)
 
+    // [0]
     thisCoil.partArr.push(baseArr)
+    // [1]
     thisCoil.partArr.push(bottomPipeArr)
+    // [2]
     thisCoil.partArr.push(frameArr)
+    // [3]
     thisCoil.partArr.push(middlePartArr)
+    // [4]
     thisCoil.partArr.push(coilArr)
 
     let frameNum = 4
