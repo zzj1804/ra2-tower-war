@@ -1,9 +1,11 @@
 class Lightning {
-  constructor(addTo, translate, rotate, scale, distance) {
+  constructor(addTo, translate, rotate, scale, distance, inflectionPoint, curveFunc) {
     let lit = this
     lit.isEnd = false
     lit.scale = scale
     lit.distance = distance
+    lit.inflectionPoint = inflectionPoint
+    lit.curveFunc = curveFunc
 
     lit.lightningGroup = new Zdog.Group({
       addTo: addTo,
@@ -92,7 +94,7 @@ class Lightning {
   getPath() {
     let distance = this.distance
     let curve = this.getCurveEquation(distance)
-    let loop = Math.min(Math.max(distance / 30, 3), 40)
+    let loop = this.inflectionPoint
     let step = distance / loop
     let path = []
     let x, y, z
@@ -110,8 +112,9 @@ class Lightning {
   }
 
   getCurveEquation(distance) {
+    if (this.curveFunc) return this.curveFunc
     let r = Math.random()
-    if(r > 0.2) {
+    if (r > 0.2) {
       return function (x) {
         return 0
       }

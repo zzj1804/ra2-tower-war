@@ -29,9 +29,14 @@ function render() {
 
     let scale = 4 * Math.random()
     let distance = 800 * Math.random()
+    let inflectionPoint = distance / 30
+    let curveFunc = function(x) {
+        let e = 1 / Math.sqrt(distance)
+        return 10 * e * (x * x / distance - x)
+    }
     let translate = {}
     if (!lightning) {
-        lightning = new Lightning(illo, translate, {}, scale, distance)
+        lightning = new Lightning(illo, translate, {}, scale, distance, inflectionPoint)
     }
     if (lightning.isEnd) {
         let rotate = {
@@ -39,7 +44,7 @@ function render() {
             y: Zdog.TAU * (0.5 - Math.random()),
             z: Zdog.TAU * (0.5 - Math.random())
         }
-        lightning = new Lightning(illo, translate, rotate, scale, distance)
+        lightning = new Lightning(illo, translate, rotate, scale, distance, inflectionPoint)
     }
 
     illo.updateRenderGraph()
