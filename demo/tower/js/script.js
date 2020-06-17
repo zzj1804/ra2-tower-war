@@ -17,7 +17,7 @@ let illo3 = new Zdog.Illustration({
     zoom: 1,
     resize: true,
     dragRotate: true,
-    rotate: { x: -Zdog.TAU / 12 }
+    rotate: { x: -Zdog.TAU / 6, y: 0, y: Zdog.TAU / 8 }
 })
 
 let illo4 = new Zdog.Illustration({
@@ -25,7 +25,7 @@ let illo4 = new Zdog.Illustration({
     zoom: 1,
     resize: true,
     dragRotate: true,
-    rotate: { x: -Zdog.TAU / 12 }
+    rotate: { x: -Zdog.TAU / 6, y: 0, y: Zdog.TAU / 8 }
 })
 
 function render() {
@@ -53,6 +53,7 @@ function displayLoadingLayer(p) {
 setGlobalTimeScale(1)
 scale1 = 0.4
 let c = new TeslaCoil(illo3, { y: 300 * scale1 }, {}, scale1)
+scale2 = 0.4
 c.build()
 new Zdog.Polygon({
     addTo: illo3,
@@ -63,6 +64,16 @@ new Zdog.Polygon({
     fill: true,
     rotate: { x: -Zdog.TAU / 4 },
     translate: { y: 320 * scale1 }
+})
+new Zdog.Polygon({
+    addTo: illo4,
+    radius: 200,
+    sides: 5,
+    stroke: 10,
+    color: 'rgba(0,100,100,0.9)',
+    fill: true,
+    rotate: { x: -Zdog.TAU / 4 },
+    translate: { y: 320 * scale2 }
 })
 
 render()
