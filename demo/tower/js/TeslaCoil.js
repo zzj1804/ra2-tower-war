@@ -1,17 +1,18 @@
 class TeslaCoil {
   constructor(addTo, translate, rotate, scale) {
     let coil = this
+    coil.addTo = addTo
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
     coil.scale = scale
-    coil.isRepairing = false
+    coil.isAutoRepairMode = false
     coil.target = null
-    coil.centerPoint = null
-    coil.topPoint = null
     coil.loadTime = 0
     coil.partArr = []
     coil.aniObjArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
+    coil.centerPoint = coil.model.translate.copy().subtract({ y: 200 * scale })
+    coil.topPoint = coil.model.translate.copy().subtract({ y: 400 * scale })
     coil.tl = gsap.timeline({ repeat: -1 })
       .to(1, { duration: 0.1 })
       .call(() => { coil.render() })
@@ -23,7 +24,7 @@ class TeslaCoil {
     if (coil.hp <= 0) coil.status = TeslaCoil.STATUS.DESTROYED
 
     // TODO repair anime
-    if (coil.isRepairing) {
+    if (coil.isAutoRepairMode) {
       coil.repair(1)
     }
 
@@ -57,7 +58,10 @@ class TeslaCoil {
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
     coil.build_tl = gsap.timeline({
       onStart: () => { coil.status = TeslaCoil.STATUS.BUILDING },
-      onComplete: () => { coil.status = TeslaCoil.STATUS.STANDBY }
+      onComplete: () => {
+        coil.status = TeslaCoil.STATUS.STANDBY
+        coil.build_tl = null
+      }
     })
     let tl = coil.build_tl
     // build anime
@@ -126,12 +130,12 @@ class TeslaCoil {
     this.getDamage(-v)
   }
 
-  switchRepair() {
+  switchAutoRepair() {
     if (coil.hp >= TeslaCoil.MAX_HP || coil.hp <= 0) {
-      coil.isRepairing = false
+      coil.isAutoRepairMode = false
       return false
     }
-    return coil.isRepairing = !coil.isRepairing
+    return coil.isAutoRepairMode = !coil.isAutoRepairMode
   }
 
   getDamage(damage) {
@@ -162,6 +166,8 @@ class TeslaCoil {
       if (!coil.target.isEnd()) {
         coil.target.getDamage(TeslaCoil.AP)
       }
+    } else {
+      coil.status = TeslaCoil.STATUS.STANDBY
     }
   }
 
@@ -200,16 +206,16 @@ class TeslaCoil {
 
   destroyed() {
     let coil = this
-    // TODO explosion
+    new Explosion(coil.addTo, coil.centerPoint, 4 * coil.scale, 3)
     coil.remove()
   }
 
   remove() {
     let coil = this
     if (coil.isEnd()) return
-    // TODO remove
+    coil.addTo = null
     coil.status = TeslaCoil.STATUS.END
-    coil.isRepairing = false
+    coil.isAutoRepairMode = false
     coil.target = null
     coil.centerPoint = null
     coil.topPoint = null

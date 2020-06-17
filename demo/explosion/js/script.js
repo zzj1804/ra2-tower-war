@@ -28,12 +28,13 @@ function render() {
     stats.begin()
 
     let scale = Math.random() * 2
+    let duration = Math.random() * 10
     let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }
     if (!explosion) {
-        explosion = new Explosion(illo, translate, scale)
+        explosion = new Explosion(illo, translate, scale, duration)
     }
     if (explosion.isEnd) {
-        explosion = new Explosion(illo, translate, scale)
+        explosion = new Explosion(illo, translate, scale, duration)
     }
 
     illo.updateRenderGraph()

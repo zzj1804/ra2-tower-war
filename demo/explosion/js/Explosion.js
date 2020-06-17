@@ -1,5 +1,5 @@
 class Explosion {
-  constructor(addTo, translate, scale) {
+  constructor(addTo, translate, scale, duration) {
     let expl = this
     expl.isEnd = false
     expl.explosionGroup = new Zdog.Group({
@@ -26,15 +26,19 @@ class Explosion {
     })
 
     expl.tl = new TimelineMax({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
-    expl.tl.to(expl.aObj1, 3, {
-      color: 'rgba(250,250,155,0)',
-      stroke: 300 * scale,
-      ease: "expo.out"
-    }).to(expl.aObj2, 3, {
-      color: 'rgba(255,255,255,0)',
-      stroke: 185 * scale,
-      ease: "expo.out"
-    }, "-=3")
+    expl.tl.addLabel('start')
+      .to(expl.aObj1, {
+        color: 'rgba(250,250,155,0)',
+        stroke: 300 * scale,
+        ease: 'expo.out',
+        duration: duration / 2
+      })
+      .to(expl.aObj2, {
+        color: 'rgba(255,255,255,0)',
+        stroke: 185 * scale,
+        ease: 'expo.out',
+        duration: duration / 2
+      }, 'start')
   }
 
   render() {
