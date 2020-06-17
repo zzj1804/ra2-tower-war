@@ -29,18 +29,19 @@ class TeslaCoil {
       case TeslaCoil.STATUS.ATTACKING:
         break
       case TeslaCoil.STATUS.SELLING:
-        coil.status = TeslaCoil.STATUS.END
+        coil.sell()
         break
       case TeslaCoil.STATUS.DESTROYED:
         coil.destroyed()
-        coil.remove()
-        coil.status = TeslaCoil.STATUS.END
         break
     }
 
     // TODO repair anime
     if (coil.isRepairing) {
 
+    }
+    // TODO lean the tower
+    if (coil.isLean()) {
     }
   }
 
@@ -62,9 +63,6 @@ class TeslaCoil {
 
   standby() {
     let coil = this
-    if (coil.isLean()) {
-      // TODO lean the tower
-    }
     // TODO charge anime
 
     // TODO find target
@@ -124,7 +122,9 @@ class TeslaCoil {
   }
 
   destroyed() {
+    let coil = this
     // TODO explosion
+    coil.remove()
   }
 
   remove() {
@@ -139,7 +139,7 @@ class TeslaCoil {
 
   isEnd() {
     let coil = this
-    return coil.status === TeslaCoil.END
+    return coil.status === TeslaCoil.END || coil.status === TeslaCoil.CREATED
   }
 
   isLean() {
