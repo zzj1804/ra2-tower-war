@@ -55,7 +55,13 @@ class TeslaCoil {
     let scale = coil.scale
     let part = coil.partArr
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
-    let tl = gsap.timeline({ onComplete: () => { tl.kill() } })
+    let tl = gsap.timeline({
+      onStart: () => { coil.status = TeslaCoil.STATUS.BUILDING },
+      onComplete: () => {
+        coil.status = TeslaCoil.STATUS.STANDBY
+        tl.kill()
+      }
+    })
 
     // TODO build anime
     // 1.frame
@@ -86,10 +92,31 @@ class TeslaCoil {
         { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[1][0], bottomPipeAniObj) } },
         'bottomPipeStart')
     // 5.coil
+    let coilAniObj = {
+      '1_path_1_y': -50,
+      '2_translate_y': 0,
+      '3_translate_y': 0,
+      '4_translate_y': 0,
+      '5_translate_y': 0,
+      '6_translate_y': 0,
+    }
     tl.addLabel('coilStart', '>')
-
-
-    coil.status = TeslaCoil.STATUS.BUILDING
+      .call(() => { part[4].forEach(ele => { ele.visible = !ele.visible }) }, null, 'coilStart')
+      .to(coilAniObj,
+        {
+          '1_path_1_y': -400,
+          '2_translate_y': -70,
+          '3_translate_y': -150,
+          '4_translate_y': -250,
+          '5_translate_y': -350,
+          '6_translate_y': -475,
+          duration: 1,
+          onUpdate: () => {
+            coil.changeAnimeValue(part[4], coilAniObj)
+            part[4][1].updatePath()
+          }
+        },
+        'coilStart')
   }
 
   standby() {
@@ -532,7 +559,6 @@ class TeslaCoil {
       visible: isVisible
     })
 
-    coilArr.push(coil)
     coilArr.push(pillar)
     coilArr.push(littleCoil)
     coilArr.push(bigCoil)
