@@ -15,7 +15,7 @@ class TeslaCoil {
     coil.centerPoint = coil.model.translate.copy().subtract({ y: 200 * scale })
     coil.topPoint = coil.model.translate.copy().subtract({ y: 400 * scale })
     coil.tl = gsap.timeline({ repeat: -1 })
-      .to(1, { duration: 0.1 })
+      .to(1, { duration: TeslaCoil.RENDER_PERIOD })
       .call(() => { coil.render() })
   }
 
@@ -32,20 +32,8 @@ class TeslaCoil {
     coil.lean()
 
     switch (coil.status) {
-      case TeslaCoil.STATUS.BUILDING:
-        break
       case TeslaCoil.STATUS.STANDBY:
         coil.standby()
-        break
-      case TeslaCoil.STATUS.LOADING:
-        if (!coil.target || coil.target.isEnd()) {
-          coil.status = TeslaCoil.STATUS.STANDBY
-        }
-        break
-      case TeslaCoil.STATUS.ATTACKING:
-        break
-      case TeslaCoil.STATUS.SELLING:
-        coil.sell()
         break
       case TeslaCoil.STATUS.DESTROYED:
         coil.destroyed()
@@ -120,9 +108,11 @@ class TeslaCoil {
 
   standby() {
     let coil = this
-    if (coil.findAndSetTarget()) {
-      coil.status = TeslaCoil.ATTACKING
+    if (!coil.isCD() && coil.findAndSetTarget()) {
+      coil.loading()
     } else if (!coil.lightning || coil.lightning.isEnd) {
+      coil.loadTime += TeslaCoil.RENDER_PERIOD
+
       let anchor = coil.partArr[4][7]
       let distance = 350
       coil.lightning = new Lightning(anchor, { y: -400 }, { z: Zdog.TAU / 4 },
@@ -161,13 +151,47 @@ class TeslaCoil {
     coil.hp = hp
   }
 
-  toAttack(target) {
+  loading() {
     let coil = this
-    if (target && !target.isEnd()) {
-      coil.target = target
-      // TODO loading anime
-      coil.status = TeslaCoil.STATUS.LOADING
-    }
+    if (coil.status !== TeslaCoil.STATUS.STANDBY) return
+    let ball = coil.partArr[4][6]
+    let topCoil = coil.partArr[4][5]
+    let midCoil = coil.partArr[4][4]
+    let bottomCoil = coil.partArr[4][3]
+    coil.loading_tl = gsap.timeline({
+      onStart: () => { coil.status = TeslaCoil.STATUS.LOADING },
+      onUpdate: () => {
+        if (!coil.target || coil.target.isEnd()) {
+          coil.status = TeslaCoil.STATUS.STANDBY
+          coil.loading_tl.kill()
+          coil.loading_tl = null
+        }
+      },
+      onComplete: () => { coil.attack() }
+    })
+    let tl = coil.loading_tl
+
+    // TODO loading anime
+    let sliver = '#EEF'
+    let white = 'white'
+    let bottomCoilAniObj = { color: silver }
+    let midCoilAniObj = { color: silver }
+    let topCoilAniObj = { color: silver }
+    let ballAniObj = { color: silver }
+
+    // 1.bottomCoil
+    tl.to(bottomCoilAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'midCoilStart')
+      .to(bottomCoilAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'topCoilStart')
+    // 2.midCoil
+    tl.to(midCoilAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } }, 'midCoilStart')
+      .to(midCoilAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } })
+    // 3.topCoil
+    tl.to(topCoilAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } }, 'topCoilStart')
+    tl.addLabel('ballStart')
+      .to(topCoilAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } })
+    // 4.ball
+    tl.to(ballAniObj, { color: white, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } }, 'ballStart')
+      .to(ballAniObj, { color: sliver, duration: 0.15, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } })
   }
 
   attack() {
@@ -175,9 +199,7 @@ class TeslaCoil {
     if (coil.target) {
       // TODO attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
-      if (!coil.target.isEnd()) {
-        coil.target.getDamage(TeslaCoil.AP)
-      }
+      coil.target.getDamage(TeslaCoil.AP)
     } else {
       coil.status = TeslaCoil.STATUS.STANDBY
     }
@@ -309,6 +331,10 @@ class TeslaCoil {
       coil.sell_tl.kill()
       coil.sell_tl = null
     }
+    if (coil.loading_tl) {
+      coil.loading_tl.kill()
+      coil.loading_tl = null
+    }
     if (coil.lightning) {
       coil.lightning.remove()
       coil.lightning = null
@@ -334,6 +360,7 @@ class TeslaCoil {
   static AP = 200
   static ATTACK_CD = 8
   static AUTO_REPAIR_VAL = 1
+  static RENDER_PERIOD = 0.1
 
   static STATUS = {
     CREATED: 'created',
@@ -378,7 +405,7 @@ class TeslaCoil {
     let thisCoil = this
     // colors
     const red = '#FF0000'
-    const silver = '#DFDFDF'
+    const silver = '#EEF'
     const gold = '#FA6'
 
     const TAU = Zdog.TAU
@@ -616,7 +643,7 @@ class TeslaCoil {
         { y: -400 },
       ],
       stroke: 35 * scale,
-      color: silver,
+      color: '#DFDFDF',
       visible: isVisible
     })
     // 4.coil:top ball
@@ -624,7 +651,7 @@ class TeslaCoil {
       addTo: coilAnchor,
       translate: { y: -475 },
       stroke: 140 * scale,
-      color: '#EEE',
+      color: silver,
       visible: isVisible
     })
     // 4.coil:bottom little coil
@@ -634,7 +661,7 @@ class TeslaCoil {
       translate: { y: -70 },
       rotate: { x: TAU4 },
       stroke: 20 * scale,
-      color: '#EEE',
+      color: silver,
       fill: false,
       visible: isVisible
     })
@@ -645,7 +672,7 @@ class TeslaCoil {
       translate: { y: -150 },
       rotate: { x: TAU4 },
       stroke: 20 * scale,
-      color: '#EEF',
+      color: silver,
       fill: false,
       visible: isVisible
     })
@@ -656,7 +683,7 @@ class TeslaCoil {
       translate: { y: -250 },
       rotate: { x: TAU4 },
       stroke: 20 * scale,
-      color: '#EEF',
+      color: silver,
       fill: false,
       visible: isVisible
     })
@@ -667,7 +694,7 @@ class TeslaCoil {
       translate: { y: -350 },
       rotate: { x: TAU4 },
       stroke: 20 * scale,
-      color: '#EEF',
+      color: silver,
       fill: false,
       visible: isVisible
     })
