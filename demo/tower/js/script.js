@@ -17,7 +17,7 @@ let illo3 = new Zdog.Illustration({
     zoom: 1,
     resize: true,
     dragRotate: true,
-    rotate: { x: -Zdog.TAU / 12 }
+    // rotate: { x: -Zdog.TAU / 12 }
 })
 
 let illo4 = new Zdog.Illustration({
@@ -40,7 +40,29 @@ function setGlobalTimeScale(num) {
     ENV.timeScale = num
     return ENV
 }
+
+function displayLoadingLayer(p) {
+    if (p) {
+        document.getElementById('loading-layer').style.display = 'flex'
+    } else {
+        document.getElementById('loading-layer').style.display = 'none'
+    }
+}
+
+
 setGlobalTimeScale(1)
 scale1 = 0.4
-let c = new TeslaCoil(illo3, {y: 300 * scale1}, {}, scale1)
+let c = new TeslaCoil(illo3, { y: 300 * scale1 }, {}, scale1)
+new Zdog.Polygon({
+    addTo: illo3,
+    radius: 200,
+    sides: 5,
+    stroke: 10,
+    color: 'rgba(0,200,100,0.5)',
+    fill: true,
+    rotate: { x: -Zdog.TAU / 4 },
+    translate: { y: 320 * scale1 }
+})
+
 render()
+displayLoadingLayer(false)

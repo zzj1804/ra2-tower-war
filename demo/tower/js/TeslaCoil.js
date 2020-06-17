@@ -3,6 +3,7 @@ class TeslaCoil {
     let coil = this
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
+    coil.scale = scale
     coil.isRepairing = false
     coil.target = null
     coil.centerPoint = null
@@ -11,7 +12,7 @@ class TeslaCoil {
     coil.partArr = []
     coil.aniObjArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
-    coil.tl = new TimelineMax({ onUpdate: () => { coil.render() } })
+    coil.tl = gsap.timeline({ onUpdate: () => { coil.render() } })
   }
 
   render() {
@@ -51,17 +52,28 @@ class TeslaCoil {
 
   build() {
     let coil = this
+    let scale = coil.scale
+    let part = coil.partArr
     if (coil.status !== TeslaCoil.STATUS.CREATED) return
+    let tl = gsap.timeline({ onComplete: () => { tl.kill() } })
+
     // TODO build anime
-    let tl = new TimelineMax({delay: 10}).call(() => {
-      coil.status = TeslaCoil.STATUS.STANDBY
-      coil.partArr.forEach(arr => {
-        arr.forEach(part => {
-          part.visible = true
-        })
-      })
-      tl.kill()
-    })
+    // 1.frame
+    let frameAniObj = { translate_y: 100 * scale }
+    tl
+      .call(() => { part[2].forEach(ele => { ele.visible = !ele.visible }) })
+      .to(frameAniObj,
+        { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[2][0], frameAniObj) } })
+    // 2.base
+    let baseAniObj = { translate_y: 0 }
+    tl.addLabel('baseStart', '<0.5')
+      .call(() => { part[0].forEach(ele => { ele.visible = !ele.visible }) }, null, 'baseStart')
+      .to(baseAniObj,
+        { translate_y: -55, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[0][0], baseAniObj) } },
+        'baseStart')
+    // 3.middlePart
+    // 4.coil
+
     coil.status = TeslaCoil.STATUS.BUILDING
   }
 
