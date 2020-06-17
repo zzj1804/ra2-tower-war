@@ -58,7 +58,7 @@ new Zdog.Polygon({
     radius: 200,
     sides: 5,
     stroke: 10,
-    color: 'rgba(0,200,100,0.5)',
+    color: 'rgba(0,200,100,0.9)',
     fill: true,
     rotate: { x: -Zdog.TAU / 4 },
     translate: { y: 320 * scale1 }

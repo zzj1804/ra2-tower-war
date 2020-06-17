@@ -72,6 +72,12 @@ class TeslaCoil {
         { translate_y: -55, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[0][0], baseAniObj) } },
         'baseStart')
     // 3.middlePart
+    let middlePartAniObj = { translate_y: 160 * scale }
+    tl.addLabel('middlePartStart', 'baseStart+=1')
+      .call(() => { part[3].forEach(ele => { ele.visible = !ele.visible }) }, null, 'middlePartStart')
+      .to(middlePartAniObj,
+        { translate_y: 0, duration: 1, onUpdate: () => { coil.changeAnimeValue(part[3][0], middlePartAniObj) } },
+        'middlePartStart')
     // 4.coil
 
     coil.status = TeslaCoil.STATUS.BUILDING
