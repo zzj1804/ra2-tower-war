@@ -17,7 +17,7 @@ let illo3 = new Zdog.Illustration({
     zoom: 1,
     resize: true,
     dragRotate: true,
-    // rotate: { x: -Zdog.TAU / 12 }
+    rotate: { x: -Zdog.TAU / 12 }
 })
 
 let illo4 = new Zdog.Illustration({
