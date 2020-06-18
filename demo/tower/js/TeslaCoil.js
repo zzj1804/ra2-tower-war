@@ -139,6 +139,7 @@ class TeslaCoil {
   autoRepair() {
     let coil = this
     if (coil.isAutoRepairMode &&
+      !coil.isEnd() &&
       coil.hp < TeslaCoil.MAX_HP) {
       coil.repair(TeslaCoil.AUTO_REPAIR_VAL)
     }
@@ -147,6 +148,7 @@ class TeslaCoil {
   autoRepairModeAnime() {
     let coil = this
     if (coil.isAutoRepairMode &&
+      !coil.isEnd() &&
       coil.hp < TeslaCoil.MAX_HP &&
       (!coil.spanner || coil.spanner.isEnd)) {
       coil.spanner = new Spanner(coil.anchor, { x: 200, y: -400 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 1, '#CBCBCB', 3, 2)
