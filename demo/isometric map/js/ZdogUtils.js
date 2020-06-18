@@ -12,6 +12,14 @@ class ZdogUtils {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
   }
 
+  static vecCrossProduct(v1, v2) {
+    return new Zdog.Vector({
+      x: v1.y * v2.z - v1.z * v2.y,
+      y: v1.z * v2.x - v1.x * v2.z,
+      z: v1.x * v2.y - v1.y * v2.x
+    })
+  }
+
   static getUnitNormalVector(v1, v2) {
     let v = new Zdog.Vector({
       x: v1.y * v2.z - v2.y * v1.z,
@@ -190,9 +198,26 @@ class ZdogUtils {
   static getRotate(fromVec, toVec) {
     let fv = ZdogUtils.getUnitVector(fromVec)
     let tv = ZdogUtils.getUnitVector(toVec)
-
-    let RM = ZdogUtils.multiplyMatrices([[tv.x], [tv.y], [tv.z]], [[fv.x, fv.y, fv.z]])
+    let axis = ZdogUtils.vecCrossProduct(fv, tv)
+    let x = axis.x
+    let y = axis.y
+    let z = axis.z
+    let cosθ = ZdogUtils.vecDotProduct(fv, tv)
+    let dcosθ = 1 - cosθ
+    let sinθ = Math.sqrt(1 - Math.pow(cosθ, 2))
+    let RM = [
+      [x * x * dcosθ + cosθ, x * y * dcosθ + x * sinθ, x * z * dcosθ - y * sinθ],
+      [x * y * dcosθ - x * sinθ, y * y * dcosθ + cosθ, y * z * dcosθ + x * sinθ],
+      [x * z * dcosθ + y * sinθ, y * z * dcosθ - x * sinθ, x * x * dcosθ + cosθ]
+    ]
     console.log(RM)
+
+    let ry = -Math.atan2(-RM[2][0], Math.sqrt(Math.pow(RM[2][1], 2) + Math.pow(RM[2][2], 2)))
+    let cosRy = Math.cos(ry)
+    let rx = Math.atan2(RM[2][1] / cosRy, RM[2][2] / cosRy)
+    let rz = Math.atan2(RM[1][0] / cosRy, RM[0][0] / cosRy)
+
+    return new Zdog.Vector({ x: rx, y: ry, z: rz })
   }
 
   static getDistance(v1, v2) {
