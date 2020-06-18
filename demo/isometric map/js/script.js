@@ -157,9 +157,7 @@ class IsometricMap {
           thisMap.removeModelByGrid(idx)
           thisMap.selectionBox.color = 'green'
         } else {
-          let c = new TeslaCoil(thisMap.isoAnchor, {}, { x: -Zdog.TAU / 4 }, 0.25)
-          thisMap.addModelByGrid(c.model, idx)
-          c.build()
+          thisMap.addModelByGrid(getAxis(0.5), idx)
           thisMap.selectionBox.color = 'red'
         }
       }
