@@ -20,20 +20,24 @@ let illo = new Zdog.Illustration({
     element: '#illo',
     zoom: 1,
     dragRotate: true,
-    resize: true
+    resize: true,
+    // rotate: { x: -Zdog.TAU / 8 }
 })
 
 function render() {
     stats.begin()
 
-    let height = 15
-    let hwRatio = 0.6
+    let length = 150
+    let lwRatio = 2
     let feq = 15
-    let duration = 5
+    let duration = 10
+    let stroke = 10
+    let scale = 0.5
+    let color = '#CBCBCB'
     let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }
 
-    if(ENV.time % 15 === 0) {
-        new Fire(illo, translate, height, hwRatio, feq, duration)
+    if (ENV.time % 77 === 0) {
+        new Spanner(illo, translate, {}, length, lwRatio, stroke, scale, color, feq, duration)
     }
 
     illo.updateRenderGraph()
