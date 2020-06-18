@@ -5,13 +5,13 @@ class TeslaCoil {
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
     coil.scale = scale
-    coil.isAutoRepairMode = false
+    coil.isAutoRepairMode = true
     coil.target = null
     coil.loadTime = 0
     coil.partArr = []
     coil.aniObjArr = []
-    coil.anchor = new Zdog.Anchor({ addTo: addTo, translate: translate, rotate: rotate })
     coil.model = coil.getModel(addTo, translate, rotate, scale)
+    coil.anchor = new Zdog.Anchor({ addTo: coil.model })
     coil.centerPoint = coil.model.translate.copy().subtract({ y: 200 * scale })
     coil.topPoint = coil.model.translate.copy().subtract({ y: 400 * scale })
     coil.tl = gsap.timeline({ repeat: -1 })
@@ -24,11 +24,11 @@ class TeslaCoil {
     if (coil.isEnd()) return
     if (coil.hp <= 0) coil.status = TeslaCoil.STATUS.DESTROYED
 
-    // TODO repair anime
-    if (coil.isAutoRepairMode) {
-      coil.repair(TeslaCoil.AUTO_REPAIR_VAL)
-    }
+    // autoRepairMode
+    coil.autoRepairModeAnime()
+    coil.autoRepair()
 
+    // lean the tower if damaged
     coil.lean()
 
     switch (coil.status) {
@@ -130,14 +130,27 @@ class TeslaCoil {
     this.getDamage(-v)
   }
 
-  switchAutoRepair() {
+  switchAutoRepairMode() {
     let coil = this
-    if (coil.hp >= TeslaCoil.MAX_HP || coil.hp <= 0) {
-      coil.isAutoRepairMode = false
-      return false
-    }
     coil.isAutoRepairMode = !coil.isAutoRepairMode
     return coil.isAutoRepairMode
+  }
+
+  autoRepair() {
+    let coil = this
+    if (coil.isAutoRepairMode &&
+      coil.hp < TeslaCoil.MAX_HP) {
+      coil.repair(TeslaCoil.AUTO_REPAIR_VAL)
+    }
+  }
+
+  autoRepairModeAnime() {
+    let coil = this
+    if (coil.isAutoRepairMode &&
+      coil.hp < TeslaCoil.MAX_HP &&
+      (!coil.spanner || coil.spanner.isEnd)) {
+      coil.spanner = new Spanner(coil.anchor, { x: 200, y: -400 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 1, '#CBCBCB', 3, 2)
+    }
   }
 
   getDamage(damage) {
@@ -344,6 +357,10 @@ class TeslaCoil {
     if (coil.lightning) {
       coil.lightning.remove()
       coil.lightning = null
+    }
+    if (coil.spanner) {
+      coil.spanner.remove()
+      coil.spanner = null
     }
   }
 
