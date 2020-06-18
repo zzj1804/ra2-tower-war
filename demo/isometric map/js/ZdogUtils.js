@@ -296,6 +296,8 @@ function ZdogUtilsTest() {
   cout(ZdogUtils.getRotationMatrix(test8Rotate))
   let test8ToVec = test8FromVec.copy().rotate(test8Rotate)
   let test8ResultRotate = ZdogUtils.getRotate(test8FromVec, test8ToVec)
+  cout(test8Rotate)
+  cout(test8ResultRotate)
   cout('8. ZdogUtils.getRotate() ' + (ZdogUtils.isVecEqual(test8Rotate, test8ResultRotate) ? 'pass' : 'not pass'))
 
   cout('----------- ZdogUtilsTest END -------------')
