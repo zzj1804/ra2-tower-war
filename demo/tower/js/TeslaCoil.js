@@ -226,11 +226,25 @@ class TeslaCoil {
   attack() {
     let coil = this
     if (coil.target) {
-      // TODO attack anime
+      // TODO test attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
+      let topPoint = coil.getTopPoint()
+      let targetPoint = coil.target.centerPoint
+      let fromVec = new Zdog.Vector({ x: 1 })
+      let toVec = targetPoint.copy().subtract(topPoint)
+      let rotate = ZdogUtils.getRotate(fromVec, toVec)
+      let distance = ZdogUtils.getDistance(topPoint, targetPoint)
+      let inflectionPointNum = distance / 50
+      new Lightning(coil.addTo, topBallPoint, rotate, 10 * coil.scale, distance, inflectionPointNum)
       coil.target.getDamage(TeslaCoil.AP)
+      gsap.timeline({}).to(1, { duration: 1 })
+        .call(() => {
+          coil.target = null
+          coil.status = TeslaCoil.STATUS.STANDBY
+        })
+    } else {
+      coil.status = TeslaCoil.STATUS.STANDBY
     }
-    coil.status = TeslaCoil.STATUS.STANDBY
   }
 
   lean() {
