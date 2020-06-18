@@ -1,6 +1,6 @@
 class ZdogUtils {
-  static getUnitVector(v){
-    let mag = v.magnitude();
+  static getUnitVector(v) {
+    let mag = v.magnitude()
     return new Zdog.Vector({
       x: v.x / mag,
       y: v.y / mag,
@@ -8,12 +8,12 @@ class ZdogUtils {
     })
   }
 
-  static vecDotProduct(v1, v2){
+  static vecDotProduct(v1, v2) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
   }
 
-  static getUnitNormalVector(v1, v2){
-    let v =  new Zdog.Vector({
+  static getUnitNormalVector(v1, v2) {
+    let v = new Zdog.Vector({
       x: v1.y * v2.z - v2.y * v1.z,
       y: v2.x * v1.z - v1.x * v2.z,
       z: v1.x * v2.y - v2.x * v1.y
@@ -21,15 +21,15 @@ class ZdogUtils {
     return ZdogUtils.getUnitVector(v)
   }
 
-  static getCoordinateTransformatedVector(CoorAxis1, CoorAxis2, vectorInCoorAxis1){
+  static getCoordinateTransformatedVector(CoorAxis1, CoorAxis2, vectorInCoorAxis1) {
     let cos = ZdogUtils.vecDotProduct(CoorAxis1, CoorAxis2)
     let sin = Math.sqrt(1 - cos * cos)
     let dcos = 1 - cos
-    let {x, y, z} = ZdogUtils.getUnitNormalVector(CoorAxis1, CoorAxis2)
+    let { x, y, z } = ZdogUtils.getUnitNormalVector(CoorAxis1, CoorAxis2)
     let rotationMatrix = [
-      [ cos + dcos * x * x     , dcos * x * y - sin * z , dcos * x * z + sin * y ],
-      [ dcos * y * x + sin * z , cos + dcos * y * y     , dcos * y * z - sin * x ],
-      [ dcos * z * x - sin * y , dcos * z * y + sin * x , cos + dcos * z * z     ]
+      [cos + dcos * x * x, dcos * x * y - sin * z, dcos * x * z + sin * y],
+      [dcos * y * x + sin * z, cos + dcos * y * y, dcos * y * z - sin * x],
+      [dcos * z * x - sin * y, dcos * z * y + sin * x, cos + dcos * z * z]
     ]
 
     let ox = vectorInCoorAxis1.x
@@ -61,7 +61,7 @@ class ZdogUtils {
     let ny = (y * x * dcos + z * sin) * ox + (y * y * dcos + cos) * oy + (y * z * dcos - x * sin) * oz
     let nz = (x * z * dcos - y * sin) * ox + (y * z * dcos + x * sin) * oy + (z * z * dcos + cos) * oz
 
-    return new Zdog.Vector({x: nx, y: ny, z: nz})
+    return new Zdog.Vector({ x: nx, y: ny, z: nz })
   }
 
   static getRotationMatrix(rotation) {
@@ -143,20 +143,20 @@ class ZdogUtils {
   static multiplyMatrices(m1, m2) {
     let result = []
     for (let i = 0; i < m1.length; i++) {
-        result[i] = []
-        for (let j = 0; j < m2[0].length; j++) {
-          let sum = 0
-            for (let k = 0; k < m1[0].length; k++) {
-                sum += m1[i][k] * m2[k][j]
-            }
-            result[i][j] = sum
+      result[i] = []
+      for (let j = 0; j < m2[0].length; j++) {
+        let sum = 0
+        for (let k = 0; k < m1[0].length; k++) {
+          sum += m1[i][k] * m2[k][j]
         }
+        result[i][j] = sum
+      }
     }
     return result
   }
 
   static multiplyMatrixAndVec(m, v) {
-    let result = ZdogUtils.multiplyMatrices(m, [[v.x],[v.y],[v.z]])
+    let result = ZdogUtils.multiplyMatrices(m, [[v.x], [v.y], [v.z]])
     return new Zdog.Vector({
       x: result[0][0],
       y: result[1][0],
@@ -183,14 +183,26 @@ class ZdogUtils {
   }
 
   static isVecEqual(v1, v2) {
-    if(!v1 || !v2) return false
-    return isNumEqual(v1.x, v2.x) && isNumEqual(v1.y, v2.y) && isNumEqual(v1.z, v2.z)
+    if (!v1 || !v2) return false
+    return ZdogUtils.isNumEqual(v1.x, v2.x) && ZdogUtils.isNumEqual(v1.y, v2.y) && ZdogUtils.isNumEqual(v1.z, v2.z)
   }
-}
 
-function isNumEqual(num, sign) {
-  let v = num - sign
-  return v > -0.0000001 && v < 0.0000001
+  static getRotate(fromVec, toVec) {
+    let fv = ZdogUtils.getUnitVector(fromVec)
+    let tv = ZdogUtils.getUnitVector(toVec)
+
+    let RM = ZdogUtils.multiplyMatrices([[tv.x], [tv.y], [tv.z]], [[fv.x, fv.y, fv.z]])
+    console.log(RM)
+  }
+
+  static getDistance(v1, v2) {
+    return Math.sqrt(Math.pow((v1.x - v2.x, 2)) + Math.pow((v1.y - v2.y, 2)) + Math.pow((v1.z - v2.z, 2)))
+  }
+
+  static isNumEqual(num, sign) {
+    let v = num - sign
+    return v > -0.0000001 && v < 0.0000001
+  }
 }
 
 function ZdogUtilsTest() {
@@ -199,10 +211,10 @@ function ZdogUtilsTest() {
   let angleX = Math.random() * Zdog.TAU
   let angleY = Math.random() * Zdog.TAU
   let angleZ = Math.random() * Zdog.TAU
-  let x00 = new Zdog.Vector({x: Math.random()})
-  let y00 = new Zdog.Vector({y: Math.random()})
-  let z00 = new Zdog.Vector({z: Math.random()})
-  let rotation = new Zdog.Vector({x: angleX, y: angleY, z: angleZ})
+  let x00 = new Zdog.Vector({ x: Math.random() })
+  let y00 = new Zdog.Vector({ y: Math.random() })
+  let z00 = new Zdog.Vector({ z: Math.random() })
+  let rotation = new Zdog.Vector({ x: angleX, y: angleY, z: angleZ })
 
   // isVecEqual
   let isIsVecEqualPass = ZdogUtils.isVecEqual(x00, x00) && ZdogUtils.isVecEqual(y00, y00) && ZdogUtils.isVecEqual(z00, z00)
@@ -212,7 +224,7 @@ function ZdogUtilsTest() {
   x00 = ZdogUtils.getUnitVector(x00)
   y00 = ZdogUtils.getUnitVector(y00)
   z00 = ZdogUtils.getUnitVector(z00)
-  let isGetUnitVectorPass = isNumEqual(x00.magnitude(), 1) && isNumEqual(y00.magnitude(), 1) && isNumEqual(z00.magnitude(), 1)
+  let isGetUnitVectorPass = ZdogUtils.isNumEqual(x00.magnitude(), 1) && ZdogUtils.isNumEqual(y00.magnitude(), 1) && ZdogUtils.isNumEqual(z00.magnitude(), 1)
   cout('1. ZdogUtils.getUnitVector() ' + (isGetUnitVectorPass ? 'pass' : 'not pass'))
 
   let x01 = x00.copy().rotate(rotation)
@@ -220,21 +232,21 @@ function ZdogUtilsTest() {
   let z01 = z00.copy().rotate(rotation)
 
   // vecDotProduct
-  let isVecDotProductPass = isNumEqual(ZdogUtils.vecDotProduct(x00, y00), 0) &&
-                            isNumEqual(ZdogUtils.vecDotProduct(x00, z00), 0) &&
-                            isNumEqual(ZdogUtils.vecDotProduct(z00, y00), 0)
+  let isVecDotProductPass = ZdogUtils.isNumEqual(ZdogUtils.vecDotProduct(x00, y00), 0) &&
+    ZdogUtils.isNumEqual(ZdogUtils.vecDotProduct(x00, z00), 0) &&
+    ZdogUtils.isNumEqual(ZdogUtils.vecDotProduct(z00, y00), 0)
   cout('2. ZdogUtils.vecDotProduct() ' + (isVecDotProductPass ? 'pass' : 'not pass'))
 
   // getUnitNormalVector
   let isGetUnitNormalVectorPass = ZdogUtils.isVecEqual(ZdogUtils.getUnitNormalVector(x00, y00), z00) &&
-                                  ZdogUtils.isVecEqual(ZdogUtils.getUnitNormalVector(z00, x00), y00) &&
-                                  ZdogUtils.isVecEqual(ZdogUtils.getUnitNormalVector(y00, z00), x00)
+    ZdogUtils.isVecEqual(ZdogUtils.getUnitNormalVector(z00, x00), y00) &&
+    ZdogUtils.isVecEqual(ZdogUtils.getUnitNormalVector(y00, z00), x00)
   cout('3. ZdogUtils.getUnitNormalVector() ' + (isGetUnitNormalVectorPass ? 'pass' : 'not pass'))
 
   // getCoordinateTransformatedVector
-  let isGetCoordinateTransformatedVectorPass = ZdogUtils.isVecEqual(ZdogUtils.getCoordinateTransformatedVector(z01, z00, z00) ,z01) &&
-                                               ZdogUtils.isVecEqual(ZdogUtils.getCoordinateTransformatedVector(y01, y00, y00), y01) &&
-                                               ZdogUtils.isVecEqual(ZdogUtils.getCoordinateTransformatedVector(x01, x00, x00), x01)
+  let isGetCoordinateTransformatedVectorPass = ZdogUtils.isVecEqual(ZdogUtils.getCoordinateTransformatedVector(z01, z00, z00), z01) &&
+    ZdogUtils.isVecEqual(ZdogUtils.getCoordinateTransformatedVector(y01, y00, y00), y01) &&
+    ZdogUtils.isVecEqual(ZdogUtils.getCoordinateTransformatedVector(x01, x00, x00), x01)
   cout('4. ZdogUtils.getCoordinateTransformatedVector() ' + (isGetCoordinateTransformatedVectorPass ? 'pass' : 'not pass'))
 
   // rotateAroundUnitVector
@@ -253,6 +265,13 @@ function ZdogUtilsTest() {
   let TM7 = ZdogUtils.getTransposeRotationMatrix(rotation)
   let testVec7 = ZdogUtils.multiplyMatrixAndVec(TM7, z01)
   cout('7. ZdogUtils.getTransposeRotationMatrix() ' + (ZdogUtils.isVecEqual(testVec7, z00) ? 'pass' : 'not pass'))
+
+  let test8FromVec = new Zdog.Vector({ x: Math.random(), y: Math.random(), z: Math.random() })
+  let test8Rotate = new Zdog.Vector({ x: Math.random(), y: Math.random(), z: Math.random() })
+  cout(ZdogUtils.getRotationMatrix(test8Rotate))
+  let test8ToVec = test8FromVec.copy().rotate(test8Rotate)
+  let test8ResultRotate = ZdogUtils.getRotate(test8FromVec, test8ToVec)
+  cout('8. ZdogUtils.getRotate() ' + (ZdogUtils.isVecEqual(test8Rotate, test8ResultRotate) ? 'pass' : 'not pass'))
 
   cout('----------- ZdogUtilsTest END -------------')
 }
