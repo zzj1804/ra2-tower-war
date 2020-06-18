@@ -5,7 +5,7 @@ class Spanner {
     spanner.spannerGroup = new Zdog.Group({
       addTo: addTo,
       translate: translate,
-      rotate,
+      rotate: rotate,
       scale: scale
     })
 
