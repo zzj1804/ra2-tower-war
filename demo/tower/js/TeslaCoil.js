@@ -1,7 +1,8 @@
 class TeslaCoil {
-  constructor(addTo, translate, rotate, scale) {
+  constructor(addTo, translate, rotate, scale, map) {
     let coil = this
     coil.addTo = addTo
+    coil.map = map
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
     coil.scale = scale
@@ -13,7 +14,6 @@ class TeslaCoil {
     coil.model = coil.getModel(addTo, translate, rotate, scale)
     coil.anchor = new Zdog.Anchor({ addTo: coil.model })
     coil.centerPoint = coil.model.translate.copy().subtract({ y: 200 * scale })
-    coil.topPoint = coil.model.translate.copy().subtract({ y: 400 * scale })
     coil.tl = gsap.timeline({ repeat: -1 })
       .to(1, { duration: TeslaCoil.RENDER_PERIOD })
       .call(() => { coil.render() })
@@ -106,6 +106,15 @@ class TeslaCoil {
         'coilStart')
   }
 
+  getTopPoint() {
+    let coil = this
+    if (coil.isLean()) {
+      return coil.model.translate.copy().subtract({ x: -100 * coil.scale, y: 625 * coil.scale, z: 80 * coil.scale })
+    } else {
+      return coil.model.translate.copy().subtract({ y: 675 * coil.scale })
+    }
+  }
+
   standby() {
     let coil = this
     if (!coil.isCD() && coil.findAndSetTarget()) {
@@ -118,6 +127,10 @@ class TeslaCoil {
       coil.lightning = new Lightning(anchor, { y: -400 }, { z: Zdog.TAU / 4 },
         10 * coil.scale, distance, 8,
         function (x) { return (25 / Math.sqrt(distance) * (x * x / distance - x)) })
+
+      let topBallPoint = coil.getTopPoint()
+      new Lightning(coil.addTo, topBallPoint, {},
+        10 * coil.scale, distance, 8)
     }
   }
 
@@ -329,11 +342,11 @@ class TeslaCoil {
     let coil = this
     if (coil.isEnd()) return
     coil.addTo = null
+    coil.map = null
     coil.status = TeslaCoil.STATUS.END
     coil.isAutoRepairMode = false
     coil.target = null
     coil.centerPoint = null
-    coil.topPoint = null
     coil.loadTime = 0
     coil.hp = 0
     coil.partArr.length = 0
