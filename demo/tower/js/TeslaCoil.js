@@ -129,7 +129,7 @@ class TeslaCoil {
       let anchor = coil.partArr[4][7]
       let distance = 350
       coil.lightning = new Lightning(anchor, { y: -400 }, { z: Zdog.TAU / 4 },
-        10 * coil.scale, distance, 8,
+        10 * coil.scale, distance, 8, 10, 150,
         function (x) { return (25 / Math.sqrt(distance) * (x * x / distance - x)) })
     }
   }
@@ -192,7 +192,10 @@ class TeslaCoil {
     let midCoil = coil.partArr[4][4]
     let bottomCoil = coil.partArr[4][3]
     coil.loading_tl = gsap.timeline({
-      onStart: () => { coil.status = TeslaCoil.STATUS.LOADING },
+      onStart: () => {
+        coil.lightning.remove()
+        coil.status = TeslaCoil.STATUS.LOADING
+      },
       onUpdate: () => {
         if (!coil.target || coil.target.isEnd()) {
           coil.status = TeslaCoil.STATUS.STANDBY
@@ -244,9 +247,9 @@ class TeslaCoil {
       console.log(rotate)
       console.log(distance)
       let inflectionPointNum = distance / 50
-      new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum)
+      new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, 0.5, 8)
       coil.target.getDamage(TeslaCoil.AP)
-      gsap.timeline({}).to(1, { duration: 1 })
+      gsap.timeline({}).to(1, { duration: 0.5 })
         .call(() => {
           coil.target = null
           coil.status = TeslaCoil.STATUS.STANDBY

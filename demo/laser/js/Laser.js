@@ -1,5 +1,5 @@
 class Laser {
-  constructor(addTo, translate, rotate, scale, distance) {
+  constructor(addTo, translate, rotate, scale, distance, duration) {
     let laser = this
     laser.isEnd = false
     laser.scale = scale
@@ -37,12 +37,12 @@ class Laser {
       color: 'rgba(157,240,250,0)',
       stroke: scale * 0.9,
       ease: "expo.out",
-      duration: 3
+      duration: duration
     }, 'begin').to(laser.aObj2, {
       color: 'rgba(255,255,255,0)',
       stroke: scale * 1.1,
       ease: "expo.out",
-      duration: 3
+      duration: duration
     }, 'begin')
   }
 

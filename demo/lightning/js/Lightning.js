@@ -1,5 +1,5 @@
 class Lightning {
-  constructor(addTo, translate, rotate, scale, distance, inflectionPointNum, curveFunc) {
+  constructor(addTo, translate, rotate, scale, distance, inflectionPointNum, duration, frequency, curveFunc) {
     let lit = this
     lit.isEnd = false
     lit.scale = scale
@@ -23,11 +23,10 @@ class Lightning {
     lit.setRandomRotate(lit.lit3)
 
     lit.tl = new TimelineMax()
-    let feq = 15
-    for (let i = 1; i < feq; i++) {
-      lit.tl.call(() => lit.updateLit(), null, i / feq)
+    for (let i = 1; i < frequency; i++) {
+      lit.tl.call(() => lit.updateLit(), null, i / frequency * duration)
     }
-    lit.tl.call(() => lit.remove(), null, 1)
+    lit.tl.call(() => lit.remove(), null, duration)
   }
 
   getNewLit(color) {

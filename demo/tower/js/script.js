@@ -77,7 +77,7 @@ setGlobalTimeScale(1)
 
 let c = new TeslaCoil(illo3, { y: 300 * scale1 }, {}, scale1, 'red')
 c.build()
-let t3 = new Target(illo3, { x: 220 }, {})
+let t3 = new Target(illo3, { x: 220, y: -100, z: 50 }, {})
 let t4 = new Target(illo4, {}, {})
 
 render()
