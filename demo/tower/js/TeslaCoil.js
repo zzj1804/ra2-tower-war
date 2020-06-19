@@ -1,8 +1,9 @@
 class TeslaCoil {
-  constructor(addTo, translate, rotate, scale, map) {
+  constructor(addTo, translate, rotate, scale, teamColor, map) {
     let coil = this
     coil.addTo = addTo
     coil.map = map
+    coil.teamColor = teamColor
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
     coil.scale = scale
@@ -10,10 +11,9 @@ class TeslaCoil {
     coil.target = null
     coil.loadTime = 0
     coil.partArr = []
-    coil.aniObjArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
     coil.anchor = new Zdog.Anchor({ addTo: coil.model })
-    coil.centerPoint = coil.model.translate.copy().subtract({ y: 200 * scale })
+    coil.centerPoint = new Zdog.Vector(translate).subtract({ y: 200 * scale })
     coil.tl = gsap.timeline({ repeat: -1 })
       .to(1, { duration: TeslaCoil.RENDER_PERIOD })
       .call(() => { coil.render() })
@@ -115,6 +115,10 @@ class TeslaCoil {
     }
   }
 
+  getCenterPoint() {
+    return this.centerPoint
+  }
+
   standby() {
     let coil = this
     if (!coil.isCD() && coil.findAndSetTarget()) {
@@ -127,10 +131,6 @@ class TeslaCoil {
       coil.lightning = new Lightning(anchor, { y: -400 }, { z: Zdog.TAU / 4 },
         10 * coil.scale, distance, 8,
         function (x) { return (25 / Math.sqrt(distance) * (x * x / distance - x)) })
-
-      let topBallPoint = coil.getTopPoint()
-      new Lightning(coil.addTo, topBallPoint, {},
-        10 * coil.scale, distance, 8)
     }
   }
 
@@ -177,6 +177,11 @@ class TeslaCoil {
       hp = 0
     }
     coil.hp = hp
+  }
+
+  isSameTeam(teamColor) {
+    let coil = this
+    return coil.teamColor === teamColor
   }
 
   loading() {
@@ -229,13 +234,17 @@ class TeslaCoil {
       // TODO test attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
       let topPoint = coil.getTopPoint()
-      let targetPoint = coil.target.centerPoint
+      let targetPoint = coil.target.getCenterPoint()
       let fromVec = new Zdog.Vector({ x: 1 })
       let toVec = targetPoint.copy().subtract(topPoint)
-      let rotate = ZdogUtils.getRotate(fromVec, toVec)
+      let rotate = new Zdog.Vector({ y: Math.atan(toVec.z / toVec.x), z: Math.atan(toVec.y / toVec.x) })
       let distance = ZdogUtils.getDistance(topPoint, targetPoint)
+      console.log(topPoint)
+      console.log(targetPoint)
+      console.log(rotate)
+      console.log(distance)
       let inflectionPointNum = distance / 50
-      new Lightning(coil.addTo, topBallPoint, rotate, 10 * coil.scale, distance, inflectionPointNum)
+      new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum)
       coil.target.getDamage(TeslaCoil.AP)
       gsap.timeline({}).to(1, { duration: 1 })
         .call(() => {
@@ -364,7 +373,6 @@ class TeslaCoil {
     coil.loadTime = 0
     coil.hp = 0
     coil.partArr.length = 0
-    coil.aniObjArr.length = 0
     coil.anchor.remove()
     coil.anchor = null
     coil.model.remove()
@@ -455,8 +463,9 @@ class TeslaCoil {
 
   getModel(addTo, translate, rotate, scale) {
     let thisCoil = this
+
     // colors
-    const red = '#FF0000'
+    const red = thisCoil.teamColor ? thisCoil.teamColor : '#FF0000'
     const silver = '#EEF'
     const gold = '#FA6'
 

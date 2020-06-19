@@ -28,6 +28,29 @@ let illo4 = new Zdog.Illustration({
     rotate: { x: -Zdog.TAU / 6, y: 0, y: Zdog.TAU / 8 }
 })
 
+scale1 = 0.4
+scale2 = 0.4
+new Zdog.Polygon({
+    addTo: illo3,
+    radius: 200,
+    sides: 5,
+    stroke: 10,
+    color: 'rgba(0,200,100,0.9)',
+    fill: true,
+    rotate: { x: -Zdog.TAU / 4 },
+    translate: { y: 320 * scale1 }
+})
+new Zdog.Polygon({
+    addTo: illo4,
+    radius: 200,
+    sides: 5,
+    stroke: 10,
+    color: 'rgba(0,100,100,0.9)',
+    fill: true,
+    rotate: { x: -Zdog.TAU / 4 },
+    translate: { y: 320 * scale2 }
+})
+
 function render() {
     illo3.updateRenderGraph()
     illo4.updateRenderGraph()
@@ -51,30 +74,11 @@ function displayLoadingLayer(p) {
 
 
 setGlobalTimeScale(1)
-scale1 = 0.4
-let c = new TeslaCoil(illo3, { y: 300 * scale1 }, {}, scale1)
-scale2 = 0.4
+
+let c = new TeslaCoil(illo3, { y: 300 * scale1 }, {}, scale1, 'red')
 c.build()
-new Zdog.Polygon({
-    addTo: illo3,
-    radius: 200,
-    sides: 5,
-    stroke: 10,
-    color: 'rgba(0,200,100,0.9)',
-    fill: true,
-    rotate: { x: -Zdog.TAU / 4 },
-    translate: { y: 320 * scale1 }
-})
-new Zdog.Polygon({
-    addTo: illo4,
-    radius: 200,
-    sides: 5,
-    stroke: 10,
-    color: 'rgba(0,100,100,0.9)',
-    fill: true,
-    rotate: { x: -Zdog.TAU / 4 },
-    translate: { y: 320 * scale2 }
-})
+let t3 = new Target(illo3, { x: 220 }, {})
+let t4 = new Target(illo4, {}, {})
 
 render()
 displayLoadingLayer(false)
