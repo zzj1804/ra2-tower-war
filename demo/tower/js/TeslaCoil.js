@@ -249,11 +249,10 @@ class TeslaCoil {
       let inflectionPointNum = distance / 50
       new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, 0.5, 8)
       coil.target.getDamage(TeslaCoil.AP)
-      gsap.timeline({}).to(1, { duration: 0.5 })
-        .call(() => {
-          coil.target = null
-          coil.status = TeslaCoil.STATUS.STANDBY
-        })
+      gsap.timeline({}).call(() => {
+        coil.target = null
+        coil.status = TeslaCoil.STATUS.STANDBY
+      }, null, 0.5)
     } else {
       coil.status = TeslaCoil.STATUS.STANDBY
     }
