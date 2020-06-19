@@ -210,7 +210,7 @@ class ZdogUtils {
       [x * y * dcosθ - x * sinθ, y * y * dcosθ + cosθ, y * z * dcosθ + x * sinθ],
       [x * z * dcosθ + y * sinθ, y * z * dcosθ - x * sinθ, x * x * dcosθ + cosθ]
     ]
-    console.log(RM)
+    console.table(RM)
 
     let ry = -Math.atan2(-RM[2][0], Math.sqrt(Math.pow(RM[2][1], 2) + Math.pow(RM[2][2], 2)))
     let cosRy = Math.cos(ry)
@@ -293,11 +293,11 @@ function ZdogUtilsTest() {
 
   let test8FromVec = new Zdog.Vector({ x: Math.random(), y: Math.random(), z: Math.random() })
   let test8Rotate = new Zdog.Vector({ x: Math.random(), y: Math.random(), z: Math.random() })
-  cout(ZdogUtils.getRotationMatrix(test8Rotate))
+  console.table(ZdogUtils.getRotationMatrix(test8Rotate))
   let test8ToVec = test8FromVec.copy().rotate(test8Rotate)
   let test8ResultRotate = ZdogUtils.getRotate(test8FromVec, test8ToVec)
-  cout(test8Rotate)
-  cout(test8ResultRotate)
+  // cout(test8Rotate)
+  // cout(test8ResultRotate)
   cout('8. ZdogUtils.getRotate() ' + (ZdogUtils.isVecEqual(test8Rotate, test8ResultRotate) ? 'pass' : 'not pass'))
 
   cout('----------- ZdogUtilsTest END -------------')

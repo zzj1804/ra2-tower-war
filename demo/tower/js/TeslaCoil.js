@@ -136,6 +136,7 @@ class TeslaCoil {
 
   findAndSetTarget() {
     let coil = this
+    // TODO find target on map
     return false
   }
 
@@ -240,12 +241,11 @@ class TeslaCoil {
       let targetPoint = coil.target.getCenterPoint()
       let fromVec = new Zdog.Vector({ x: 1 })
       let toVec = targetPoint.copy().subtract(topPoint)
-      let rotate = new Zdog.Vector({ y: Math.atan(toVec.z / toVec.x), z: Math.atan(toVec.y / toVec.x) })
+      // let angelY = Math.atan(toVec.z / toVec.x)
+      // let angelZ = Math.atan(toVec.y / toVec.x) + (toVec.x < 0 ? Zdog.TAU / 2 : 0)
+      // let rotate = new Zdog.Vector({ y: angelY, z: angelZ })
       let distance = ZdogUtils.getDistance(topPoint, targetPoint)
-      console.log(topPoint)
-      console.log(targetPoint)
-      console.log(rotate)
-      console.log(distance)
+      let rotate = ZdogUtils.getRotate(fromVec, toVec)
       let inflectionPointNum = distance / 50
       new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, 0.5, 8)
       coil.target.getDamage(TeslaCoil.AP)

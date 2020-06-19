@@ -37,8 +37,7 @@ new Zdog.Polygon({
     stroke: 10,
     color: 'rgba(0,200,100,0.9)',
     fill: true,
-    rotate: { x: -Zdog.TAU / 4 },
-    translate: { y: 320 * scale1 }
+    rotate: { x: -Zdog.TAU / 4 }
 })
 new Zdog.Polygon({
     addTo: illo4,
@@ -47,8 +46,7 @@ new Zdog.Polygon({
     stroke: 10,
     color: 'rgba(0,100,100,0.9)',
     fill: true,
-    rotate: { x: -Zdog.TAU / 4 },
-    translate: { y: 320 * scale2 }
+    rotate: { x: -Zdog.TAU / 4 }
 })
 
 function render() {
@@ -75,10 +73,19 @@ function displayLoadingLayer(p) {
 
 setGlobalTimeScale(1)
 
-let c = new TeslaCoil(illo3, { y: 300 * scale1 }, {}, scale1, 'red')
+let c = new TeslaCoil(illo3, {}, {}, scale1, 'red')
 c.build()
-let t3 = new Target(illo3, { x: 220, y: -100, z: 50 }, {})
+let t3 = new Target(illo3, { x: -10, y: -100, z: 200 }, {})
 let t4 = new Target(illo4, {}, {})
 
 render()
 displayLoadingLayer(false)
+timedRandomTarget()
+
+function timedRandomTarget() {
+    t3.changeCenterPoint({ x: (1 + Math.random()) * 150, y: -Math.random() * 300, z: (1 - Math.random()) * 150 })
+    t4.changeCenterPoint({ x: (1 + Math.random()) * 150, y: -Math.random() * 300, z: (1 - Math.random()) * 150 })
+    c.target = t3
+    c.loading()
+    setTimeout("timedRandomTarget()", 5000)
+}
