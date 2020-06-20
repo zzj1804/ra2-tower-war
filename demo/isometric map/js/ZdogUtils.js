@@ -197,18 +197,21 @@ class ZdogUtils {
 
   static getRotate(fromVec, toVec) {
     let fv = ZdogUtils.getUnitVector(fromVec)
+    fv.y = -fv.y
     let tv = ZdogUtils.getUnitVector(toVec)
-    let axis = ZdogUtils.vecCrossProduct(fv, tv)
+    tv.y = -tv.y
+    let axis = ZdogUtils.getUnitVector(ZdogUtils.vecCrossProduct(fv, tv))
     let x = axis.x
     let y = axis.y
     let z = axis.z
-    let cosθ = ZdogUtils.vecDotProduct(fv, tv)
-    let dcosθ = 1 - cosθ
-    let sinθ = Math.sqrt(1 - Math.pow(cosθ, 2))
+    let cos = ZdogUtils.vecDotProduct(fv, tv)
+    let dcos = 1 - cos
+    let sin = Math.sqrt(1 - cos**2)
+    
     let RM = [
-      [x * x * dcosθ + cosθ, x * y * dcosθ + x * sinθ, x * z * dcosθ - y * sinθ],
-      [x * y * dcosθ - x * sinθ, y * y * dcosθ + cosθ, y * z * dcosθ + x * sinθ],
-      [x * z * dcosθ + y * sinθ, y * z * dcosθ - x * sinθ, x * x * dcosθ + cosθ]
+      [x * x * dcos + cos, x * y * dcos - z * sin, x * z * dcos + y * sin],
+      [x * y * dcos + z * sin, y * y * dcos + cos, y * z * dcos - x * sin],
+      [x * z * dcos - y * sin, y * z * dcos + x * sin, z * z * dcos + cos]
     ]
     console.table(RM)
 
