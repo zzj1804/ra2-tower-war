@@ -12,7 +12,7 @@ let illo = new Zdog.Illustration({
   },
   rotate: { x: -Zdog.TAU / 12}
 });
-class PrismTower {
+class PrismTowerModel {
   constructor(){
     const silver = '#DFDFDF';
     const blue = '#0000FF';
@@ -401,7 +401,6 @@ class PrismTower {
       //   translate: { y: -60, z: prismRadius + 10 },
       // });
     }
-    // TODO 镜子角度调节得更平缓
     
     function animate() {
       illo.rotate.y += isSpinning ? 0.03 : 0;
@@ -414,4 +413,4 @@ class PrismTower {
   
 }
 
-let p = new PrismTower();
+let p = new PrismTowerModel();

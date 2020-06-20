@@ -14,7 +14,7 @@ const ENV = {
 
 let illo3 = new Zdog.Illustration({
     element: '#illo3',
-    zoom: 1,
+    zoom: 0.5,
     resize: true,
     dragRotate: true,
     rotate: { x: -Zdog.TAU / 6, y: 0, y: Zdog.TAU / 8 }
@@ -22,14 +22,14 @@ let illo3 = new Zdog.Illustration({
 
 let illo4 = new Zdog.Illustration({
     element: '#illo4',
-    zoom: 1,
+    zoom: 0.5,
     resize: true,
     dragRotate: true,
     rotate: { x: -Zdog.TAU / 6, y: 0, y: Zdog.TAU / 8 }
 })
 
 scale1 = 0.4
-scale2 = 0.4
+scale2 = 0.6
 new Zdog.Polygon({
     addTo: illo3,
     radius: 200,
@@ -46,7 +46,8 @@ new Zdog.Polygon({
     stroke: 10,
     color: 'rgba(0,100,100,0.9)',
     fill: true,
-    rotate: { x: -Zdog.TAU / 4 }
+    rotate: { x: -Zdog.TAU / 4 },
+    translate:{y:5}
 })
 
 function render() {
@@ -75,6 +76,7 @@ setGlobalTimeScale(1)
 
 let c = new TeslaCoil(illo3, {}, {}, scale1, 'red')
 c.build()
+let r = new PrismTower(illo4, {}, {}, scale2, 'blue')
 let t3 = new Target(illo3, { x: -10, y: -100, z: 200 }, {})
 let t4 = new Target(illo4, {}, {})
 

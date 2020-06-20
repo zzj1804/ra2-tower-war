@@ -121,6 +121,7 @@ class TeslaCoil {
 
   standby() {
     let coil = this
+    if (coil.status !== TeslaCoil.STATUS.STANDBY) return
     if (!coil.isCD() && coil.findAndSetTarget()) {
       coil.loading()
     } else if (!coil.lightning || coil.lightning.isEnd) {
@@ -234,7 +235,7 @@ class TeslaCoil {
 
   attack() {
     let coil = this
-    if (coil.target) {
+    if (coil.target && coil.status === TeslaCoil.STATUS.LOADING) {
       // TODO test attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
       let topPoint = coil.getTopPoint()
@@ -252,6 +253,7 @@ class TeslaCoil {
       gsap.timeline({}).call(() => {
         coil.target = null
         coil.status = TeslaCoil.STATUS.STANDBY
+        coil.loadTime = 0
       }, null, 0.5)
     } else {
       coil.status = TeslaCoil.STATUS.STANDBY
