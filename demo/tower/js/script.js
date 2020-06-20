@@ -77,6 +77,7 @@ setGlobalTimeScale(1)
 let c = new TeslaCoil(illo3, {}, {}, scale1, 'red')
 c.build()
 let r = new PrismTower(illo4, {}, {}, scale2, 'blue')
+r.build()
 let t3 = new Target(illo3, { x: -10, y: -100, z: 200 }, {})
 let t4 = new Target(illo4, {}, {})
 

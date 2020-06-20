@@ -51,6 +51,56 @@ class PrismTower {
         })
         let tl = prism.build_tl
         // build anime
+        // 1.base
+        tl.call(() => { part[0][1].visible = true })
+            .to(1, { duration: 0.3 })
+            .call(() => { part[0].forEach(ele => { ele.visible = true }) })
+            .to(1, { duration: 0.2 })
+        // 2.pillar
+        let pillarUpdateAniObj = { translate_y: 100 }
+        let pillarRecreateAniObj = { length: 0 }
+        tl.addLabel('pillarStart')
+        tl.call(() => {
+            for (let i = 0; i < part[1].length; i++) {
+                if (i === 2 || i === 4 || i === 6 || i === 8 || i === 10 || i === 12) continue
+                part[1][i].visible = true
+            }
+        })
+            .to(pillarRecreateAniObj, {
+                length: 200,
+                duration: 0.5,
+                onUpdate: () => {
+                    prism.changeAnimeValue(prism.partArr[1][0], pillarUpdateAniObj)
+                    prism.partArr[1][1] = prism.recreateWithAnimeValue(prism.partArr[1][1], pillarRecreateAniObj)
+                    for (let i = 1; i <= 6; i++) {
+                        prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarRecreateAniObj)
+                    }
+                }
+            })
+            .to(pillarUpdateAniObj, { translate_y: 0 }, 'pillarStart')
+            .call(() => {
+                for (let i = 1; i <= 6; i++) {
+                    prism.partArr[1][2 * i].visible = true
+                }
+            })
+        // 3.prism
+        let prismAniObj = { translate_y: 300, translate_z: 100, rotate_x: -Zdog.TAU / 2.5 }
+        tl.addLabel('prismStart')
+        tl.call(() => { part[3].forEach(ele => { ele.visible = true }) })
+            .to(prismAniObj, {
+                rotate_x: 0,
+                translate_y: 0,
+                translate_z: 0,
+                duration: 1.5,
+                onUpdate: () => {
+                    for (let i = 0; i < 6; i++) {
+                        const anchor = prism.partArr[3][i * 8]
+                        prism.changeAnimeValue(anchor, prismAniObj)
+                    }
+                }
+            })
+        // 4.hinge
+        tl.call(() => { part[2].forEach(ele => { ele.visible = true }) }, null, 'prismStart+=1.2')
     }
 
     getTopPoint() {
@@ -75,7 +125,7 @@ class PrismTower {
             prism.loadTime += PrismTower.RENDER_PERIOD
 
             let spinAnchor = prism.partArr[2][2]
-            spinAnchor.rotate.y -= 2 
+            spinAnchor.rotate.y -= 2
         }
     }
 
@@ -286,6 +336,12 @@ class PrismTower {
         }
     }
 
+    recreateWithAnimeValue(model, animeObject) {
+        let newModel = model.copy(animeObject)
+        model.remove()
+        return newModel
+    }
+
     getModel(addTo, translate, rotate, scale) {
         let prism = this
 
@@ -294,7 +350,7 @@ class PrismTower {
         const black = '#000000'
         const TAU = Zdog.TAU
         const TAU4 = TAU / 4
-        const isVisible = true
+        const isVisible = false
 
         let baseArr = []
         let pillarArr = []
@@ -477,11 +533,10 @@ class PrismTower {
                 stroke: 3 * scale,
                 translate: { y: -sidePillarBaseHeight / 2, z: sidePillarRadius },
                 rotate: { x: TAU4 },
-                color: black,
+                color: '#4A494A',
                 visible: isVisible
             })
 
-            let color = 0 === i % 2 ? 'rgba(215, 60, 229, 0.9)' : 'rgba(172, 33, 237, 0.9)';
             let sidePillar = new Zdog.Cylinder({
                 addTo: anchor,
                 diameter: 15,
@@ -489,7 +544,7 @@ class PrismTower {
                 stroke: false,
                 translate: { y: -(pillarLength - sidePillarBaseHeight) / 2 - sidePillarBaseHeight, z: sidePillarRadius },
                 rotate: { x: TAU4 },
-                color: color,
+                color: '#52519C',
                 visible: isVisible
             })
 
@@ -526,7 +581,7 @@ class PrismTower {
             })
             pillarArr.push(bulb)
         }
-        
+
         // hinge
         let topAnchor = new Zdog.Anchor({
             addTo: prismTower,
@@ -562,7 +617,7 @@ class PrismTower {
         let spinAnchor = new Zdog.Anchor({
             addTo: spinOffsetAnchor
         })
-        
+
         // half-pace circle1
         let hingeCircle1 = new Zdog.Ellipse({
             addTo: spinAnchor,
@@ -631,8 +686,8 @@ class PrismTower {
         hingeArr.push(hingeCircle5)
 
         // prism
-        let prismNum = 6;
-        let prismRadius = 42;
+        let prismNum = 6
+        let prismRadius = 42
         for (let i = 0; i < prismNum; i++) {
             let pipeAnchor = new Zdog.Anchor({
                 addTo: spinAnchor,
@@ -771,6 +826,6 @@ class PrismTower {
             prismArr.push(mirror)
         }
 
-    return prismTower
+        return prismTower
     }
 }
