@@ -60,12 +60,7 @@ class PrismTower {
         let pillarUpdateAniObj = { translate_y: 100 }
         let pillarRecreateAniObj = { length: 0 }
         tl.addLabel('pillarStart')
-        tl.call(() => {
-            for (let i = 0; i < part[1].length; i++) {
-                if (i === 2 || i === 4 || i === 6 || i === 8 || i === 10 || i === 12) continue
-                part[1][i].visible = true
-            }
-        })
+        tl.call(() => { part[1].forEach(ele => { ele.visible = true }) })
             .to(pillarRecreateAniObj, {
                 length: 200,
                 duration: 0.5,
@@ -77,12 +72,7 @@ class PrismTower {
                     }
                 }
             })
-            .to(pillarUpdateAniObj, { translate_y: 0 }, 'pillarStart')
-            .call(() => {
-                for (let i = 1; i <= 6; i++) {
-                    prism.partArr[1][2 * i].visible = true
-                }
-            })
+            .to(pillarUpdateAniObj, { translate_y: 0, duration: 0.5 }, 'pillarStart')
         // 3.prism
         let prismAniObj = { translate_y: 300, translate_z: 100, rotate_x: -Zdog.TAU / 2.5 }
         tl.addLabel('prismStart')
@@ -91,7 +81,7 @@ class PrismTower {
                 rotate_x: 0,
                 translate_y: 0,
                 translate_z: 0,
-                duration: 1.5,
+                duration: 1,
                 onUpdate: () => {
                     for (let i = 0; i < 6; i++) {
                         const anchor = prism.partArr[3][i * 8]
@@ -100,7 +90,7 @@ class PrismTower {
                 }
             })
         // 4.hinge
-        tl.call(() => { part[2].forEach(ele => { ele.visible = true }) }, null, 'prismStart+=1.2')
+        tl.call(() => { part[2].forEach(ele => { ele.visible = true }) }, null, 'prismStart+=0.9')
     }
 
     getTopPoint() {
