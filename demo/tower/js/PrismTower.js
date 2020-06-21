@@ -53,26 +53,16 @@ class PrismTower {
         // build anime
         // 1.base
         tl.call(() => { part[0][1].visible = true })
-            .to(1, { duration: 0.3 })
-            .call(() => { part[0].forEach(ele => { ele.visible = true }) })
+            .call(() => { part[0].forEach(ele => { ele.visible = true }) }, null, 0.3)
             .to(1, { duration: 0.2 })
         // 2.pillar
-        let pillarUpdateAniObj = { translate_y: 100 }
-        let pillarRecreateAniObj = { length: 0 }
-        tl.addLabel('pillarStart')
+        let pillarAniObj = { translate_y: 80 }
         tl.call(() => { part[1].forEach(ele => { ele.visible = true }) })
-            .to(pillarRecreateAniObj, {
-                length: 200,
+            .to(pillarAniObj, {
+                translate_y: 0,
                 duration: 0.5,
-                onUpdate: () => {
-                    prism.changeAnimeValue(prism.partArr[1][0], pillarUpdateAniObj)
-                    prism.partArr[1][1] = prism.recreateWithAnimeValue(prism.partArr[1][1], pillarRecreateAniObj)
-                    for (let i = 1; i <= 6; i++) {
-                        prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarRecreateAniObj)
-                    }
-                }
+                onUpdate: () => { prism.changeAnimeValue(prism.partArr[1][0], pillarAniObj) }
             })
-            .to(pillarUpdateAniObj, { translate_y: 0, duration: 0.5 }, 'pillarStart')
         // 3.prism
         let prismAniObj = { translate_y: 300, translate_z: 100, rotate_x: -Zdog.TAU / 2.5 }
         tl.addLabel('prismStart')
