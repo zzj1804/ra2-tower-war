@@ -182,11 +182,11 @@ class PrismTower {
 
         // 1.pillar
         let pillarColor = '#52519C'
-        let mirrorColor = '#EEEEEE'
+        let mirrorColor = '#AABBFF'
         let pillarAniObj = { color: pillarColor }
         let mirrorAniObj = { color: mirrorColor }
         tl.to(pillarAniObj, {
-            color: '#BBC9FF',
+            color: '#DDE4FF',
             duration: 1,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
@@ -196,7 +196,7 @@ class PrismTower {
         }, 'pillarMiddle')
             .to(pillarAniObj, {
                 color: pillarColor,
-                duration: 0.8,
+                duration: 1,
                 onUpdate: () => {
                     for (let i = 0; i < 6; i++) {
                         prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
@@ -206,21 +206,21 @@ class PrismTower {
         // 2.mirror
         tl.to(mirrorAniObj, {
             color: '#FFFFFF',
-            duration: 0.8,
+            duration: 0.6,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
                     prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
                 }
-            }
-        }, 'pillarMiddle')
-            .call(() => {
+            },
+            onComplete: () => {
                 if (prism.status === PrismTower.STATUS.LOADING) {
                     prism.attack()
                 }
-            })
+            }
+        },'pillarMiddle+=0.2')
             .to(mirrorAniObj, {
                 color: mirrorColor,
-                duration: 0.4,
+                duration: 0.6,
                 onUpdate: () => {
                     for (let i = 0; i < 6; i++) {
                         prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
@@ -926,7 +926,7 @@ class PrismTower {
                 width: 28,
                 height: 100,
                 stroke: 15 * scale,
-                color: '#EEEEEE',
+                color: '#AABBFF',
                 rotate: { x: -TAU / 30 },
                 translate: { y: -60, z: prismRadius + 43 },
                 fill: true,
