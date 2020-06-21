@@ -64,7 +64,7 @@ class PrismTower {
                 onUpdate: () => { prism.changeAnimeValue(prism.partArr[1][0], pillarAniObj) }
             })
         // 3.prism
-        let prismAniObj = { translate_y: 300, translate_z: 100, rotate_x: -Zdog.TAU / 2.5 }
+        let prismAniObj = { translate_y: 300, translate_z: 10, rotate_x: -Zdog.TAU / 2.5 }
         tl.addLabel('prismStart')
         tl.call(() => { part[3].forEach(ele => { ele.visible = true }) })
             .to(prismAniObj, {
@@ -210,7 +210,7 @@ class PrismTower {
         let prism = this
         if (prism.isEnd()) return
         let spinOffesetAnchor = prism.partArr[2][1]
-        if (prism.isLean() && prism.status !== TeslaCoil.STATUS.SELLING) {
+        if (prism.isLean() && prism.status !== PrismTower.STATUS.SELLING) {
             spinOffesetAnchor.rotate.x = -Zdog.TAU / 50
             spinOffesetAnchor.rotate.z = -Zdog.TAU / 50
             spinOffesetAnchor.translate.y = 5
@@ -222,6 +222,59 @@ class PrismTower {
     }
 
     sell() {
+        let prism = this
+        if (!(
+            prism.status === PrismTower.STATUS.STANDBY ||
+            prism.status === PrismTower.STATUS.LOADING ||
+            prism.status === PrismTower.STATUS.ATTACKING
+        )) return
+        let part = prism.partArr
+        prism.sell_tl = gsap.timeline({
+            onStart: () => {
+                prism.status = PrismTower.STATUS.SELLING
+            },
+            onComplete: () => {
+                if (prism.status === PrismTower.STATUS.SELLING) {
+                    prism.remove()
+                }
+            }
+        })
+        let tl = prism.sell_tl
+        // sell anime
+        // 1.hinge
+        tl.call(() => { part[2].forEach(ele => { ele.visible = false }) }, null, 0.1)
+        // 2.prism
+        let prismAniObj = { translate_y: 0, translate_z: 0, rotate_x: 0 }
+        tl.to(prismAniObj, {
+            rotate_x: -Zdog.TAU / 2.5,
+            translate_y: 300,
+            translate_z: 10,
+            duration: 1,
+            onUpdate: () => {
+                for (let i = 0; i < 6; i++) {
+                    const anchor = prism.partArr[3][i * 8]
+                    prism.changeAnimeValue(anchor, prismAniObj)
+                }
+            }
+        })
+            .call(() => { part[3].forEach(ele => { ele.visible = false }) })
+        // 3.pillar
+        let pillarAniObj = { translate_y: 0 }
+        tl.to(pillarAniObj, {
+            translate_y: 80,
+            duration: 0.5,
+            onUpdate: () => { prism.changeAnimeValue(prism.partArr[1][0], pillarAniObj) }
+        })
+            .call(() => { part[1].forEach(ele => { ele.visible = false }) })
+
+        // 4.base
+        tl.addLabel('baseStart')
+        tl.call(() => {
+            for (let i = 2; i < part[0].length; i++) {
+                part[0][i].visible = false
+            }
+        }, null, 'baseStart+=0.2')
+            .call(() => { part[0][1].visible = false }, null, 'baseStart+=0.5')
     }
 
     destroyed() {
