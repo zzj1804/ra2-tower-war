@@ -122,11 +122,11 @@ class TeslaCoil {
   standby() {
     let coil = this
     if (coil.status !== TeslaCoil.STATUS.STANDBY) return
+    coil.loadTime += TeslaCoil.RENDER_PERIOD
+
     if (!coil.isCD() && coil.findAndSetTarget()) {
       coil.loading()
     } else if (!coil.lightning || coil.lightning.isEnd) {
-      coil.loadTime += TeslaCoil.RENDER_PERIOD
-
       let anchor = coil.partArr[4][7]
       let distance = 350
       coil.lightning = new Lightning(anchor, { y: -400 }, { z: Zdog.TAU / 4 },
@@ -195,17 +195,23 @@ class TeslaCoil {
     let bottomCoil = coil.partArr[4][3]
     coil.loading_tl = gsap.timeline({
       onStart: () => {
-        coil.lightning.remove()
         coil.status = TeslaCoil.STATUS.LOADING
+        coil.lightning.remove()
       },
       onUpdate: () => {
         if (!coil.target || coil.target.isEnd()) {
-          coil.status = TeslaCoil.STATUS.STANDBY
-          coil.loading_tl.kill()
-          coil.loading_tl = null
+          if (coil.status === TeslaCoil.STATUS.LOADING) {
+            coil.status = TeslaCoil.STATUS.STANDBY
+            coil.loading_tl.kill()
+            coil.loading_tl = null
+          }
         }
       },
-      onComplete: () => { coil.attack() }
+      onComplete: () => {
+        if (coil.status === TeslaCoil.STATUS.LOADING) {
+          coil.attack()
+        }
+      }
     })
     let tl = coil.loading_tl
 
@@ -252,8 +258,10 @@ class TeslaCoil {
       coil.target.getDamage(TeslaCoil.AP)
       gsap.timeline({}).call(() => {
         coil.target = null
-        coil.status = TeslaCoil.STATUS.STANDBY
-        coil.loadTime = 0
+        if (coil.status === TeslaCoil.STATUS.ATTACKING) {
+          coil.status = TeslaCoil.STATUS.STANDBY
+          coil.loadTime = 0
+        }
       }, null, 0.5)
     } else {
       coil.status = TeslaCoil.STATUS.STANDBY
@@ -297,10 +305,13 @@ class TeslaCoil {
         coil.status = TeslaCoil.STATUS.SELLING
         if (coil.lightning) {
           coil.lightning.remove()
-          coil.lightning = null
         }
       },
-      onComplete: () => { coil.remove() }
+      onComplete: () => {
+        if (coil.status === TeslaCoil.STATUS.SELLING) {
+          coil.remove()
+        }
+      }
     })
     let tl = coil.sell_tl
     // sell anime
