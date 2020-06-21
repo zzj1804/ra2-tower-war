@@ -183,11 +183,10 @@ class PrismTower {
         // 1.pillar
         let pillarColor = '#52519C'
         let mirrorColor = '#EEEEEE'
-        let white = '#FFFFFF'
         let pillarAniObj = { color: pillarColor }
         let mirrorAniObj = { color: mirrorColor }
         tl.to(pillarAniObj, {
-            color: white,
+            color: '#BBC9FF',
             duration: 1,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
@@ -197,7 +196,7 @@ class PrismTower {
         }, 'pillarMiddle')
             .to(pillarAniObj, {
                 color: pillarColor,
-                duration: 0.5,
+                duration: 0.8,
                 onUpdate: () => {
                     for (let i = 0; i < 6; i++) {
                         prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
@@ -206,7 +205,7 @@ class PrismTower {
             })
         // 2.mirror
         tl.to(mirrorAniObj, {
-            color: white,
+            color: '#FFFFFF',
             duration: 0.8,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
