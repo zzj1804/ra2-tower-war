@@ -188,7 +188,7 @@ class PrismTower {
         let mirrorAniObj = { color: mirrorColor }
         tl.to(pillarAniObj, {
             color: white,
-            duration: 0.6,
+            duration: 1,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
                     prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
@@ -197,7 +197,7 @@ class PrismTower {
         }, 'pillarMiddle')
             .to(pillarAniObj, {
                 color: pillarColor,
-                duration: 0.3,
+                duration: 0.5,
                 onUpdate: () => {
                     for (let i = 0; i < 6; i++) {
                         prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
@@ -207,13 +207,13 @@ class PrismTower {
         // 2.mirror
         tl.to(mirrorAniObj, {
             color: white,
-            duration: 0.1,
+            duration: 0.8,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
                     prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
                 }
             }
-        }, 'pillarMiddle+=0.1')
+        }, 'pillarMiddle')
             .call(() => {
                 if (prism.status === PrismTower.STATUS.LOADING) {
                     prism.attack()
@@ -221,7 +221,7 @@ class PrismTower {
             })
             .to(mirrorAniObj, {
                 color: mirrorColor,
-                duration: 0.2,
+                duration: 0.4,
                 onUpdate: () => {
                     for (let i = 0; i < 6; i++) {
                         prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
