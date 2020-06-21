@@ -99,11 +99,11 @@ class PrismTower {
     standby() {
         let prism = this
         if (prism.status !== PrismTower.STATUS.STANDBY) return
+        prism.loadTime += PrismTower.RENDER_PERIOD
+
         if (!prism.isCD() && prism.findAndSetTarget()) {
             prism.loading()
         } else {
-            prism.loadTime += PrismTower.RENDER_PERIOD
-
             let spinAnchor = prism.partArr[2][2]
             spinAnchor.rotate.y -= 2
         }
@@ -209,6 +209,16 @@ class PrismTower {
     lean() {
         let prism = this
         if (prism.isEnd()) return
+        let spinOffesetAnchor = prism.partArr[2][1]
+        if (prism.isLean() && prism.status !== TeslaCoil.STATUS.SELLING) {
+            spinOffesetAnchor.rotate.x = -Zdog.TAU / 50
+            spinOffesetAnchor.rotate.z = -Zdog.TAU / 50
+            spinOffesetAnchor.translate.y = 5
+        } else {
+            spinOffesetAnchor.rotate.x = 0
+            spinOffesetAnchor.rotate.z = 0
+            spinOffesetAnchor.translate.y = 0
+        }
     }
 
     sell() {
