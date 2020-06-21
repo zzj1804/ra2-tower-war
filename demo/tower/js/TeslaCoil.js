@@ -254,7 +254,8 @@ class TeslaCoil {
       let distance = ZdogUtils.getDistance(topPoint, targetPoint)
       let rotate = ZdogUtils.getRotate(fromVec, toVec)
       let inflectionPointNum = distance / 50
-      new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, 0.5, 8)
+      let duration = 1
+      new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, duration, 8)
       coil.target.getDamage(TeslaCoil.AP)
       gsap.timeline({}).call(() => {
         coil.target = null
@@ -262,7 +263,7 @@ class TeslaCoil {
           coil.status = TeslaCoil.STATUS.STANDBY
           coil.loadTime = 0
         }
-      }, null, 0.5)
+      }, null, duration)
     } else {
       coil.status = TeslaCoil.STATUS.STANDBY
     }

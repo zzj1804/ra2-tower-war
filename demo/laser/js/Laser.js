@@ -34,12 +34,12 @@ class Laser {
 
     laser.tl = new TimelineMax({ onUpdate: () => { laser.render() }, delay: 0, onComplete: () => { laser.remove() } })
     laser.tl.to(laser.aObj1, {
-      color: 'rgba(157,240,250,0)',
+      color: 'rgba(157,240,250,0.01)',
       stroke: scale * 0.9,
       ease: "expo.out",
       duration: duration
     }, 'begin').to(laser.aObj2, {
-      color: 'rgba(255,255,255,0)',
+      color: 'rgba(255,255,255,0.01)',
       stroke: scale * 1.1,
       ease: "expo.out",
       duration: duration

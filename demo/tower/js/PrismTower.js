@@ -86,9 +86,9 @@ class PrismTower {
     getTopPoint() {
         let prism = this
         if (prism.isLean()) {
-            return prism.model.translate.copy().subtract({ x: -100 * prism.scale, y: 625 * prism.scale, z: 80 * prism.scale })
+            return prism.model.translate.copy().subtract({ x: 25 * prism.scale, y: 445 * prism.scale, z: -25 * prism.scale })
         } else {
-            return prism.model.translate.copy().subtract({ y: 675 * prism.scale })
+            return prism.model.translate.copy().subtract({ y: 450 * prism.scale })
         }
     }
 
@@ -140,7 +140,7 @@ class PrismTower {
             !prism.isEnd() &&
             prism.hp < PrismTower.MAX_HP &&
             (!prism.spanner || prism.spanner.isEnd)) {
-            prism.spanner = new Spanner(prism.anchor, { x: 200, y: -400 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 1, '#CBCBCB', 3, 2)
+            prism.spanner = new Spanner(prism.anchor, { x: 150, y: -300 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 1, '#CBCBCB', 3, 2)
         }
     }
 
@@ -165,19 +165,96 @@ class PrismTower {
         if (prism.status !== PrismTower.STATUS.STANDBY) return
         prism.loading_tl = gsap.timeline({
             onStart: () => {
-                prism.lightning.remove()
                 prism.status = PrismTower.STATUS.LOADING
             },
             onUpdate: () => {
                 if (!prism.target || prism.target.isEnd()) {
-                    prism.status = PrismTower.STATUS.STANDBY
-                    prism.loading_tl.kill()
-                    prism.loading_tl = null
+                    if (prism.status === PrismTower.STATUS.LOADING) {
+                        prism.status = PrismTower.STATUS.STANDBY
+                        prism.loading_tl.kill()
+                        prism.loading_tl = null
+                    }
                 }
-            },
-            onComplete: () => { prism.attack() }
+            }
         })
+
         let tl = prism.loading_tl
+
+        // 1.pillar
+        let pillarColor = '#52519C'
+        let mirrorColor = '#EEEEEE'
+        let white = '#FFFFFF'
+        let pillarAniObj = { color: pillarColor }
+        let mirrorAniObj = { color: mirrorColor }
+        tl.to(pillarAniObj, {
+            color: white,
+            duration: 0.6,
+            onUpdate: () => {
+                for (let i = 0; i < 6; i++) {
+                    prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
+                }
+            }
+        }, 'pillarMiddle')
+            .to(pillarAniObj, {
+                color: pillarColor,
+                duration: 0.3,
+                onUpdate: () => {
+                    for (let i = 0; i < 6; i++) {
+                        prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
+                    }
+                }
+            })
+        // 2.mirror
+        tl.to(mirrorAniObj, {
+            color: white,
+            duration: 0.1,
+            onUpdate: () => {
+                for (let i = 0; i < 6; i++) {
+                    prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
+                }
+            }
+        }, 'pillarMiddle+=0.1')
+            .call(() => {
+                if (prism.status === PrismTower.STATUS.LOADING) {
+                    prism.attack()
+                }
+            })
+            .to(mirrorAniObj, {
+                color: mirrorColor,
+                duration: 0.2,
+                onUpdate: () => {
+                    for (let i = 0; i < 6; i++) {
+                        prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
+                    }
+                }
+            })
+    }
+
+    setPillarLaser() {
+        let prism = this
+        if (prism.pillar_laser) {
+            prism.pillar_laser.remove()
+        }
+        prism.pillar_laser = new Zdog.Group({
+            addTo: prism.anchor
+        })
+        let color = 'white'
+        let sidePillarNum = 6
+        let sidePillarRadius = 55
+        for (let i = 0; i < sidePillarNum; i++) {
+            let anchor = new Zdog.Anchor({
+                addTo: prism.pillar_laser,
+                rotate: { y: TAU * i / sidePillarNum }
+            })
+
+            new Zdog.Shape({
+                addTo: anchor,
+                path: [{}, { y: -20 }],
+                stroke: 15 * prism.scale,
+                translate: { y: -70, z: sidePillarRadius },
+                color: color
+            })
+        }
     }
 
     attack() {
@@ -194,13 +271,13 @@ class PrismTower {
             // let rotate = new Zdog.Vector({ y: angelY, z: angelZ })
             let distance = ZdogUtils.getDistance(topPoint, targetPoint)
             let rotate = ZdogUtils.getRotate(fromVec, toVec)
-            let inflectionPointNum = distance / 50
-            new Lightning(prism.addTo, topPoint, rotate, 10 * prism.scale, distance, inflectionPointNum, 0.5, 8)
+            let duration = 1
+            new Laser(prism.addTo, topPoint, rotate, 40 * prism.scale, distance, duration)
             prism.target.getDamage(PrismTower.AP)
-            gsap.timeline({}).call(() => {
-                prism.target = null
+            if (prism.status === PrismTower.STATUS.ATTACKING) {
                 prism.status = PrismTower.STATUS.STANDBY
-            }, null, 0.5)
+                prism.loadTime = 0
+            }
         } else {
             prism.status = PrismTower.STATUS.STANDBY
         }
@@ -850,7 +927,7 @@ class PrismTower {
                 width: 28,
                 height: 100,
                 stroke: 15 * scale,
-                color: '#FFF',
+                color: '#EEEEEE',
                 rotate: { x: -TAU / 30 },
                 translate: { y: -60, z: prismRadius + 43 },
                 fill: true,
