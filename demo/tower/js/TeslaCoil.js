@@ -271,25 +271,23 @@ class TeslaCoil {
   lean() {
     let coil = this
     if (coil.isEnd()) return
-    try {
-      let anchor = coil.partArr[4][7]
-      let topCoil = coil.partArr[4][5]
-      let midCoil = coil.partArr[4][4]
-      let bottomCoil = coil.partArr[4][3]
-      if (coil.isLean()) {
-        anchor.rotate.z = Zdog.TAU / 36
-        anchor.rotate.x = Zdog.TAU / 36
-        topCoil.rotate.y = -Zdog.TAU / 20
-        midCoil.translate.x = 10
-        bottomCoil.rotate.y = Zdog.TAU / 20
-      } else {
-        anchor.rotate.z = 0
-        anchor.rotate.x = 0
-        topCoil.rotate.y = 0
-        midCoil.translate.x = 0
-        bottomCoil.rotate.y = 0
-      }
-    } catch (e) { }
+    let anchor = coil.partArr[4][7]
+    let topCoil = coil.partArr[4][5]
+    let midCoil = coil.partArr[4][4]
+    let bottomCoil = coil.partArr[4][3]
+    if (coil.isLean() && coil.status !== TeslaCoil.STATUS.SELLING) {
+      anchor.rotate.z = Zdog.TAU / 36
+      anchor.rotate.x = Zdog.TAU / 36
+      topCoil.rotate.y = -Zdog.TAU / 20
+      midCoil.translate.x = 10
+      bottomCoil.rotate.y = Zdog.TAU / 20
+    } else {
+      anchor.rotate.z = 0
+      anchor.rotate.x = 0
+      topCoil.rotate.y = 0
+      midCoil.translate.x = 0
+      bottomCoil.rotate.y = 0
+    }
   }
 
   sell() {

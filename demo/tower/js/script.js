@@ -90,5 +90,5 @@ function timedRandomTarget() {
     t4.changeCenterPoint({ x: (1 + Math.random()) * 150, y: -Math.random() * 300, z: (1 - Math.random()) * 150 })
     c.target = t3
     c.loading()
-    setTimeout("timedRandomTarget()", 5000)
+    setTimeout("timedRandomTarget()", 5000/ENV.timeScale)
 }
