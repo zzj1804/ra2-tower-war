@@ -1,3 +1,6 @@
+/**
+ * left-handed
+ */
 class ZdogUtils {
   static getUnitVector(v) {
     let mag = v.magnitude()
@@ -197,9 +200,9 @@ class ZdogUtils {
 
   static getRotate(fromVec, toVec) {
     let fv = ZdogUtils.getUnitVector(fromVec)
-    fv.y = -fv.y
+    fv.z = -fv.z
     let tv = ZdogUtils.getUnitVector(toVec)
-    tv.y = -tv.y
+    tv.z = -tv.z
     let axis = ZdogUtils.getUnitVector(ZdogUtils.vecCrossProduct(fv, tv))
     let x = axis.x
     let y = axis.y

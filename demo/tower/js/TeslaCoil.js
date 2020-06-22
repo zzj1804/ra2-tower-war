@@ -246,13 +246,11 @@ class TeslaCoil {
       coil.status = TeslaCoil.STATUS.ATTACKING
       let topPoint = coil.getTopPoint()
       let targetPoint = coil.target.getCenterPoint()
-      let fromVec = new Zdog.Vector({ x: 1 })
       let toVec = targetPoint.copy().subtract(topPoint)
-      // let angelY = Math.atan(toVec.z / toVec.x)
-      // let angelZ = Math.atan(toVec.y / toVec.x) + (toVec.x < 0 ? Zdog.TAU / 2 : 0)
-      // let rotate = new Zdog.Vector({ y: angelY, z: angelZ })
+      let angelY = Math.atan(toVec.z / toVec.x) + (toVec.x < 0 ? Zdog.TAU / 2 : 0)
+      let angelZ = Math.atan(toVec.y / Math.sqrt(toVec.x ** 2 + toVec.z ** 2))
+      let rotate = new Zdog.Vector({ y: angelY, z: angelZ })
       let distance = ZdogUtils.getDistance(topPoint, targetPoint)
-      let rotate = ZdogUtils.getRotate(fromVec, toVec)
       let inflectionPointNum = distance / 50
       let duration = 0.8
       new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, duration, 12)

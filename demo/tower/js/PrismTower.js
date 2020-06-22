@@ -217,7 +217,7 @@ class PrismTower {
                     prism.attack()
                 }
             }
-        },'pillarMiddle+=0.2')
+        }, 'pillarMiddle+=0.2')
             .to(mirrorAniObj, {
                 color: mirrorColor,
                 duration: 0.6,
@@ -263,13 +263,11 @@ class PrismTower {
             prism.status = PrismTower.STATUS.ATTACKING
             let topPoint = prism.getTopPoint()
             let targetPoint = prism.target.getCenterPoint()
-            let fromVec = new Zdog.Vector({ x: 1 })
             let toVec = targetPoint.copy().subtract(topPoint)
-            // let angelY = Math.atan(toVec.z / toVec.x)
-            // let angelZ = Math.atan(toVec.y / toVec.x) + (toVec.x < 0 ? Zdog.TAU / 2 : 0)
-            // let rotate = new Zdog.Vector({ y: angelY, z: angelZ })
+            let angelY = Math.atan(toVec.z / toVec.x) + (toVec.x < 0 ? Zdog.TAU / 2 : 0)
+            let angelZ = Math.atan(toVec.y / Math.sqrt(toVec.x ** 2 + toVec.z ** 2))
+            let rotate = new Zdog.Vector({ y: angelY, z: angelZ })
             let distance = ZdogUtils.getDistance(topPoint, targetPoint)
-            let rotate = ZdogUtils.getRotate(fromVec, toVec)
             let duration = 1
             new Laser(prism.addTo, topPoint, rotate, 40 * prism.scale, distance, duration)
             prism.target.getDamage(PrismTower.AP)

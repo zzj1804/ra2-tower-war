@@ -143,8 +143,8 @@ displayLoadingLayer(false)
 timedRandomTarget()
 
 function timedRandomTarget() {
-    t3.changeCenterPoint({ x: (1 + Math.random()) * 150, y: -Math.random() * 300, z: (1 - Math.random()) * 150 })
-    t4.changeCenterPoint({ x: (1 + Math.random()) * 150, y: -Math.random() * 300, z: (1 - Math.random()) * 150 })
+    t3.changeCenterPoint({ x: (Math.random()-0.5) * 300, y: (Math.random()-0.8) * 300, z: (Math.random()-0.5) * 300 })
+    t4.changeCenterPoint({ x: (Math.random()-0.5) * 300, y: (Math.random()-0.8) * 300, z: (Math.random()-0.5) * 300 })
     c.target = t3
     c.loading()
     r.target = t4
