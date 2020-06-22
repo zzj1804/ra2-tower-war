@@ -7,19 +7,6 @@ class LaserExplosion {
       translate: translate
     })
 
-    expl.aObj1 = {
-      color: 'orange',
-      stroke: 1
-    }
-
-    expl.aObj2 = {
-      stroke: 1
-    }
-
-    expl.explosion2 = new Zdog.Shape({
-      addTo: expl.explosionGroup
-    })
-
     expl.modelArr = []
     expl.aniObjArr = []
 

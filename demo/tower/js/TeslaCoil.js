@@ -252,6 +252,7 @@ class TeslaCoil {
       let inflectionPointNum = distance / 50
       let duration = 0.8
       new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, duration, 12)
+      new LightningExplosion(coil.addTo, targetPoint, coil.scale, 1, 2, 5)
       coil.target.getDamage(TeslaCoil.AP)
 
       coil.loadTime = 0

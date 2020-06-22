@@ -28,13 +28,15 @@ function render() {
     stats.begin()
 
     let scale = Math.random() * 2
-    let duration = Math.random() * 10
+    let duration = 1
+    let feq = duration * 5
+    let num = 5
     let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }
     if (!explosion) {
-        explosion = new LightningExplosion(illo, translate, scale, duration)
+        explosion = new LightningExplosion(illo, translate, scale, duration, feq, num)
     }
     if (explosion.isEnd) {
-        explosion = new LightningExplosion(illo, translate, scale, duration)
+        explosion = new LightningExplosion(illo, translate, scale, duration, feq, num)
     }
 
     illo.updateRenderGraph()
