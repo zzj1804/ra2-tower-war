@@ -199,12 +199,10 @@ class TeslaCoil {
         coil.lightning.remove()
       },
       onUpdate: () => {
-        if (!coil.target || coil.target.isEnd()) {
-          if (coil.status === TeslaCoil.STATUS.LOADING) {
-            coil.status = TeslaCoil.STATUS.STANDBY
-            coil.loading_tl.kill()
-            coil.loading_tl = null
-          }
+        if (!coil.isTargetWithinRange() && coil.status === TeslaCoil.STATUS.LOADING) {
+          coil.status = TeslaCoil.STATUS.STANDBY
+          coil.loading_tl.kill()
+          coil.loading_tl = null
         }
       },
       onComplete: () => {
@@ -241,7 +239,7 @@ class TeslaCoil {
 
   attack() {
     let coil = this
-    if (coil.target && coil.status === TeslaCoil.STATUS.LOADING) {
+    if (coil.status === TeslaCoil.STATUS.LOADING && coil.isTargetWithinRange()) {
       // TODO test attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
       let topPoint = coil.getTopPoint()
@@ -255,7 +253,7 @@ class TeslaCoil {
       let duration = 0.8
       new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, duration, 12)
       coil.target.getDamage(TeslaCoil.AP)
-      
+
       coil.loadTime = 0
       gsap.timeline({}).call(() => {
         coil.target = null
@@ -429,9 +427,16 @@ class TeslaCoil {
     return coil.loadTime < TeslaCoil.ATTACK_CD
   }
 
+  isTargetWithinRange() {
+    let coil = this
+    return coil.target && !coil.target.isEnd() &&
+      ZdogUtils.getDistance(coil.getTopPoint(), coil.target.getCenterPoint()) <= TeslaCoil.ATTACK_RANGE
+  }
+
   static MAX_HP = 800
   static AP = 200
   static ATTACK_CD = 8
+  static ATTACK_RANGE = 2500
   static AUTO_REPAIR_VAL = 1
   static RENDER_PERIOD = 0.1
 

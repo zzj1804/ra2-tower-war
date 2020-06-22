@@ -168,12 +168,10 @@ class PrismTower {
                 prism.status = PrismTower.STATUS.LOADING
             },
             onUpdate: () => {
-                if (!prism.target || prism.target.isEnd()) {
-                    if (prism.status === PrismTower.STATUS.LOADING) {
-                        prism.status = PrismTower.STATUS.STANDBY
-                        prism.loading_tl.kill()
-                        prism.loading_tl = null
-                    }
+                if (!prism.isTargetWithinRange() && prism.status === PrismTower.STATUS.LOADING) {
+                    prism.status = PrismTower.STATUS.STANDBY
+                    prism.loading_tl.kill()
+                    prism.loading_tl = null
                 }
             }
         })
@@ -258,7 +256,7 @@ class PrismTower {
 
     attack() {
         let prism = this
-        if (prism.target && prism.status === PrismTower.STATUS.LOADING) {
+        if (prism.status === PrismTower.STATUS.LOADING && prism.isTargetWithinRange()) {
             // TODO test attack anime
             prism.status = PrismTower.STATUS.ATTACKING
             let topPoint = prism.getTopPoint()
@@ -271,7 +269,7 @@ class PrismTower {
             let duration = 1
             new Laser(prism.addTo, topPoint, rotate, 40 * prism.scale, distance, duration)
             prism.target.getDamage(PrismTower.AP)
-            
+
             prism.status = PrismTower.STATUS.STANDBY
             prism.loadTime = 0
         } else {
@@ -407,9 +405,16 @@ class PrismTower {
         return prism.loadTime < PrismTower.ATTACK_CD
     }
 
+    isTargetWithinRange() {
+        let prism = this
+        return prism.target && !prism.target.isEnd() &&
+            ZdogUtils.getDistance(prism.getTopPoint(), prism.target.getCenterPoint()) <= PrismTower.ATTACK_RANGE
+    }
+
     static MAX_HP = 800
     static AP = 200
     static ATTACK_CD = 8
+    static ATTACK_RANGE = 2000
     static AUTO_REPAIR_VAL = 1
     static RENDER_PERIOD = 0.1
 
