@@ -112,6 +112,7 @@ class PrismTower {
     findAndSetTarget() {
         let prism = this
         // TODO find target on map
+        // TODO pass laser
         return false
     }
 

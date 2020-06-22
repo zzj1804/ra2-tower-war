@@ -198,34 +198,6 @@ class ZdogUtils {
     return ZdogUtils.isNumEqual(v1.x, v2.x) && ZdogUtils.isNumEqual(v1.y, v2.y) && ZdogUtils.isNumEqual(v1.z, v2.z)
   }
 
-  static getRotate(fromVec, toVec) {
-    let fv = ZdogUtils.getUnitVector(fromVec)
-    fv.z = -fv.z
-    let tv = ZdogUtils.getUnitVector(toVec)
-    tv.z = -tv.z
-    let axis = ZdogUtils.getUnitVector(ZdogUtils.vecCrossProduct(fv, tv))
-    let x = axis.x
-    let y = axis.y
-    let z = axis.z
-    let cos = ZdogUtils.vecDotProduct(fv, tv)
-    let dcos = 1 - cos
-    let sin = Math.sqrt(1 - cos**2)
-    
-    let RM = [
-      [x * x * dcos + cos, x * y * dcos - z * sin, x * z * dcos + y * sin],
-      [x * y * dcos + z * sin, y * y * dcos + cos, y * z * dcos - x * sin],
-      [x * z * dcos - y * sin, y * z * dcos + x * sin, z * z * dcos + cos]
-    ]
-    console.table(RM)
-
-    let ry = -Math.atan2(-RM[2][0], Math.sqrt(Math.pow(RM[2][1], 2) + Math.pow(RM[2][2], 2)))
-    let cosRy = Math.cos(ry)
-    let rx = Math.atan2(RM[2][1] / cosRy, RM[2][2] / cosRy)
-    let rz = Math.atan2(RM[1][0] / cosRy, RM[0][0] / cosRy)
-
-    return new Zdog.Vector({ x: rx, y: ry, z: rz })
-  }
-
   static getDistance(v1, v2) {
     return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2 + (v1.z - v2.z) ** 2)
   }
@@ -297,16 +269,5 @@ function ZdogUtilsTest() {
   let testVec7 = ZdogUtils.multiplyMatrixAndVec(TM7, z01)
   cout('7. ZdogUtils.getTransposeRotationMatrix() ' + (ZdogUtils.isVecEqual(testVec7, z00) ? 'pass' : 'not pass'))
 
-  let test8FromVec = new Zdog.Vector({ x: Math.random(), y: Math.random(), z: Math.random() })
-  let test8Rotate = new Zdog.Vector({ x: Math.random(), y: Math.random(), z: Math.random() })
-  console.table(ZdogUtils.getRotationMatrix(test8Rotate))
-  let test8ToVec = test8FromVec.copy().rotate(test8Rotate)
-  let test8ResultRotate = ZdogUtils.getRotate(test8FromVec, test8ToVec)
-  // cout(test8Rotate)
-  // cout(test8ResultRotate)
-  cout('8. ZdogUtils.getRotate() ' + (ZdogUtils.isVecEqual(test8Rotate, test8ResultRotate) ? 'pass' : 'not pass'))
-
   cout('----------- ZdogUtilsTest END -------------')
 }
-
-ZdogUtilsTest()
