@@ -166,7 +166,7 @@ class TeslaCoil {
       !coil.isEnd() &&
       coil.hp < TeslaCoil.MAX_HP &&
       (!coil.spanner || coil.spanner.isEnd)) {
-      coil.spanner = new Spanner(coil.anchor, { x: 200, y: -400 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 1, '#CBCBCB', 3, 2)
+      coil.spanner = new Spanner(coil.anchor, { x: 200, y: -400 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 0.9, '#CBCBCB', 3, 2)
     }
   }
 
@@ -216,7 +216,7 @@ class TeslaCoil {
     // loading anime
     let sliver = '#EEF'
     let white = 'white'
-    let duration = 0.2
+    let duration = 0.15
     let bottomCoilAniObj = { color: silver }
     let midCoilAniObj = { color: silver }
     let topCoilAniObj = { color: silver }

@@ -140,7 +140,7 @@ class PrismTower {
             !prism.isEnd() &&
             prism.hp < PrismTower.MAX_HP &&
             (!prism.spanner || prism.spanner.isEnd)) {
-            prism.spanner = new Spanner(prism.anchor, { x: 150, y: -300 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 1, '#CBCBCB', 3, 2)
+            prism.spanner = new Spanner(prism.anchor, { x: 150, y: -300 }, { x: Zdog.TAU / 4 }, 150, 2, 5, 0.6, '#CBCBCB', 3, 2)
         }
     }
 
