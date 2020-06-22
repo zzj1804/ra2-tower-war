@@ -271,10 +271,9 @@ class PrismTower {
             let duration = 1
             new Laser(prism.addTo, topPoint, rotate, 40 * prism.scale, distance, duration)
             prism.target.getDamage(PrismTower.AP)
-            if (prism.status === PrismTower.STATUS.ATTACKING) {
-                prism.status = PrismTower.STATUS.STANDBY
-                prism.loadTime = 0
-            }
+            
+            prism.status = PrismTower.STATUS.STANDBY
+            prism.loadTime = 0
         } else {
             prism.status = PrismTower.STATUS.STANDBY
         }
