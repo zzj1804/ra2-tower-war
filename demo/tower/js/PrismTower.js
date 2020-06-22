@@ -394,7 +394,7 @@ class PrismTower {
 
     isEnd() {
         let prism = this
-        return prism.status === PrismTower.END || prism.status === PrismTower.CREATED
+        return prism.status === PrismTower.END
     }
 
     isLean() {

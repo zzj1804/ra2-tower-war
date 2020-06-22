@@ -415,7 +415,7 @@ class TeslaCoil {
 
   isEnd() {
     let coil = this
-    return coil.status === TeslaCoil.END || coil.status === TeslaCoil.CREATED
+    return coil.status === TeslaCoil.END
   }
 
   isLean() {
