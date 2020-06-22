@@ -268,6 +268,7 @@ class PrismTower {
             let distance = ZdogUtils.getDistance(topPoint, targetPoint)
             let duration = 1
             new Laser(prism.addTo, topPoint, rotate, 40 * prism.scale, distance, duration)
+            new LaserExplosion(prism.addTo, targetPoint, prism.scale, 0.5, 5)
             prism.target.getDamage(PrismTower.AP)
 
             prism.status = PrismTower.STATUS.STANDBY
