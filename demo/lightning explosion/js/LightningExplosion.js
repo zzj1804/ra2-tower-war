@@ -12,6 +12,8 @@ class LightningExplosion {
 
     expl.tl = new TimelineMax({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
     for (let i = 1; i <= frequency; i++) {
+      let label = 'start_' + i
+      expl.tl.addLabel(label)
       for (let j = 1; j <= perFreqNum; j++) {
         let anchor = new Zdog.Anchor({ addTo: expl.explosionGroup, rotate: expl.getRandomRotate() })
 
@@ -20,6 +22,7 @@ class LightningExplosion {
           color: expl.getRandomColor(),
           closed: false,
           stroke: 5 * scale,
+          visible: false,
           path: [
             {},
             { x: 20, y: -5 },
@@ -33,14 +36,13 @@ class LightningExplosion {
         expl.modelArr.push(model)
         expl.aniObjArr.push(aniObj)
 
-        let label = 'start_' + i
-        expl.tl.addLabel(label)
         expl.tl.to(aniObj, {
-          translate_x: 100 * scale,
+          translate_x: 80 * scale,
           ease: 'none',
-          duration: duration / frequency,
+          duration: duration / perFreqNum,
+          onStart: () => { model.visible = true },
           onComplete: () => { model.visible = false }
-        }, label + '+=' + duration / perFreqNum / frequency * j)
+        }, label)
       }
     }
   }

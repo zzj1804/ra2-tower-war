@@ -27,10 +27,10 @@ let explosion
 function render() {
     stats.begin()
 
-    let scale = Math.random() * 2
+    let scale = 0.5
     let duration = 1
-    let feq = duration * 5
-    let num = 5
+    let feq = duration * 3
+    let num = 10
     let translate = { x: Math.random() * 300, y: Math.random() * 300, z: Math.random() * 300 }
     if (!explosion) {
         explosion = new LightningExplosion(illo, translate, scale, duration, feq, num)
