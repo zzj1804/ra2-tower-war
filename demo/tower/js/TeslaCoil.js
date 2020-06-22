@@ -434,6 +434,7 @@ class TeslaCoil {
       ZdogUtils.getDistance(coil.getTopPoint(), coil.target.getCenterPoint()) <= TeslaCoil.ATTACK_RANGE
   }
 
+  static BUILDING_TYPE = 1
   static MAX_HP = 800
   static AP = 200
   static ATTACK_CD = 8

@@ -413,6 +413,7 @@ class PrismTower {
             ZdogUtils.getDistance(prism.getTopPoint(), prism.target.getCenterPoint()) <= PrismTower.ATTACK_RANGE
     }
 
+    static BUILDING_TYPE = 2
     static MAX_HP = 800
     static AP = 200
     static ATTACK_CD = 8
