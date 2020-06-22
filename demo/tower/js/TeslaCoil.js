@@ -254,10 +254,10 @@ class TeslaCoil {
       new Lightning(coil.addTo, topPoint, rotate, 10 * coil.scale, distance, inflectionPointNum, duration, 12)
       new LightningExplosion(coil.addTo, targetPoint, coil.scale * 2, duration * 1.1, 10, 10)
       coil.target.getDamage(TeslaCoil.AP)
-
       coil.loadTime = 0
+      coil.target = null
+
       gsap.timeline({}).call(() => {
-        coil.target = null
         if (coil.status === TeslaCoil.STATUS.ATTACKING) {
           coil.status = TeslaCoil.STATUS.STANDBY
         }

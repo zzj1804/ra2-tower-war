@@ -92,3 +92,29 @@ function timedRandomTarget() {
     r.loading()
     setTimeout("timedRandomTarget()", 5000 / ENV.timeScale)
 }
+
+document.getElementById('attack-tc').addEventListener('click', () => {
+    c.target = t3
+    c.loading()
+})
+
+document.getElementById('attack-pt').addEventListener('click', () => {
+    r.target = t4
+    r.loading()
+})
+
+document.getElementById('sell-tc').addEventListener('click', () => {
+    c.sell()
+})
+
+document.getElementById('sell-pt').addEventListener('click', () => {
+    r.sell()
+})
+
+document.getElementById('damage-tc').addEventListener('click', () => {
+    c.getDamage(100)
+})
+
+document.getElementById('damage-pt').addEventListener('click', () => {
+    r.getDamage(100)
+})

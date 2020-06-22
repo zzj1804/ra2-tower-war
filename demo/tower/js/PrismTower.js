@@ -273,6 +273,7 @@ class PrismTower {
 
             prism.status = PrismTower.STATUS.STANDBY
             prism.loadTime = 0
+            prism.target = null
         } else {
             prism.status = PrismTower.STATUS.STANDBY
         }
