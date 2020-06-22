@@ -180,7 +180,7 @@ class PrismTower {
 
         // 1.pillar
         let pillarColor = '#52519C'
-        let mirrorColor = '#AABBFF'
+        let mirrorColor = '#EEEEEE'
         let pillarAniObj = { color: pillarColor }
         let mirrorAniObj = { color: mirrorColor }
         tl.to(pillarAniObj, {
@@ -929,7 +929,7 @@ class PrismTower {
                 width: 28,
                 height: 100,
                 stroke: 15 * scale,
-                color: '#AABBFF',
+                color: '#EEEEEE',
                 rotate: { x: -TAU / 30 },
                 translate: { y: -60, z: prismRadius + 43 },
                 fill: true,

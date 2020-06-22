@@ -109,7 +109,7 @@ class Lightning {
   getCurveEquation(distance) {
     if (this.curveFunc) return this.curveFunc
     let r = Math.random()
-    if (r > 0.2) {
+    if (r > 0.5) {
       return function (x) {
         return 0
       }
