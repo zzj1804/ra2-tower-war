@@ -352,7 +352,7 @@ class PrismTower {
 
     destroyed() {
         let prism = this
-        new Explosion(prism.addTo, prism.centerPoint, 4 * prism.scale, 3)
+        new Explosion(prism.addTo, prism.centerPoint, 3 * prism.scale, 3)
         prism.remove()
     }
 
