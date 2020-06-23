@@ -111,28 +111,20 @@ class IsometricMap {
     }
 
 
-    getModelByGrid(index) {
+    getObjByGrid(index) {
         if (!index) return
         return this.isoArr[index.y][index.x]
     }
 
-    addModelByGrid(model, index) {
+    addObjByGrid(model, index) {
         if (!model || !index) return
         let oldModel = this.isoArr[index.y][index.x]
         if (oldModel) return
         this.isoArr[index.y][index.x] = model
-        let { x, y } = this.getScreenToMapIndexCenterPoint(index)
-        let halfMapLength = MAP_GRID_LENGTH * MAP_GRID_NUM / 2
-        model.translate.x += x
-        model.translate.y += y
-        this.isoAnchor.addChild(model)
     }
 
-    removeModelByGrid(index) {
+    removeObjByGrid(index) {
         if (!index) return
-        let model = this.isoArr[index.y][index.x]
-        if (!model) return
-        this.isoAnchor.removeChild(model)
         this.isoArr[index.y][index.x] = null
     }
 
