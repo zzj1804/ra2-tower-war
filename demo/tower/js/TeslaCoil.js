@@ -5,6 +5,7 @@ class TeslaCoil {
     coil.map = map
     coil.mapIndex = mapIndex
     coil.teamColor = teamColor
+    coil.buildingType = TeslaCoil.BUILDING_TYPE
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
     coil.scale = scale
@@ -163,6 +164,13 @@ class TeslaCoil {
           visits[tx][ty] = true
           newPoi = { x: tx, y: ty }
           queue.push(newPoi)
+
+          if (newPoi.x === startPoi.x && i % 8 === 0 &&
+            Math.abs(newPoi.y - startPoi.y) * prism.map.gridLength > TeslaCoil.ATTACK_RANGE) {
+            console.log('target out of range')
+            return false
+          }
+
           let building = buildingArr[tx][ty]
           if (building && !building.isEnd() && !coil.isSameTeam(building.teamColor) &&
             ZdogUtils.getDistance(coil.getTopPoint(), building.getCenterPoint()) <= TeslaCoil.ATTACK_RANGE) {
@@ -415,24 +423,31 @@ class TeslaCoil {
 
   remove() {
     let coil = this
-    if (coil.isEnd()) return
     coil.status = TeslaCoil.STATUS.END
     coil.addTo = null
+    coil.scale = null
     coil.map = null
     coil.mapIndex = null
     coil.teamColor = null
-    coil.isAutoRepairMode = false
+    coil.buildingType = null
+    coil.isAutoRepairMode = null
     coil.target = null
     coil.centerPoint = null
-    coil.loadTime = 0
-    coil.hp = 0
-    coil.partArr.length = 0
-    coil.anchor.remove()
-    coil.anchor = null
-    coil.model.remove()
-    coil.model = null
-    coil.tl.kill()
-    coil.tl = null
+    coil.loadTime = null
+    coil.hp = null
+    coil.partArr = null
+    if (coil.anchor) {
+      coil.anchor.remove()
+      coil.anchor = null     
+    }
+    if (coil.model) {
+      coil.model.remove()
+      coil.model = null    
+    }
+    if (coil.tl) {
+      coil.tl.kill()
+      coil.tl = null    
+    }
     if (coil.build_tl) {
       coil.build_tl.kill()
       coil.build_tl = null

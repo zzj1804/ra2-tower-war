@@ -82,6 +82,8 @@ class IsometricMap {
   constructor(illo, cartAnchor, gridNum, gridLength, mapColor) {
     this.illo = illo
     this.cartAnchor = cartAnchor
+    this.gridLength = gridLength
+    this.gridNum = gridNum
     this.isoArr = new Array(gridNum)
     for (let i = 0; i < gridNum; i++) {
       this.isoArr[i] = new Array(gridNum).fill(null)
@@ -256,6 +258,8 @@ class IsometricMap {
     this.isoAnchor = null
     this.isoArr = null
     this.cartAnchor = null
+    this.gridLength = null
+    this.gridNum = null
   }
 
   removeAllChild() {

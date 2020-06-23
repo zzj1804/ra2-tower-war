@@ -5,6 +5,7 @@ class PrismTower {
         prism.map = map
         prism.mapIndex = mapIndex
         prism.teamColor = teamColor
+        prism.buildingType = PrismTower.BUILDING_TYPE
         prism.status = PrismTower.STATUS.CREATED
         prism.hp = PrismTower.MAX_HP
         prism.scale = scale
@@ -103,6 +104,7 @@ class PrismTower {
         prism.loadTime += PrismTower.RENDER_PERIOD
 
         if (!prism.isCD() && prism.findAndSetTarget()) {
+            prism.findAndSetLaserHelper()
             prism.loading()
         } else {
             let spinAnchor = prism.partArr[2][2]
@@ -112,9 +114,102 @@ class PrismTower {
 
     findAndSetTarget() {
         let prism = this
-        // TODO find target on map
-        // TODO pass laser
+        // find target on map,bfs
+        if (!prism.map || !prism.mapIndex) return false
+        let buildingArr = prism.map.isoArr
+        let len = prism.map.isoArr.length
+        let diers = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }]
+        let visits = new Array(len)
+        let queue = []
+        let startPoi = { x: prism.mapIndex.x, y: prism.mapIndex.y }
+        queue.push(startPoi)
+        for (let i = 0; i < visits.length; i++) {
+            visits[i] = new Array(len).fill(false)
+        }
+        visits[poi.x][poi.y] = true
+        while (queue.length > 0) {
+            for (let i = 0; i < diers.length; i++) {
+                const dier = diers[i]
+                let poi = queue.pop()
+                let tx = poi.x + dier.x
+                let ty = poi.y + dier.y
+                if (tx >= 0 && tx < len &&
+                    ty >= 0 && ty < len &&
+                    !visits[tx][ty]) {
+                    visits[tx][ty] = true
+                    newPoi = { x: tx, y: ty }
+                    queue.push(newPoi)
+
+                    if (newPoi.x === startPoi.x && i % 8 === 0 &&
+                        Math.abs(newPoi.y - startPoi.y) * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                        console.log('target out of range')
+                        return false
+                    }
+
+                    let building = buildingArr[tx][ty]
+                    if (building && !building.isEnd() && !prism.isSameTeam(building.teamColor) &&
+                        ZdogUtils.getDistance(prism.getTopPoint(), building.getCenterPoint()) <= Teslaprism.ATTACK_RANGE) {
+                        prism.target = building
+                        return true
+                    }
+                }
+            }
+        }
         return false
+    }
+
+    findAndSetLaserHelper() {
+        let prism = this
+        // find target on map,bfs
+        if (!prism.map || !prism.mapIndex) return false
+        let totalNum = 0
+        let buildingArr = prism.map.isoArr
+        let len = prism.map.isoArr.length
+        let diers = [
+            { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }, { x: -1, y: 1 },
+            { x: -1, y: 0 }, { x: -1, y: -1 }, { x: 0, y: -1 }, { x: 1, y: -1 }
+        ]
+        let visits = new Array(len)
+        let queue = []
+        let startPoi = { x: prism.mapIndex.x, y: prism.mapIndex.y }
+        queue.push(startPoi)
+        for (let i = 0; i < visits.length; i++) {
+            visits[i] = new Array(len).fill(false)
+        }
+        visits[poi.x][poi.y] = true
+        while (queue.length > 0) {
+            for (let i = 0; i < diers.length; i++) {
+                const dier = diers[i]
+                let poi = queue.pop()
+                let tx = poi.x + dier.x
+                let ty = poi.y + dier.y
+                if (tx >= 0 && tx < len &&
+                    ty >= 0 && ty < len &&
+                    !visits[tx][ty]) {
+                    visits[tx][ty] = true
+                    newPoi = { x: tx, y: ty }
+                    queue.push(newPoi)
+
+                    if (newPoi.x === startPoi.x && i % 8 === 0 &&
+                        Math.abs(newPoi.y - startPoi.y) * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                        console.log('helper out of range')
+                        return totalNum
+                    }
+
+                    let building = buildingArr[tx][ty]
+                    if (building && !building.isEnd() &&
+                        building.setPassLaserTarget(prism)) {
+                        console.log('helper+1')
+                        totalNum += 1
+                    }
+                    if (totalNum >= PrismTower.MAX_RECEIVE_LASER_NUM) {
+                        console.log('helper max')
+                        return totalNum
+                    }
+                }
+            }
+        }
+        return totalNum
     }
 
     repair(v) {
@@ -265,6 +360,19 @@ class PrismTower {
 
     addOneReceiveLaserNum() {
         this.receive_laser_num += 1
+    }
+
+    setPassLaserTarget(target) {
+        let prism = this
+        if (target && target.buildingType === PrismTower.BUILDING_TYPE && !target.isEnd() &&
+            prism.isSameTeam(target.teamColor) &&
+            ZdogUtils.getDistance(prism.getTopPoint(), target.getTopPoint()) <= PrismTower.ATTACK_RANGE) {
+            prism.pass_laser_target = target
+            passLaserLoading()
+            return true
+        } else {
+            return false
+        }
     }
 
     passLaserLoading() {
@@ -440,25 +548,33 @@ class PrismTower {
 
     remove() {
         let prism = this
-        if (prism.isEnd()) return
         prism.status = PrismTower.STATUS.END
         prism.addTo = null
+        prism.scale = null
         prism.map = null
         prism.mapIndex = null
         prism.teamColor = null
-        prism.isAutoRepairMode = false
+        prism.buildingType = null
+        prism.receive_laser_num = null
+        prism.isAutoRepairMode = null
         prism.target = null
         prism.pass_laser_target = null
         prism.centerPoint = null
-        prism.loadTime = 0
-        prism.hp = 0
-        prism.partArr.length = 0
-        prism.anchor.remove()
-        prism.anchor = null
-        prism.model.remove()
-        prism.model = null
-        prism.tl.kill()
-        prism.tl = null
+        prism.loadTime = null
+        prism.hp = null
+        prism.partArr = null
+        if (prism.anchor) {
+            prism.anchor.remove()
+            prism.anchor = null
+        }
+        if (prism.model) {
+            prism.model.remove()
+            prism.model = null
+        }
+        if (prism.tl) {
+            prism.tl.kill()
+            prism.tl = null
+        }
         if (prism.build_tl) {
             prism.build_tl.kill()
             prism.build_tl = null
