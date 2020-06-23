@@ -16,6 +16,8 @@ const ENV = {
     timeScale: 1
 }
 
+let isPlaying = true
+
 const stats = new Stats()
 
 let map
@@ -77,7 +79,118 @@ illo.element.addEventListener("wheel", e => {
     illo.zoom = zoom
 }, false)
 
+document.getElementById('center-button').addEventListener('click', () => {
+    resetPosition()
+}, false)
+
+document.getElementById('play-button').addEventListener('click', (e) => {
+    switchPlayAndPause()
+    let btn = e.srcElement
+    if (isPlaying) {
+        btn.innerHTML = 'play'
+    } else {
+        btn.innerHTML = 'pause'
+    }
+}, false)
+
+document.getElementById('time-scale-button').addEventListener('click', (e) => {
+    let btn = e.srcElement
+    switch (ENV.timeScale) {
+        case 1:
+            setGlobalTimeScale(2)
+            break
+        case 2:
+            setGlobalTimeScale(0.5)
+            break
+        case 0.5:
+            setGlobalTimeScale(1)
+            break
+    }
+
+    btn.innerHTML = ENV.timeScale + 'X'
+}, false)
+
+const BUILD_MODE = {
+    PT: 'prism-tower',
+    TC: 'tesla-coil',
+    SELL: 'sell',
+    NONE: 'none'
+}
+let buildMode = BUILD_MODE.NONE
+document.getElementById('build-pt-button').addEventListener('click', () => {
+    if (buildMode === BUILD_MODE.NONE || buildMode !== BUILD_MODE.PT) {
+        buildMode = BUILD_MODE.PT
+    } else {
+        buildMode = BUILD_MODE.NONE
+    }
+    switchBuildMode()
+}, false)
+document.getElementById('build-tc-button').addEventListener('click', () => {
+    if (buildMode === BUILD_MODE.NONE || buildMode !== BUILD_MODE.TC) {
+        buildMode = BUILD_MODE.TC
+    } else {
+        buildMode = BUILD_MODE.NONE
+    }
+    switchBuildMode()
+}, false)
+document.getElementById('sell-button').addEventListener('click', () => {
+    if (buildMode === BUILD_MODE.NONE || buildMode !== BUILD_MODE.SELL) {
+        buildMode = BUILD_MODE.SELL
+    } else {
+        buildMode = BUILD_MODE.NONE
+    }
+    switchBuildMode()
+}, false)
+
+
 // event end
+
+function resetPosition() {
+    illoAnchor.translate = new Zdog.Vector({})
+    illoAnchor.rotate = new Zdog.Vector({})
+}
+
+function switchPlayAndPause() {
+    isPlaying = !isPlaying
+    if (isPlaying) {
+        gsap.globalTimeline.play()
+    } else {
+        gsap.globalTimeline.pause()
+    }
+}
+
+function switchBuildMode() {
+    let ptBtn = document.getElementById('build-pt-button')
+    let tcBtn = document.getElementById('build-tc-button')
+    let sellBtn = document.getElementById('sell-button')
+    switch (buildMode) {
+        case BUILD_MODE.PT:
+            switchBtnActive(ptBtn, true)
+            switchBtnActive(tcBtn, false)
+            switchBtnActive(sellBtn, false)
+            break
+        case BUILD_MODE.TC:
+            switchBtnActive(ptBtn, false)
+            switchBtnActive(tcBtn, true)
+            switchBtnActive(sellBtn, false)
+            break
+        case BUILD_MODE.SELL:
+            switchBtnActive(ptBtn, false)
+            switchBtnActive(tcBtn, false)
+            switchBtnActive(sellBtn, true)
+            break
+        case BUILD_MODE.NONE:
+            switchBtnActive(ptBtn, false)
+            switchBtnActive(tcBtn, false)
+            switchBtnActive(sellBtn, false)
+            break
+    }
+}
+
+function setGlobalTimeScale(v) {
+    ENV.timeScale = v
+    gsap.globalTimeline.timeScale(v)
+}
 
 function switchBtnActive(btn, v) {
     if (v) {
@@ -143,9 +256,14 @@ async function switchPip() {
 
 function render() {
     stats.begin()
+
     illo.updateRenderGraph()
-    ENV.time += ENV.timeScale
+    if (isPlaying) {
+        ENV.time += ENV.timeScale
+    }
+
     stats.end()
+
     requestAnimFrame(render)
 }
 
