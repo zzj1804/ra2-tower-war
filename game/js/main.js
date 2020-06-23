@@ -9,7 +9,7 @@ window.requestAnimFrame = (function () {
 
 const MAP_GRID_NUM = 10
 const MAP_GRID_LENGTH = 100
-const DEFAULT_ILLO_ZOOM = 0.1
+const DEFAULT_ILLO_ZOOM = 1
 
 const ENV = {
     time: 0,
@@ -87,9 +87,9 @@ document.getElementById('play-button').addEventListener('click', (e) => {
     switchPlayAndPause()
     let btn = e.srcElement
     if (isPlaying) {
-        btn.innerHTML = 'play'
-    } else {
         btn.innerHTML = 'pause'
+    } else {
+        btn.innerHTML = 'play'
     }
 }, false)
 
