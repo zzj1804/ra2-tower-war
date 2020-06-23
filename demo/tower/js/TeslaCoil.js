@@ -165,12 +165,6 @@ class TeslaCoil {
           newPoi = { x: tx, y: ty }
           queue.push(newPoi)
 
-          if (newPoi.x === startPoi.x && i % 8 === 0 &&
-            Math.abs(newPoi.y - startPoi.y) * prism.map.gridLength > TeslaCoil.ATTACK_RANGE) {
-            console.log('target out of range')
-            return false
-          }
-
           let building = buildingArr[tx][ty]
           if (building && !building.isEnd() && !coil.isSameTeam(building.teamColor) &&
             ZdogUtils.getDistance(coil.getTopPoint(), building.getCenterPoint()) <= TeslaCoil.ATTACK_RANGE) {

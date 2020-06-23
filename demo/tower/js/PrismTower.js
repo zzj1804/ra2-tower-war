@@ -140,12 +140,6 @@ class PrismTower {
                     newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
-                    if (newPoi.x === startPoi.x && i % 8 === 0 &&
-                        Math.abs(newPoi.y - startPoi.y) * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
-                        console.log('target out of range')
-                        return false
-                    }
-
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() && !prism.isSameTeam(building.teamColor) &&
                         ZdogUtils.getDistance(prism.getTopPoint(), building.getCenterPoint()) <= Teslaprism.ATTACK_RANGE) {
@@ -165,10 +159,7 @@ class PrismTower {
         let totalNum = 0
         let buildingArr = prism.map.isoArr
         let len = prism.map.isoArr.length
-        let diers = [
-            { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }, { x: -1, y: 1 },
-            { x: -1, y: 0 }, { x: -1, y: -1 }, { x: 0, y: -1 }, { x: 1, y: -1 }
-        ]
+        let diers = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }]
         let visits = new Array(len)
         let queue = []
         let startPoi = { x: prism.mapIndex.x, y: prism.mapIndex.y }
@@ -189,13 +180,7 @@ class PrismTower {
                     visits[tx][ty] = true
                     newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
-
-                    if (newPoi.x === startPoi.x && i % 8 === 0 &&
-                        Math.abs(newPoi.y - startPoi.y) * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
-                        console.log('helper out of range')
-                        return totalNum
-                    }
-
+                    
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() &&
                         building.setPassLaserTarget(prism)) {
