@@ -206,6 +206,9 @@ class TeslaCoil {
 
   getDamage(damage) {
     let coil = this
+    if (coil.hp > TeslaCoil.MAX_HP) {
+      coil.hp = TeslaCoil.MAX_HP
+    }
     let hp = coil.hp - damage
     if (hp > TeslaCoil.MAX_HP) {
       hp = TeslaCoil.MAX_HP

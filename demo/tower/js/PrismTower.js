@@ -148,6 +148,9 @@ class PrismTower {
 
     getDamage(damage) {
         let prism = this
+        if (prism.hp > PrismTower.MAX_HP) {
+            prism.hp = PrismTower.MAX_HP
+        }
         let hp = prism.hp - damage
         if (hp > PrismTower.MAX_HP) {
             hp = PrismTower.MAX_HP
@@ -427,6 +430,8 @@ class PrismTower {
     static ATTACK_RANGE = 2000
     static AUTO_REPAIR_VAL = 1
     static RENDER_PERIOD = 0.1
+    static MAX_RECEIVE_LASER_NUM = 5
+    static PER_RECEIVE_LASER_AP_AMPLIFICATION = 0.25
 
     static STATUS = {
         CREATED: 'created',
@@ -435,6 +440,8 @@ class PrismTower {
         STANDBY: 'standby',
         LOADING: 'loading',
         ATTACKING: 'attacking',
+        PASS_LASER_LOADING: 'pass_laser_loading',
+        PASSING_LASER: 'passing_laser',
         SELLING: 'selling',
         END: 'end'
     }
