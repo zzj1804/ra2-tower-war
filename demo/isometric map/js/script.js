@@ -130,40 +130,6 @@ class IsometricMap {
       color: 'green',
       visible: false
     })
-
-    let thisMap = this
-    this.illo.element.addEventListener("mousemove", e => {
-      let idx = thisMap.getScreenToMapIndex(e.offsetX, e.offsetY)
-      if (idx) {
-        let model = thisMap.getModelByGrid(idx)
-        let newPoint = thisMap.getScreenToMapIndexCenterPoint(idx)
-        thisMap.selectionBox.translate.x = newPoint.x
-        thisMap.selectionBox.translate.y = newPoint.y
-        if (model && isBuildMode) {
-          thisMap.selectionBox.color = 'red'
-        } else {
-          thisMap.selectionBox.color = 'green'
-        }
-        thisMap.selectionBox.visible = true
-      } else {
-        thisMap.selectionBox.visible = false
-      }
-    }, false)
-
-    this.illo.element.addEventListener("click", e => {
-      if (!isBuildMode) return
-      let idx = thisMap.getScreenToMapIndex(e.offsetX, e.offsetY)
-      if (idx) {
-        let model = thisMap.getModelByGrid(idx)
-        if (model) {
-          thisMap.removeModelByGrid(idx)
-          thisMap.selectionBox.color = 'green'
-        } else {
-          thisMap.addModelByGrid(getAxis(0.5), idx)
-          thisMap.selectionBox.color = 'red'
-        }
-      }
-    }, false)
   }
 
   getScreenToMapVector(offsetX, offsetY) {
@@ -353,6 +319,39 @@ illo.element.addEventListener("wheel", e => {
   if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom
   if (zoom < illoOption.minZoom) zoom = illoOption.minZoom
   illo.zoom = zoom
+}, false)
+
+illo.element.addEventListener("mousemove", e => {
+  let idx = map.getScreenToMapIndex(e.offsetX, e.offsetY)
+  if (idx) {
+    let model = map.getModelByGrid(idx)
+    let newPoint = map.getScreenToMapIndexCenterPoint(idx)
+    map.selectionBox.translate.x = newPoint.x
+    map.selectionBox.translate.y = newPoint.y
+    if (model && isBuildMode) {
+      map.selectionBox.color = 'red'
+    } else {
+      map.selectionBox.color = 'green'
+    }
+    map.selectionBox.visible = true
+  } else {
+    map.selectionBox.visible = false
+  }
+}, false)
+
+illo.element.addEventListener("click", e => {
+  if (!isBuildMode) return
+  let idx = map.getScreenToMapIndex(e.offsetX, e.offsetY)
+  if (idx) {
+    let model = map.getModelByGrid(idx)
+    if (model) {
+      map.removeModelByGrid(idx)
+      map.selectionBox.color = 'green'
+    } else {
+      map.addModelByGrid(getAxis(0.5), idx)
+      map.selectionBox.color = 'red'
+    }
+  }
 }, false)
 
 document.addEventListener("keydown", e => {
