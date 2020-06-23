@@ -204,6 +204,38 @@ document.addEventListener("keydown", e => {
     }
 })
 
+illo.element.addEventListener("mousemove", e => {
+    let idx = map.getScreenToMapIndex(e.offsetX, e.offsetY)
+    if (idx) {
+        let model = map.getModelByGrid(idx)
+        let newPoint = map.getScreenToMapIndexCenterPoint(idx)
+        map.selectionBox.translate.x = newPoint.x
+        map.selectionBox.translate.y = newPoint.y
+        if (model) {
+            map.selectionBox.color = 'red'
+        } else {
+            map.selectionBox.color = 'green'
+        }
+        map.selectionBox.visible = true
+    } else {
+        map.selectionBox.visible = false
+    }
+}, false)
+
+illo.element.addEventListener("click", e => {
+    let idx = map.getScreenToMapIndex(e.offsetX, e.offsetY)
+    if (idx) {
+        let model = map.getModelByGrid(idx)
+        if (model) {
+            map.removeModelByGrid(idx)
+            map.selectionBox.color = 'green'
+        } else {
+            map.addModelByGrid(getAxis(0.5), idx)
+            map.selectionBox.color = 'red'
+        }
+    }
+}, false)
+
 // event end
 
 function resetPosition() {
