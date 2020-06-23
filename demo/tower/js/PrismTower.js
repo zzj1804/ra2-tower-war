@@ -23,7 +23,7 @@ class PrismTower {
 
     render() {
         let prism = this
-        if (prism.isEnd()) return
+        if (prism.status === PrismTower.STATUS.CREATED || prism.isEnd()) return
         if (prism.hp <= 0) prism.status = PrismTower.STATUS.DESTROYED
 
         // autoRepairMode
@@ -180,7 +180,7 @@ class PrismTower {
                     visits[tx][ty] = true
                     newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
-                    
+
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() &&
                         building.setPassLaserTarget(prism)) {

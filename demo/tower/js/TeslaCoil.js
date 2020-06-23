@@ -23,7 +23,7 @@ class TeslaCoil {
 
   render() {
     let coil = this
-    if (coil.isEnd()) return
+    if (coil.status === TeslaCoil.STATUS.CREATED || coil.isEnd()) return
     if (coil.hp <= 0) coil.status = TeslaCoil.STATUS.DESTROYED
 
     // autoRepairMode
