@@ -85,29 +85,10 @@ document.getElementById('center-button').addEventListener('click', () => {
 
 document.getElementById('play-button').addEventListener('click', (e) => {
     switchPlayAndPause()
-    let btn = e.srcElement
-    if (isPlaying) {
-        btn.innerHTML = 'pause'
-    } else {
-        btn.innerHTML = 'play'
-    }
 }, false)
 
 document.getElementById('time-scale-button').addEventListener('click', (e) => {
-    let btn = e.srcElement
-    switch (ENV.timeScale) {
-        case 1:
-            setGlobalTimeScale(2)
-            break
-        case 2:
-            setGlobalTimeScale(0.5)
-            break
-        case 0.5:
-            setGlobalTimeScale(1)
-            break
-    }
-
-    btn.innerHTML = ENV.timeScale + 'X'
+    switchGlobalTimeScale()
 }, false)
 
 const BUILD_MODE = {
@@ -142,6 +123,86 @@ document.getElementById('sell-button').addEventListener('click', () => {
     switchBuildMode()
 }, false)
 
+document.addEventListener("keydown", e => {
+    console.log(e)
+    switch (e.keyCode) {
+        // ←
+        case 37:
+            illoAnchor.translate.x += 10 / illo.zoom
+            break
+        // ↑
+        case 38:
+            illoAnchor.translate.y += 10 / illo.zoom
+            break
+        // →
+        case 39:
+            illoAnchor.translate.x -= 10 / illo.zoom
+            break
+        // ↓
+        case 40:
+            illoAnchor.translate.y -= 10 / illo.zoom
+            break
+        // c -> reset move&rotate
+        case 67:
+        case 99:
+            resetPosition()
+            break
+        // p -> PiP
+        case 80:
+        case 112:
+            switchPip()
+            break
+        // r -> isDragRotate
+        case 82:
+        case 114:
+            illoOption.isDragRotate = !illoOption.isDragRotate
+            break
+        // s -> stats
+        case 83:
+        case 115:
+            changeStats(!illoOption.stats)
+            break
+        // q -> build prism tower
+        case 81:
+        case 113:
+            if (buildMode === BUILD_MODE.NONE || buildMode !== BUILD_MODE.PT) {
+                buildMode = BUILD_MODE.PT
+            } else {
+                buildMode = BUILD_MODE.NONE
+            }
+            switchBuildMode()
+            break
+        // w -> build tesla coil
+        case 87:
+        case 119:
+            if (buildMode === BUILD_MODE.NONE || buildMode !== BUILD_MODE.TC) {
+                buildMode = BUILD_MODE.TC
+            } else {
+                buildMode = BUILD_MODE.NONE
+            }
+            switchBuildMode()
+            break
+        // r -> sell building
+        case 69:
+        case 101:
+            if (buildMode === BUILD_MODE.NONE || buildMode !== BUILD_MODE.SELL) {
+                buildMode = BUILD_MODE.SELL
+            } else {
+                buildMode = BUILD_MODE.NONE
+            }
+            switchBuildMode()
+            break
+        // d -> timeScale
+        case 68:
+        case 100:
+            switchPlayAndPause()
+            break
+        case 70:
+        case 102:
+            switchGlobalTimeScale()
+            break
+    }
+})
 
 // event end
 
@@ -151,11 +212,14 @@ function resetPosition() {
 }
 
 function switchPlayAndPause() {
+    let btn = document.getElementById('play-button')
     isPlaying = !isPlaying
     if (isPlaying) {
         gsap.globalTimeline.play()
+        btn.innerHTML = 'pause'
     } else {
         gsap.globalTimeline.pause()
+        btn.innerHTML = 'play'
     }
 }
 
@@ -185,6 +249,25 @@ function switchBuildMode() {
             switchBtnActive(sellBtn, false)
             break
     }
+}
+
+function switchGlobalTimeScale() {
+    switch (ENV.timeScale) {
+        case 1:
+            setGlobalTimeScale(2)
+            break
+        case 2:
+            setGlobalTimeScale(0.5)
+            break
+        case 0.5:
+            setGlobalTimeScale(1)
+            break
+        default:
+            setGlobalTimeScale(1)
+            break
+    }
+    let btn = document.getElementById('time-scale-button')
+    btn.innerHTML = ENV.timeScale + 'X'
 }
 
 function setGlobalTimeScale(v) {
