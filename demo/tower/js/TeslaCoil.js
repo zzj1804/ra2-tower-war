@@ -13,7 +13,7 @@ class TeslaCoil {
     coil.partArr = []
     coil.model = coil.getModel(addTo, translate, rotate, scale)
     coil.anchor = new Zdog.Anchor({ addTo: coil.model })
-    coil.centerPoint = new Zdog.Vector(translate).subtract({ y: 200 * scale })
+    coil.centerPoint = null
     coil.tl = gsap.timeline({ repeat: -1 })
       .to(1, { duration: TeslaCoil.RENDER_PERIOD })
       .call(() => { coil.render() })
@@ -109,14 +109,14 @@ class TeslaCoil {
   getTopPoint() {
     let coil = this
     if (coil.isLean()) {
-      return coil.model.translate.copy().subtract({ x: -100 * coil.scale, y: 625 * coil.scale, z: 80 * coil.scale })
+      return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ x: -100 * coil.scale, y: 625 * coil.scale, z: 80 * coil.scale }).rotate(coil.model.rotate))
     } else {
-      return coil.model.translate.copy().subtract({ y: 675 * coil.scale })
+      return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 675 * coil.scale }).rotate(coil.model.rotate))
     }
   }
 
   getCenterPoint() {
-    return this.centerPoint
+    return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 200 * coil.scale }).rotate(coil.model.rotate))
   }
 
   standby() {
@@ -376,9 +376,10 @@ class TeslaCoil {
   remove() {
     let coil = this
     if (coil.isEnd()) return
+    coil.status = TeslaCoil.STATUS.END
     coil.addTo = null
     coil.map = null
-    coil.status = TeslaCoil.STATUS.END
+    coil.teamColor = null
     coil.isAutoRepairMode = false
     coil.target = null
     coil.centerPoint = null

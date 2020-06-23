@@ -69,7 +69,6 @@ function displayLoadingLayer(p) {
     }
 }
 
-
 setGlobalTimeScale(1)
 
 let c = new TeslaCoil(illo3, {}, {}, 0.6, 'red')

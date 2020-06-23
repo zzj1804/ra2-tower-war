@@ -13,7 +13,7 @@ class PrismTower {
         prism.partArr = []
         prism.model = prism.getModel(addTo, translate, rotate, scale)
         prism.anchor = new Zdog.Anchor({ addTo: prism.model })
-        prism.centerPoint = new Zdog.Vector(translate).subtract({ y: 200 * scale })
+        prism.centerPoint = null
         prism.tl = gsap.timeline({ repeat: -1 })
             .to(1, { duration: PrismTower.RENDER_PERIOD })
             .call(() => { prism.render() })
@@ -86,14 +86,14 @@ class PrismTower {
     getTopPoint() {
         let prism = this
         if (prism.isLean()) {
-            return prism.model.translate.copy().subtract({ x: 25 * prism.scale, y: 445 * prism.scale, z: -25 * prism.scale })
+            return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ x: 25 * prism.scale, y: 445 * prism.scale, z: -25 * prism.scale }).rotate(prism.model.rotate))
         } else {
-            return prism.model.translate.copy().subtract({ y: 450 * prism.scale })
+            return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 450 * prism.scale }).rotate(prism.model.rotate))
         }
     }
 
     getCenterPoint() {
-        return this.centerPoint
+        return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 200 * prism.scale }).rotate(prism.model.rotate))
     }
 
     standby() {
@@ -360,9 +360,10 @@ class PrismTower {
     remove() {
         let prism = this
         if (prism.isEnd()) return
+        prism.status = PrismTower.STATUS.END
         prism.addTo = null
         prism.map = null
-        prism.status = PrismTower.STATUS.END
+        prism.teamColor = null
         prism.isAutoRepairMode = false
         prism.target = null
         prism.centerPoint = null
