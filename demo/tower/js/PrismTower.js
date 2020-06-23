@@ -1,8 +1,9 @@
 class PrismTower {
-    constructor(addTo, translate, rotate, scale, teamColor, map) {
+    constructor(addTo, translate, rotate, scale, teamColor, map, mapIndex) {
         let prism = this
         prism.addTo = addTo
         prism.map = map
+        prism.mapIndex = mapIndex
         prism.teamColor = teamColor
         prism.status = PrismTower.STATUS.CREATED
         prism.hp = PrismTower.MAX_HP
@@ -164,6 +165,8 @@ class PrismTower {
     loading() {
         let prism = this
         if (prism.status !== PrismTower.STATUS.STANDBY) return
+        let pillarColor = '#52519C'
+        let mirrorColor = '#EEEEEE'
         prism.loading_tl = gsap.timeline({
             onStart: () => {
                 prism.status = PrismTower.STATUS.LOADING
@@ -172,7 +175,10 @@ class PrismTower {
                 if (!prism.isTargetWithinRange() && prism.status === PrismTower.STATUS.LOADING) {
                     prism.status = PrismTower.STATUS.STANDBY
                     prism.loading_tl.kill()
-                    prism.loading_tl = null
+                    for (let i = 0; i < 6; i++) {
+                        prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], { color: pillarColor })
+                        prism.partArr[3][7 + 8 * i].color = mirrorColor
+                    }
                 }
             }
         })
@@ -180,8 +186,6 @@ class PrismTower {
         let tl = prism.loading_tl
 
         // 1.pillar
-        let pillarColor = '#52519C'
-        let mirrorColor = '#EEEEEE'
         let pillarAniObj = { color: pillarColor }
         let mirrorAniObj = { color: mirrorColor }
         tl.to(pillarAniObj, {
@@ -363,6 +367,7 @@ class PrismTower {
         prism.status = PrismTower.STATUS.END
         prism.addTo = null
         prism.map = null
+        prism.mapIndex = null
         prism.teamColor = null
         prism.isAutoRepairMode = false
         prism.target = null

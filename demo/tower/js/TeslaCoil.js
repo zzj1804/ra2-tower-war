@@ -1,8 +1,9 @@
 class TeslaCoil {
-  constructor(addTo, translate, rotate, scale, teamColor, map) {
+  constructor(addTo, translate, rotate, scale, teamColor, map, mapIndex) {
     let coil = this
     coil.addTo = addTo
     coil.map = map
+    coil.mapIndex = mapIndex
     coil.teamColor = teamColor
     coil.status = TeslaCoil.STATUS.CREATED
     coil.hp = TeslaCoil.MAX_HP
@@ -137,7 +138,40 @@ class TeslaCoil {
 
   findAndSetTarget() {
     let coil = this
-    // TODO find target on map
+    // find target on map,bfs
+    if (!coil.map || !coil.mapIndex) return false
+    let buildingArr = coil.map.isoArr
+    let len = coil.map.isoArr.length
+    let diers = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }]
+    let visits = new Array(len)
+    let queue = []
+    let startPoi = { x: coil.mapIndex.x, y: coil.mapIndex.y }
+    queue.push(startPoi)
+    for (let i = 0; i < visits.length; i++) {
+      visits[i] = new Array(len).fill(false)
+    }
+    visits[poi.x][poi.y] = true
+    while (queue.length > 0) {
+      for (let i = 0; i < diers.length; i++) {
+        const dier = diers[i]
+        let poi = queue.pop()
+        let tx = poi.x + dier.x
+        let ty = poi.y + dier.y
+        if (tx >= 0 && tx < len &&
+          ty >= 0 && ty < len &&
+          !visits[tx][ty]) {
+          visits[tx][ty] = true
+          newPoi = { x: tx, y: ty }
+          queue.push(newPoi)
+          let building = buildingArr[tx][ty]
+          if (building && !building.isEnd() && !coil.isSameTeam(building.teamColor) &&
+            ZdogUtils.getDistance(coil.getTopPoint(), building.getCenterPoint()) <= TeslaCoil.ATTACK_RANGE) {
+            coil.target = building
+            return true
+          }
+        }
+      }
+    }
     return false
   }
 
@@ -189,6 +223,8 @@ class TeslaCoil {
   loading() {
     let coil = this
     if (coil.status !== TeslaCoil.STATUS.STANDBY) return
+    let sliver = '#EEF'
+    let white = 'white'
     let ball = coil.partArr[4][6]
     let topCoil = coil.partArr[4][5]
     let midCoil = coil.partArr[4][4]
@@ -201,8 +237,11 @@ class TeslaCoil {
       onUpdate: () => {
         if (!coil.isTargetWithinRange() && coil.status === TeslaCoil.STATUS.LOADING) {
           coil.status = TeslaCoil.STATUS.STANDBY
+          ball.color = sliver
+          topCoil.color = sliver
+          midCoil.color = sliver
+          bottomCoil.color = sliver
           coil.loading_tl.kill()
-          coil.loading_tl = null
         }
       },
       onComplete: () => {
@@ -214,8 +253,6 @@ class TeslaCoil {
     let tl = coil.loading_tl
 
     // loading anime
-    let sliver = '#EEF'
-    let white = 'white'
     let duration = 0.15
     let bottomCoilAniObj = { color: silver }
     let midCoilAniObj = { color: silver }
@@ -379,6 +416,7 @@ class TeslaCoil {
     coil.status = TeslaCoil.STATUS.END
     coil.addTo = null
     coil.map = null
+    coil.mapIndex = null
     coil.teamColor = null
     coil.isAutoRepairMode = false
     coil.target = null
