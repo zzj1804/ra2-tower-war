@@ -280,7 +280,7 @@ class TeslaCoil {
   attack() {
     let coil = this
     if (coil.status === TeslaCoil.STATUS.LOADING && coil.isTargetWithinRange()) {
-      // TODO test attack anime
+      // attack anime
       coil.status = TeslaCoil.STATUS.ATTACKING
       let topPoint = coil.getTopPoint()
       let targetPoint = coil.target.getCenterPoint()
