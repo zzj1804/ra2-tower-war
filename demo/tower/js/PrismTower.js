@@ -365,7 +365,7 @@ class PrismTower {
     setPassLaserTarget(target) {
         let prism = this
         if (target && target.buildingType === PrismTower.BUILDING_TYPE && !target.isEnd() &&
-            prism.isSameTeam(target.teamColor) &&
+            prism.status === PrismTower.STATUS.STANDBY && !prism.isCD() && prism.isSameTeam(target.teamColor) &&
             ZdogUtils.getDistance(prism.getTopPoint(), target.getTopPoint()) <= PrismTower.ATTACK_RANGE) {
             prism.pass_laser_target = target
             passLaserLoading()
@@ -466,6 +466,7 @@ class PrismTower {
             prism.pass_laser_target = null
         } else {
             prism.status = PrismTower.STATUS.STANDBY
+            prism.pass_laser_target = null
         }
     }
 
