@@ -7,9 +7,17 @@ window.requestAnimFrame = (function () {
         }
 })()
 
-const MAP_GRID_NUM = 10
-const MAP_GRID_LENGTH = 100
 const DEFAULT_ILLO_ZOOM = 1
+
+const MAP_GRID_NUM = 10
+const MAP_GRID_LENGTH = 125
+const MAP_COLOR = 'rgba(240, 200, 255, 0.95)'
+
+const TESLA_COIL_TEAM_COLOR = 'red'
+const PRISM_TOWER_TEAM_COLOR = 'blue'
+
+const TESLA_COIL_SCALE = 0.3
+const PRISM_TOWER_SCALE = 0.45
 
 const ENV = {
     time: 0,
@@ -206,13 +214,12 @@ document.addEventListener("keydown", e => {
 
 illo.element.addEventListener("mousemove", e => {
     let idx = map.getScreenToMapIndex(e.offsetX, e.offsetY)
-    if (idx) {
-        let model = map.getObjByGrid(idx)
+    if (idx && buildMode !== BUILD_MODE.NONE) {
         let newPoint = map.getScreenToMapIndexCenterPoint(idx)
         map.selectionBox.translate.x = newPoint.x
         map.selectionBox.translate.y = newPoint.y
-        if (model) {
-            map.selectionBox.color = 'red'
+        if (buildMode === BUILD_MODE.SELL) {
+            map.selectionBox.color = 'yellow'
         } else {
             map.selectionBox.color = 'green'
         }
@@ -224,7 +231,17 @@ illo.element.addEventListener("mousemove", e => {
 
 illo.element.addEventListener("click", e => {
     let idx = map.getScreenToMapIndex(e.offsetX, e.offsetY)
-    if (idx) {
+    if (!idx) return
+    switch (buildMode) {
+        case BUILD_MODE.PT:
+            buildPrismTowerByGrid(idx)
+            break
+        case BUILD_MODE.TC:
+            buildTeslaCoilByGrid(idx)
+            break
+        case BUILD_MODE.SELL:
+            sellBuildingByGrid(idx)
+            break
     }
 }, false)
 
@@ -361,6 +378,34 @@ async function switchPip() {
     }
 }
 
+function buildTeslaCoilByGrid(idx) {
+    if (!idx) return
+    let obj = map.getObjByGrid(idx)
+    if (obj && !obj.isEnd()) return
+    let point = map.getScreenToMapIndexCenterPoint(idx)
+    let coil = new TeslaCoil(map.isoAnchor, point, { x: -Zdog.TAU / 4 }, TESLA_COIL_SCALE, TESLA_COIL_TEAM_COLOR)
+    map.addObjByGrid(coil, idx)
+    coil.build()
+}
+
+function buildPrismTowerByGrid(idx) {
+    if (!idx) return
+    let obj = map.getObjByGrid(idx)
+    if (obj && !obj.isEnd()) return
+    let point = map.getScreenToMapIndexCenterPoint(idx)
+    let prism = new PrismTower(map.isoAnchor, point, { x: -Zdog.TAU / 4 }, PRISM_TOWER_SCALE, PRISM_TOWER_TEAM_COLOR)
+    map.addObjByGrid(prism, idx)
+    prism.build()
+}
+
+function sellBuildingByGrid(idx) {
+    if (!idx) return
+    let obj = map.getObjByGrid(idx)
+    if (!obj || obj.isEnd()) return
+    obj.sell()
+    map.removeObjByGrid(idx)
+}
+
 function render() {
     stats.begin()
 
@@ -375,7 +420,7 @@ function render() {
 }
 
 // init
-map = new IsometricMap(illo, illoAnchor, MAP_GRID_NUM, MAP_GRID_LENGTH, 'rgba(240, 200, 255, 0.95)')
+map = new IsometricMap(illo, illoAnchor, MAP_GRID_NUM, MAP_GRID_LENGTH, MAP_COLOR)
 createOptionGUI()
 render()
 displayLoadingLayer(false)
