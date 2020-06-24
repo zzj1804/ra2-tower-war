@@ -357,7 +357,7 @@ class PrismTower {
             prism.status === PrismTower.STATUS.STANDBY && !prism.isCD() && prism.isSameTeam(target.teamColor) &&
             ZdogUtils.getDistance(prism.getTopPoint(), target.getTopPoint()) <= PrismTower.ATTACK_RANGE) {
             prism.pass_laser_target = target
-            passLaserLoading()
+            prism.passLaserLoading()
             return true
         } else {
             return false
