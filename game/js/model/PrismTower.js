@@ -619,12 +619,12 @@ class PrismTower {
     static BUILDING_TYPE = 2
     static MAX_HP = 800
     static AP = 200
-    static ATTACK_CD = 8
-    static ATTACK_RANGE = 2000
+    static ATTACK_CD = 6
+    static ATTACK_RANGE = 500
     static AUTO_REPAIR_VAL = 1
     static RENDER_PERIOD = 0.1
     static MAX_RECEIVE_LASER_NUM = 5
-    static PER_RECEIVE_LASER_AP_AMPLIFICATION = 1.25
+    static PER_RECEIVE_LASER_AP_AMPLIFICATION = 1.5
 
     static STATUS = {
         CREATED: 'created',

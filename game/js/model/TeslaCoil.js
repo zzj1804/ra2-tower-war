@@ -491,9 +491,9 @@ class TeslaCoil {
 
     static BUILDING_TYPE = 1
     static MAX_HP = 800
-    static AP = 200
-    static ATTACK_CD = 8
-    static ATTACK_RANGE = 2500
+    static AP = 250
+    static ATTACK_CD = 5
+    static ATTACK_RANGE = 600
     static AUTO_REPAIR_VAL = 1
     static RENDER_PERIOD = 0.1
 
