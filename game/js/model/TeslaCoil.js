@@ -110,6 +110,7 @@ class TeslaCoil {
 
     getTopPoint() {
         let coil = this
+        if (coil.isEnd()) return
         if (coil.isLean()) {
             return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ x: -100 * coil.scale, y: 625 * coil.scale, z: 80 * coil.scale }).rotate(coil.model.rotate))
         } else {
@@ -119,6 +120,7 @@ class TeslaCoil {
 
     getCenterPoint() {
         let coil = this
+        if (coil.isEnd()) return
         return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 200 * coil.scale }).rotate(coil.model.rotate))
     }
 
@@ -229,7 +231,7 @@ class TeslaCoil {
     loading() {
         let coil = this
         if (coil.status !== TeslaCoil.STATUS.STANDBY) return
-        let sliver = '#EEF'
+        let silver = '#EEF'
         let white = 'white'
         let ball = coil.partArr[4][6]
         let topCoil = coil.partArr[4][5]
@@ -238,15 +240,17 @@ class TeslaCoil {
         coil.loading_tl = gsap.timeline({
             onStart: () => {
                 coil.status = TeslaCoil.STATUS.LOADING
-                coil.lightning.remove()
+                if (coil.lightning) {
+                    coil.lightning.remove()
+                }
             },
             onUpdate: () => {
                 if (!coil.isTargetWithinRange() && coil.status === TeslaCoil.STATUS.LOADING) {
                     coil.status = TeslaCoil.STATUS.STANDBY
-                    ball.color = sliver
-                    topCoil.color = sliver
-                    midCoil.color = sliver
-                    bottomCoil.color = sliver
+                    ball.color = silver
+                    topCoil.color = silver
+                    midCoil.color = silver
+                    bottomCoil.color = silver
                     coil.loading_tl.kill()
                 }
             },
@@ -267,17 +271,17 @@ class TeslaCoil {
 
         // 1.bottomCoil
         tl.to(bottomCoilAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'midCoilStart')
-            .to(bottomCoilAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'topCoilStart')
+            .to(bottomCoilAniObj, { color: silver, duration: duration, onUpdate: () => { coil.changeAnimeValue(bottomCoil, bottomCoilAniObj) } }, 'topCoilStart')
         // 2.midCoil
         tl.to(midCoilAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } }, 'midCoilStart')
-            .to(midCoilAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } })
+            .to(midCoilAniObj, { color: silver, duration: duration, onUpdate: () => { coil.changeAnimeValue(midCoil, midCoilAniObj) } })
         // 3.topCoil
         tl.to(topCoilAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } }, 'topCoilStart')
         tl.addLabel('ballStart')
-            .to(topCoilAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } })
+            .to(topCoilAniObj, { color: silver, duration: duration, onUpdate: () => { coil.changeAnimeValue(topCoil, topCoilAniObj) } })
         // 4.ball
         tl.to(ballAniObj, { color: white, duration: duration, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } }, 'ballStart')
-            .to(ballAniObj, { color: sliver, duration: duration, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } })
+            .to(ballAniObj, { color: silver, duration: duration, onUpdate: () => { coil.changeAnimeValue(ball, ballAniObj) } })
     }
 
     attack() {

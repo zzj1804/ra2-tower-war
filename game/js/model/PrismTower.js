@@ -87,6 +87,7 @@ class PrismTower {
 
     getTopPoint() {
         let prism = this
+        if (prism.isEnd()) return
         if (prism.isLean()) {
             return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ x: 25 * prism.scale, y: 445 * prism.scale, z: -25 * prism.scale }).rotate(prism.model.rotate))
         } else {
@@ -96,6 +97,7 @@ class PrismTower {
 
     getCenterPoint() {
         let prism = this
+        if (prism.isEnd()) return
         return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 200 * prism.scale }).rotate(prism.model.rotate))
     }
 
