@@ -230,7 +230,7 @@ class TeslaCoil {
     loading() {
         let coil = this
         if (coil.status !== TeslaCoil.STATUS.STANDBY) return
-        let silver = '#EEF'
+        let silver = '#EEEEFF'
         let white = 'white'
         let ball = coil.partArr[4][6]
         let topCoil = coil.partArr[4][5]
@@ -540,7 +540,7 @@ class TeslaCoil {
 
         // colors
         const red = thisCoil.teamColor ? thisCoil.teamColor : '#FF0000'
-        const silver = '#EEF'
+        const silver = '#EEEEEE'
         const gold = '#FA6'
 
         const TAU = Zdog.TAU
@@ -778,7 +778,7 @@ class TeslaCoil {
                 { y: -400 },
             ],
             stroke: 35 * scale,
-            color: '#DFDFDF',
+            color: '#EEEEEE',
             visible: isVisible
         })
         // 4.coil:top ball
