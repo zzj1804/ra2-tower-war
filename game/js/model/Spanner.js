@@ -62,7 +62,7 @@ class Spanner {
             rotate_z: -Zdog.TAU / 8
         }
 
-        spanner.tl = new TimelineMax({ yoyo: true, repeat: feq, onUpdate: () => { spanner.render() }, onComplete: () => { spanner.remove() } })
+        spanner.tl = new gsap.timeline({ yoyo: true, repeat: feq, onUpdate: () => { spanner.render() }, onComplete: () => { spanner.remove() } })
 
         spanner.tl.to(spanner.aObj, {
             duration: duration / 2 / feq,

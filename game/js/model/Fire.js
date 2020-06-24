@@ -52,7 +52,7 @@ class Fire {
             path_1_y: -height2
         }
 
-        fire.tl = new TimelineMax({ repeat: feq, onUpdate: () => { fire.render() }, delay: 0, onComplete: () => { fire.remove() } })
+        fire.tl = new gsap.timeline({ repeat: feq, onUpdate: () => { fire.render() }, delay: 0, onComplete: () => { fire.remove() } })
 
         fire.tl.to(fire.aObj1, {
             duration: duration / 2 / feq,

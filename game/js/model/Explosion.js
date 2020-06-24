@@ -25,7 +25,7 @@ class Explosion {
             addTo: expl.explosionGroup
         })
 
-        expl.tl = new TimelineMax({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
+        expl.tl = new gsap.timeline({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
         expl.tl.addLabel('start')
             .to(expl.aObj1, {
                 color: 'rgba(250,250,155,0)',

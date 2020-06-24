@@ -32,7 +32,7 @@ class Laser {
             stroke: scale * 1.2
         }
 
-        laser.tl = new TimelineMax({ onUpdate: () => { laser.render() }, delay: 0, onComplete: () => { laser.remove() } })
+        laser.tl = new gsap.timeline({ onUpdate: () => { laser.render() }, delay: 0, onComplete: () => { laser.remove() } })
         laser.tl.to(laser.aObj1, {
             color: 'rgba(157,240,250,0.01)',
             stroke: scale * 0.9,

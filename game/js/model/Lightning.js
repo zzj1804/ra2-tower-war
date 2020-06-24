@@ -22,7 +22,7 @@ class Lightning {
         lit.lit3 = lit.getNewLit('white')
         lit.setRandomRotate(lit.lit3)
 
-        lit.tl = new TimelineMax()
+        lit.tl = new gsap.timeline()
         for (let i = 1; i < frequency; i++) {
             lit.tl.call(() => lit.updateLit(), null, i / frequency * duration)
         }

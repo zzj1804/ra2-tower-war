@@ -10,7 +10,7 @@ class LaserExplosion {
         expl.modelArr = []
         expl.aniObjArr = []
 
-        expl.tl = new TimelineMax({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
+        expl.tl = new gsap.timeline({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
         for (let i = 0; i < frequency; i++) {
             let model = new Zdog.Shape({ addTo: expl.explosionGroup })
             let aniObj = {

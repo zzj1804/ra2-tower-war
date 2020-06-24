@@ -10,7 +10,7 @@ class LightningExplosion {
         expl.modelArr = []
         expl.aniObjArr = []
 
-        expl.tl = new TimelineMax({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
+        expl.tl = new gsap.timeline({ onUpdate: () => { expl.render() }, onComplete: () => { expl.remove() } })
         for (let i = 1; i <= frequency; i++) {
             let label = 'start_' + i
             expl.tl.addLabel(label)
