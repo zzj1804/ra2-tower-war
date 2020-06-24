@@ -336,6 +336,17 @@ function createOptionGUI() {
     // stats
     illoFolder.add(illoOption, "stats").listen().onChange(v => changeStats(v))
 
+
+    // TeslaCoil
+    let TeslaCoilFolder = gui.addFolder('TeslaCoil')
+    TeslaCoilFolder.open()
+    TeslaCoilFolder.add(TeslaCoil, 'AP', 0, 2000)
+
+
+    // PrismTower
+    let PrismTowerFolder = gui.addFolder('PrismTower')
+    PrismTowerFolder.open()
+    PrismTowerFolder.add(PrismTower, 'AP', 0, 2000)
     return gui
 }
 
