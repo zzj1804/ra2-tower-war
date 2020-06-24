@@ -414,7 +414,7 @@ class PrismTower {
         // 2.mirror
         tl.to(mirrorAniObj, {
             color: '#FFFFFF',
-            duration: 0.55,
+            duration: 0.5,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
                     prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
@@ -591,7 +591,7 @@ class PrismTower {
 
     isEnd() {
         let prism = this
-        return prism.status === PrismTower.END
+        return prism.status === PrismTower.STATUS.END
     }
 
     isLean() {

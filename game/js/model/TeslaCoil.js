@@ -470,7 +470,7 @@ class TeslaCoil {
 
     isEnd() {
         let coil = this
-        return coil.status === TeslaCoil.END
+        return coil.status === TeslaCoil.STATUS.END
     }
 
     isLean() {

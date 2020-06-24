@@ -116,8 +116,6 @@ class IsometricMap {
 
     addObjByGrid(model, index) {
         if (!model || !index) return
-        let oldModel = this.isoArr[index.y][index.x]
-        if (oldModel) return
         this.isoArr[index.y][index.x] = model
     }
 
