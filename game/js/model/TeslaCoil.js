@@ -11,7 +11,7 @@ class TeslaCoil {
         coil.scale = scale
         coil.isAutoRepairMode = true
         coil.target = null
-        coil.loadTime = 0
+        coil.loadTime = TeslaCoil.ATTACK_CD
         coil.partArr = []
         coil.model = coil.getModel(addTo, translate, rotate, scale)
         coil.anchor = new Zdog.Anchor({ addTo: coil.model })
@@ -118,6 +118,7 @@ class TeslaCoil {
     }
 
     getCenterPoint() {
+        let coil = this
         return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 200 * coil.scale }).rotate(coil.model.rotate))
     }
 
@@ -151,7 +152,7 @@ class TeslaCoil {
         for (let i = 0; i < visits.length; i++) {
             visits[i] = new Array(len).fill(false)
         }
-        visits[poi.x][poi.y] = true
+        visits[startPoi.x][startPoi.y] = true
         while (queue.length > 0) {
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
@@ -162,7 +163,7 @@ class TeslaCoil {
                     ty >= 0 && ty < len &&
                     !visits[tx][ty]) {
                     visits[tx][ty] = true
-                    newPoi = { x: tx, y: ty }
+                    let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
                     let building = buildingArr[tx][ty]

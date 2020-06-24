@@ -24,9 +24,9 @@ const ENV = {
     timeScale: 1
 }
 
-let isPlaying = true
-
 const stats = new Stats()
+
+let isPlaying = true
 
 let map
 let video = document.createElement('video')
@@ -383,7 +383,7 @@ function buildTeslaCoilByGrid(idx) {
     let obj = map.getObjByGrid(idx)
     if (obj && !obj.isEnd()) return
     let point = map.getScreenToMapIndexCenterPoint(idx)
-    let coil = new TeslaCoil(map.isoAnchor, point, { x: -Zdog.TAU / 4 }, TESLA_COIL_SCALE, TESLA_COIL_TEAM_COLOR)
+    let coil = new TeslaCoil(map.isoAnchor, point, { x: -Zdog.TAU / 4 }, TESLA_COIL_SCALE, TESLA_COIL_TEAM_COLOR, map, idx)
     map.addObjByGrid(coil, idx)
     coil.build()
 }
@@ -393,7 +393,7 @@ function buildPrismTowerByGrid(idx) {
     let obj = map.getObjByGrid(idx)
     if (obj && !obj.isEnd()) return
     let point = map.getScreenToMapIndexCenterPoint(idx)
-    let prism = new PrismTower(map.isoAnchor, point, { x: -Zdog.TAU / 4 }, PRISM_TOWER_SCALE, PRISM_TOWER_TEAM_COLOR)
+    let prism = new PrismTower(map.isoAnchor, point, { x: -Zdog.TAU / 4 }, PRISM_TOWER_SCALE, PRISM_TOWER_TEAM_COLOR, map, idx)
     map.addObjByGrid(prism, idx)
     prism.build()
 }

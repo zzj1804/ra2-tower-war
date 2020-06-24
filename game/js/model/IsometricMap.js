@@ -87,7 +87,6 @@ class IsometricMap {
         let cartZ = - (cartX * z20.x + cartY * z20.y) / z20.z
         let cartPoint = new Zdog.Vector({ x: cartX, y: cartY, z: cartZ })
         let isoPoint = mMV(TM1, mMV(TM0, cartPoint))
-        console.debug(`isoPoint: x: ${isoPoint.x} y: ${isoPoint.y} z: ${isoPoint.z}`)
 
         return isoPoint
     }
@@ -100,7 +99,6 @@ class IsometricMap {
         let y = vec.y + halfMapLength
         let indexX = Math.floor(x / MAP_GRID_LENGTH)
         let indexY = Math.floor(y / MAP_GRID_LENGTH)
-        console.debug(`indexX:${indexX} indexY:${indexY}`)
 
         return { x: indexX, y: indexY }
     }

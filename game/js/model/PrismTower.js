@@ -11,7 +11,7 @@ class PrismTower {
         prism.scale = scale
         prism.isAutoRepairMode = true
         prism.target = null
-        prism.loadTime = 0
+        prism.loadTime = PrismTower.ATTACK_CD
         prism.partArr = []
         prism.model = prism.getModel(addTo, translate, rotate, scale)
         prism.anchor = new Zdog.Anchor({ addTo: prism.model })
@@ -95,6 +95,7 @@ class PrismTower {
     }
 
     getCenterPoint() {
+        let prism = this
         return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 200 * prism.scale }).rotate(prism.model.rotate))
     }
 
@@ -126,7 +127,7 @@ class PrismTower {
         for (let i = 0; i < visits.length; i++) {
             visits[i] = new Array(len).fill(false)
         }
-        visits[poi.x][poi.y] = true
+        visits[startPoi.x][startPoi.y] = true
         while (queue.length > 0) {
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
@@ -137,12 +138,12 @@ class PrismTower {
                     ty >= 0 && ty < len &&
                     !visits[tx][ty]) {
                     visits[tx][ty] = true
-                    newPoi = { x: tx, y: ty }
+                    let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() && !prism.isSameTeam(building.teamColor) &&
-                        ZdogUtils.getDistance(prism.getTopPoint(), building.getCenterPoint()) <= Teslaprism.ATTACK_RANGE) {
+                        ZdogUtils.getDistance(prism.getTopPoint(), building.getCenterPoint()) <= PrismTower.ATTACK_RANGE) {
                         prism.target = building
                         return true
                     }
@@ -167,7 +168,7 @@ class PrismTower {
         for (let i = 0; i < visits.length; i++) {
             visits[i] = new Array(len).fill(false)
         }
-        visits[poi.x][poi.y] = true
+        visits[startPoi.x][startPoi.y] = true
         while (queue.length > 0) {
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
@@ -178,11 +179,13 @@ class PrismTower {
                     ty >= 0 && ty < len &&
                     !visits[tx][ty]) {
                     visits[tx][ty] = true
-                    newPoi = { x: tx, y: ty }
+                    let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() &&
+                        building.buildingType === PrismTower.BUILDING_TYPE &&
+                        prism.isSameTeam(building.teamColor) &&
                         building.setPassLaserTarget(prism)) {
                         console.log('helper+1')
                         totalNum += 1
