@@ -15,6 +15,10 @@ class PrismTower {
         prism.partArr = []
         prism.model = prism.getModel(addTo, translate, rotate, scale)
         prism.anchor = new Zdog.Anchor({ addTo: prism.model })
+        prism.centerPoint = new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 200 * prism.scale }).rotate(prism.model.rotate))
+        prism.normalTopPoint = new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 450 * prism.scale }).rotate(prism.model.rotate))
+        prism.leanTopPoint = new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ x: 25 * prism.scale, y: 445 * prism.scale, z: -25 * prism.scale }).rotate(prism.model.rotate))
+
         prism.tl = gsap.timeline({ repeat: -1 })
             .to(1, { duration: PrismTower.RENDER_PERIOD })
             .call(() => { prism.render() })
@@ -86,18 +90,15 @@ class PrismTower {
 
     getTopPoint() {
         let prism = this
-        if (prism.isEnd()) return
         if (prism.isLean()) {
-            return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ x: 25 * prism.scale, y: 445 * prism.scale, z: -25 * prism.scale }).rotate(prism.model.rotate))
+            return prism.leanTopPoint
         } else {
-            return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 450 * prism.scale }).rotate(prism.model.rotate))
+            return prism.normalTopPoint
         }
     }
 
     getCenterPoint() {
-        let prism = this
-        if (prism.isEnd()) return
-        return new Zdog.Vector(prism.model.translate).subtract(new Zdog.Vector({ y: 200 * prism.scale }).rotate(prism.model.rotate))
+        return this.centerPoint
     }
 
     standby() {
@@ -130,9 +131,9 @@ class PrismTower {
         let queue = []
         queue.push(startPoi)
         while (queue.length > 0) {
+            let poi = queue.shift()
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
-                let poi = queue.shift()
                 let tx = poi.x + dier.x
                 let ty = poi.y + dier.y
                 if (tx >= 0 && tx < len &&
@@ -171,9 +172,9 @@ class PrismTower {
         }
         visits[startPoi.x][startPoi.y] = true
         while (queue.length > 0) {
+            let poi = queue.shift()
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
-                let poi = queue.shift()
                 let tx = poi.x + dier.x
                 let ty = poi.y + dier.y
                 if (tx >= 0 && tx < len &&
@@ -336,11 +337,13 @@ class PrismTower {
             let duration = 1
             new Laser(prism.addTo, topPoint, rotate, 40 * prism.scale, distance, duration)
             new LaserExplosion(prism.addTo, targetPoint, prism.scale, 0.5, 3)
+
+            console.log(`attack with helper: ${prism.receive_laser_num}`)
             prism.target.getDamage(PrismTower.AP * (1 + PrismTower.PER_RECEIVE_LASER_AP_AMPLIFICATION * prism.receive_laser_num))
 
             prism.status = PrismTower.STATUS.STANDBY
-            prism.loadTime = 0
             prism.target = null
+            prism.loadTime = 0
             prism.receive_laser_num = 0
         } else {
             prism.status = PrismTower.STATUS.STANDBY
@@ -411,7 +414,7 @@ class PrismTower {
         // 2.mirror
         tl.to(mirrorAniObj, {
             color: '#FFFFFF',
-            duration: 0.5,
+            duration: 0.55,
             onUpdate: () => {
                 for (let i = 0; i < 6; i++) {
                     prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
@@ -621,7 +624,7 @@ class PrismTower {
     static AUTO_REPAIR_VAL = 1
     static RENDER_PERIOD = 0.1
     static MAX_RECEIVE_LASER_NUM = 5
-    static PER_RECEIVE_LASER_AP_AMPLIFICATION = 0.25
+    static PER_RECEIVE_LASER_AP_AMPLIFICATION = 1.25
 
     static STATUS = {
         CREATED: 'created',

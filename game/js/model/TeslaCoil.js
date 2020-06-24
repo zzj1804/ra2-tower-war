@@ -15,6 +15,10 @@ class TeslaCoil {
         coil.partArr = []
         coil.model = coil.getModel(addTo, translate, rotate, scale)
         coil.anchor = new Zdog.Anchor({ addTo: coil.model })
+        coil.centerPoint = new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 200 * coil.scale }).rotate(coil.model.rotate))
+        coil.normalTopPoint = new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 675 * coil.scale }).rotate(coil.model.rotate))
+        coil.leanTopPoint = new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ x: -100 * coil.scale, y: 625 * coil.scale, z: 80 * coil.scale }).rotate(coil.model.rotate))
+
         coil.tl = gsap.timeline({ repeat: -1 })
             .to(1, { duration: TeslaCoil.RENDER_PERIOD })
             .call(() => { coil.render() })
@@ -109,18 +113,15 @@ class TeslaCoil {
 
     getTopPoint() {
         let coil = this
-        if (coil.isEnd()) return
         if (coil.isLean()) {
-            return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ x: -100 * coil.scale, y: 625 * coil.scale, z: 80 * coil.scale }).rotate(coil.model.rotate))
+            return coil.leanTopPoint
         } else {
-            return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 675 * coil.scale }).rotate(coil.model.rotate))
+            return coil.normalTopPoint
         }
     }
 
     getCenterPoint() {
-        let coil = this
-        if (coil.isEnd()) return
-        return new Zdog.Vector(coil.model.translate).subtract(new Zdog.Vector({ y: 200 * coil.scale }).rotate(coil.model.rotate))
+        return this.centerPoint
     }
 
     standby() {
@@ -155,9 +156,9 @@ class TeslaCoil {
         let queue = []
         queue.push(startPoi)
         while (queue.length > 0) {
+            let poi = queue.shift()
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
-                let poi = queue.shift()
                 let tx = poi.x + dier.x
                 let ty = poi.y + dier.y
                 if (tx >= 0 && tx < len &&
