@@ -143,6 +143,13 @@ class PrismTower {
                     let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
+                    let absX = Math.abs(startPoi.x - tx)
+                    let absY = Math.abs(startPoi.y - ty)
+                    if (absX === absY &&
+                    1.41421356 * absX * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                        return false
+                    }
+
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() && !prism.isSameTeam(building.teamColor) &&
                         ZdogUtils.getDistance(prism.getTopPoint(), building.getCenterPoint()) <= PrismTower.ATTACK_RANGE) {
@@ -184,16 +191,21 @@ class PrismTower {
                     let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
+                    let absX = Math.abs(startPoi.x - tx)
+                    let absY = Math.abs(startPoi.y - ty)
+                    if (absX === absY &&
+                    1.41421356 * absX * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                        return totalNum
+                    }
+
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() &&
                         building.buildingType === PrismTower.BUILDING_TYPE &&
                         prism.isSameTeam(building.teamColor) &&
                         building.setPassLaserTarget(prism)) {
-                        console.log('helper+1')
                         totalNum += 1
                     }
                     if (totalNum >= PrismTower.MAX_RECEIVE_LASER_NUM) {
-                        console.log('helper max')
                         return totalNum
                     }
                 }
@@ -338,7 +350,6 @@ class PrismTower {
             new Laser(prism.addTo, topPoint, rotate, 40 * prism.scale, distance, duration)
             new LaserExplosion(prism.addTo, targetPoint, prism.scale, 0.5, 3)
 
-            console.log(`attack with helper: ${prism.receive_laser_num}`)
             prism.target.getDamage(PrismTower.AP * (1 + PrismTower.PER_RECEIVE_LASER_AP_AMPLIFICATION * prism.receive_laser_num))
 
             prism.status = PrismTower.STATUS.STANDBY
