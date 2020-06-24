@@ -403,7 +403,6 @@ function sellBuildingByGrid(idx) {
     let obj = map.getObjByGrid(idx)
     if (!obj || obj.isEnd()) return
     obj.sell()
-    map.removeObjByGrid(idx)
 }
 
 function render() {

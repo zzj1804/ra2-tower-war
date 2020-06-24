@@ -15,7 +15,6 @@ class TeslaCoil {
         coil.partArr = []
         coil.model = coil.getModel(addTo, translate, rotate, scale)
         coil.anchor = new Zdog.Anchor({ addTo: coil.model })
-        coil.centerPoint = null
         coil.tl = gsap.timeline({ repeat: -1 })
             .to(1, { duration: TeslaCoil.RENDER_PERIOD })
             .call(() => { coil.render() })
@@ -146,19 +145,19 @@ class TeslaCoil {
         if (!coil.map || !coil.mapIndex) return false
         let buildingArr = coil.map.isoArr
         let len = coil.map.isoArr.length
+        let startPoi = { x: coil.mapIndex.x, y: coil.mapIndex.y }
         let diers = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }]
         let visits = new Array(len)
-        let queue = []
-        let startPoi = { x: coil.mapIndex.x, y: coil.mapIndex.y }
-        queue.push(startPoi)
         for (let i = 0; i < visits.length; i++) {
             visits[i] = new Array(len).fill(false)
         }
         visits[startPoi.x][startPoi.y] = true
+        let queue = []
+        queue.push(startPoi)
         while (queue.length > 0) {
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
-                let poi = queue.pop()
+                let poi = queue.shift()
                 let tx = poi.x + dier.x
                 let ty = poi.y + dier.y
                 if (tx >= 0 && tx < len &&
@@ -416,7 +415,7 @@ class TeslaCoil {
 
     destroyed() {
         let coil = this
-        new Explosion(coil.addTo, coil.centerPoint, 4 * coil.scale, 3)
+        new Explosion(coil.addTo, coil.getCenterPoint(), 4 * coil.scale, 3)
         coil.remove()
     }
 
@@ -431,7 +430,6 @@ class TeslaCoil {
         coil.buildingType = null
         coil.isAutoRepairMode = null
         coil.target = null
-        coil.centerPoint = null
         coil.loadTime = null
         coil.hp = null
         coil.partArr = null

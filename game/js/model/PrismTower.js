@@ -15,7 +15,6 @@ class PrismTower {
         prism.partArr = []
         prism.model = prism.getModel(addTo, translate, rotate, scale)
         prism.anchor = new Zdog.Anchor({ addTo: prism.model })
-        prism.centerPoint = null
         prism.tl = gsap.timeline({ repeat: -1 })
             .to(1, { duration: PrismTower.RENDER_PERIOD })
             .call(() => { prism.render() })
@@ -121,19 +120,19 @@ class PrismTower {
         if (!prism.map || !prism.mapIndex) return false
         let buildingArr = prism.map.isoArr
         let len = prism.map.isoArr.length
+        let startPoi = { x: prism.mapIndex.x, y: prism.mapIndex.y }
         let diers = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }]
         let visits = new Array(len)
-        let queue = []
-        let startPoi = { x: prism.mapIndex.x, y: prism.mapIndex.y }
-        queue.push(startPoi)
         for (let i = 0; i < visits.length; i++) {
             visits[i] = new Array(len).fill(false)
         }
         visits[startPoi.x][startPoi.y] = true
+        let queue = []
+        queue.push(startPoi)
         while (queue.length > 0) {
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
-                let poi = queue.pop()
+                let poi = queue.shift()
                 let tx = poi.x + dier.x
                 let ty = poi.y + dier.y
                 if (tx >= 0 && tx < len &&
@@ -174,7 +173,7 @@ class PrismTower {
         while (queue.length > 0) {
             for (let i = 0; i < diers.length; i++) {
                 const dier = diers[i]
-                let poi = queue.pop()
+                let poi = queue.shift()
                 let tx = poi.x + dier.x
                 let ty = poi.y + dier.y
                 if (tx >= 0 && tx < len &&
@@ -533,7 +532,7 @@ class PrismTower {
 
     destroyed() {
         let prism = this
-        new Explosion(prism.addTo, prism.centerPoint, 3 * prism.scale, 3)
+        new Explosion(prism.addTo, prism.getCenterPoint(), 3 * prism.scale, 3)
         prism.remove()
     }
 
@@ -550,7 +549,6 @@ class PrismTower {
         prism.isAutoRepairMode = null
         prism.target = null
         prism.pass_laser_target = null
-        prism.centerPoint = null
         prism.loadTime = null
         prism.hp = null
         prism.partArr = null
