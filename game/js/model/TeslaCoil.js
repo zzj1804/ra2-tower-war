@@ -36,6 +36,9 @@ class TeslaCoil {
         // lean the tower if damaged
         coil.lean()
 
+        // smoke cause perspective bug
+        // coil.smoke()
+
         switch (coil.status) {
             case TeslaCoil.STATUS.STANDBY:
                 coil.standby()
@@ -51,8 +54,16 @@ class TeslaCoil {
         let part = coil.partArr
         if (coil.status !== TeslaCoil.STATUS.CREATED) return
         coil.build_tl = gsap.timeline({
-            onStart: () => { coil.status = TeslaCoil.STATUS.BUILDING },
-            onComplete: () => { coil.status = TeslaCoil.STATUS.STANDBY }
+            onStart: () => {
+                if (coil.status === TeslaCoil.STATUS.CREATED) {
+                    coil.status = TeslaCoil.STATUS.BUILDING
+                }
+            },
+            onComplete: () => {
+                if (coil.status === TeslaCoil.STATUS.BUILDING) {
+                    coil.status = TeslaCoil.STATUS.STANDBY
+                }
+            }
         })
         let tl = coil.build_tl
         // build anime
@@ -223,6 +234,13 @@ class TeslaCoil {
         coil.hp = hp
     }
 
+    smoke() {
+        let coil = this
+        if (coil.hp < TeslaCoil.MAX_HP * 0.7 && coil.anchor) {
+            new Smoke(coil.anchor, {}, 8, 5, 5, 5 * (1 - coil.hp / TeslaCoil.MAX_HP))
+        }
+    }
+
     isSameTeam(teamColor) {
         let coil = this
         return coil.teamColor === teamColor
@@ -316,7 +334,7 @@ class TeslaCoil {
 
     lean() {
         let coil = this
-        if (coil.isEnd()) return
+        if (coil.isEnd() || !coil.partArr) return
         let anchor = coil.partArr[4][7]
         let topCoil = coil.partArr[4][5]
         let midCoil = coil.partArr[4][4]
@@ -427,7 +445,6 @@ class TeslaCoil {
         coil.scale = null
         coil.map = null
         coil.mapIndex = null
-        coil.teamColor = null
         coil.buildingType = null
         coil.isAutoRepairMode = null
         coil.target = null

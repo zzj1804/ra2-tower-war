@@ -36,6 +36,9 @@ class PrismTower {
         // lean the tower if damaged
         prism.lean()
 
+        // smoke cause perspective bug
+        // prism.smoke()
+
         switch (prism.status) {
             case PrismTower.STATUS.STANDBY:
                 prism.standby()
@@ -49,35 +52,59 @@ class PrismTower {
     build() {
         let prism = this
         let part = prism.partArr
-        if (prism.status !== PrismTower.STATUS.CREATED) return
+        if (prism.status !== PrismTower.STATUS.CREATED || !part) return
         prism.build_tl = gsap.timeline({
-            onStart: () => { prism.status = PrismTower.STATUS.BUILDING },
-            onComplete: () => { prism.status = PrismTower.STATUS.STANDBY }
+            onStart: () => {
+                if (prism.status === PrismTower.STATUS.CREATED) {
+                    prism.status = PrismTower.STATUS.BUILDING
+                }
+            },
+            onComplete: () => {
+                if (prism.status === PrismTower.STATUS.BUILDING) {
+                    prism.status = PrismTower.STATUS.STANDBY
+                }
+            }
         })
         let tl = prism.build_tl
         // build anime
         // 1.base
-        tl.call(() => { part[0][1].visible = true })
-            .call(() => { part[0].forEach(ele => { ele.visible = true }) }, null, 0.3)
+        tl.call(() => {
+            if (!prism.partArr) return
+            part[0][1].visible = true
+        })
+            .call(() => {
+                if (!prism.partArr) return
+                part[0].forEach(ele => { ele.visible = true })
+            }, null, 0.3)
             .to(1, { duration: 0.2 })
         // 2.pillar
         let pillarAniObj = { translate_y: 80 }
-        tl.call(() => { part[1].forEach(ele => { ele.visible = true }) })
+        tl.call(() => {
+            if (!prism.partArr) return
+            part[1].forEach(ele => { ele.visible = true })
+        })
             .to(pillarAniObj, {
                 translate_y: 0,
                 duration: 0.5,
-                onUpdate: () => { prism.changeAnimeValue(prism.partArr[1][0], pillarAniObj) }
+                onUpdate: () => {
+                    if (!prism.partArr) return
+                    prism.changeAnimeValue(prism.partArr[1][0], pillarAniObj)
+                }
             })
         // 3.prism
         let prismAniObj = { translate_y: 300, translate_z: 10, rotate_x: -Zdog.TAU / 2.5 }
         tl.addLabel('prismStart')
-        tl.call(() => { part[3].forEach(ele => { ele.visible = true }) })
+        tl.call(() => {
+            if (!prism.partArr) return
+            part[3].forEach(ele => { ele.visible = true })
+        })
             .to(prismAniObj, {
                 rotate_x: 0,
                 translate_y: 0,
                 translate_z: 0,
                 duration: 1,
                 onUpdate: () => {
+                    if (!prism.partArr) return
                     for (let i = 0; i < 6; i++) {
                         const anchor = prism.partArr[3][i * 8]
                         prism.changeAnimeValue(anchor, prismAniObj)
@@ -85,7 +112,10 @@ class PrismTower {
                 }
             })
         // 4.hinge
-        tl.call(() => { part[2].forEach(ele => { ele.visible = true }) }, null, 'prismStart+=0.9')
+        tl.call(() => {
+            if (!prism.partArr) return
+            part[2].forEach(ele => { ele.visible = true })
+        }, null, 'prismStart+=0.9')
     }
 
     getTopPoint() {
@@ -110,6 +140,7 @@ class PrismTower {
             prism.findAndSetLaserHelper()
             prism.loading()
         } else {
+            if (!prism.partArr) return
             let spinAnchor = prism.partArr[2][2]
             spinAnchor.rotate.y -= 2
         }
@@ -243,6 +274,13 @@ class PrismTower {
         prism.hp = hp
     }
 
+    smoke() {
+        let prism = this
+        if (prism.hp < PrismTower.MAX_HP * 0.7 && prism.anchor) {
+            new Smoke(prism.anchor, {}, 8, 5, 5, 5 * (1 - prism.hp / PrismTower.MAX_HP))
+        }
+    }
+
     isSameTeam(teamColor) {
         let prism = this
         return prism.teamColor === teamColor
@@ -263,6 +301,8 @@ class PrismTower {
                 if (!prism.isTargetWithinRange() && prism.status === PrismTower.STATUS.LOADING) {
                     prism.status = PrismTower.STATUS.STANDBY
                     prism.loading_tl.kill()
+
+                    if (!prism.partArr) return
                     for (let i = 0; i < 6; i++) {
                         prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], { color: pillarColor })
                         prism.partArr[3][7 + 8 * i].color = mirrorColor
@@ -280,6 +320,7 @@ class PrismTower {
             color: '#DDE4FF',
             duration: 1,
             onUpdate: () => {
+                if (!prism.partArr) return
                 for (let i = 0; i < 6; i++) {
                     prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
                 }
@@ -289,6 +330,7 @@ class PrismTower {
                 color: pillarColor,
                 duration: 1,
                 onUpdate: () => {
+                    if (!prism.partArr) return
                     for (let i = 0; i < 6; i++) {
                         prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
                     }
@@ -299,6 +341,7 @@ class PrismTower {
             color: '#FFFFFF',
             duration: 0.6,
             onUpdate: () => {
+                if (!prism.partArr) return
                 for (let i = 0; i < 6; i++) {
                     prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
                 }
@@ -313,6 +356,7 @@ class PrismTower {
                 color: mirrorColor,
                 duration: 0.6,
                 onUpdate: () => {
+                    if (!prism.partArr) return
                     for (let i = 0; i < 6; i++) {
                         prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
                     }
@@ -376,7 +420,11 @@ class PrismTower {
             onUpdate: () => {
                 if (!prism.isPassLaserTargetWithinRange() && prism.status === PrismTower.STATUS.PASS_LASER_LOADING) {
                     prism.status = PrismTower.STATUS.STANDBY
-                    prism.pass_laser_loading_tl.kill()
+                    if (prism.pass_laser_loading_tl) {
+                        prism.pass_laser_loading_tl.kill()
+                    }
+
+                    if (!prism.partArr) return
                     for (let i = 0; i < 6; i++) {
                         prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], { color: pillarColor })
                         prism.partArr[3][7 + 8 * i].color = mirrorColor
@@ -394,6 +442,7 @@ class PrismTower {
             color: '#DDE4FF',
             duration: 1,
             onUpdate: () => {
+                if (!prism.partArr) return
                 for (let i = 0; i < 6; i++) {
                     prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
                 }
@@ -403,6 +452,7 @@ class PrismTower {
                 color: pillarColor,
                 duration: 1,
                 onUpdate: () => {
+                    if (!prism.partArr) return
                     for (let i = 0; i < 6; i++) {
                         prism.partArr[1][3 + 2 * i] = prism.recreateWithAnimeValue(prism.partArr[1][3 + 2 * i], pillarAniObj)
                     }
@@ -413,6 +463,7 @@ class PrismTower {
             color: '#FFFFFF',
             duration: 0.5,
             onUpdate: () => {
+                if (!prism.partArr) return
                 for (let i = 0; i < 6; i++) {
                     prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
                 }
@@ -427,6 +478,7 @@ class PrismTower {
                 color: mirrorColor,
                 duration: 0.6,
                 onUpdate: () => {
+                    if (!prism.partArr) return
                     for (let i = 0; i < 6; i++) {
                         prism.changeAnimeValue(prism.partArr[3][7 + 8 * i], mirrorAniObj)
                     }
@@ -461,7 +513,7 @@ class PrismTower {
 
     lean() {
         let prism = this
-        if (prism.isEnd()) return
+        if (prism.isEnd() || !prism.partArr) return
         let spinOffesetAnchor = prism.partArr[2][1]
         if (prism.isLean() && prism.status !== PrismTower.STATUS.SELLING) {
             spinOffesetAnchor.rotate.x = -Zdog.TAU / 50
@@ -495,7 +547,10 @@ class PrismTower {
         let tl = prism.sell_tl
         // sell anime
         // 1.hinge
-        tl.call(() => { part[2].forEach(ele => { ele.visible = false }) }, null, 0.1)
+        tl.call(() => {
+            if (!prism.partArr) return
+            part[2].forEach(ele => { ele.visible = false })
+        }, null, 0.1)
         // 2.prism
         let prismAniObj = { translate_y: 0, translate_z: 0, rotate_x: 0 }
         tl.to(prismAniObj, {
@@ -504,30 +559,44 @@ class PrismTower {
             translate_z: 10,
             duration: 1,
             onUpdate: () => {
+                if (!prism.partArr) return
                 for (let i = 0; i < 6; i++) {
                     const anchor = prism.partArr[3][i * 8]
                     prism.changeAnimeValue(anchor, prismAniObj)
                 }
             }
         })
-            .call(() => { part[3].forEach(ele => { ele.visible = false }) })
+            .call(() => {
+                if (!prism.partArr) return
+                part[3].forEach(ele => { ele.visible = false })
+            })
         // 3.pillar
         let pillarAniObj = { translate_y: 0 }
         tl.to(pillarAniObj, {
             translate_y: 80,
             duration: 0.5,
-            onUpdate: () => { prism.changeAnimeValue(prism.partArr[1][0], pillarAniObj) }
+            onUpdate: () => {
+                if (!prism.partArr) return
+                prism.changeAnimeValue(prism.partArr[1][0], pillarAniObj)
+            }
         })
-            .call(() => { part[1].forEach(ele => { ele.visible = false }) })
+            .call(() => {
+                if (!prism.partArr) return
+                part[1].forEach(ele => { ele.visible = false })
+            })
 
         // 4.base
         tl.addLabel('baseStart')
         tl.call(() => {
+            if (!prism.partArr) return
             for (let i = 2; i < part[0].length; i++) {
                 part[0][i].visible = false
             }
         }, null, 'baseStart+=0.2')
-            .call(() => { part[0][1].visible = false }, null, 'baseStart+=0.5')
+            .call(() => {
+                if (!prism.partArr) return
+                part[0][1].visible = false
+            }, null, 'baseStart+=0.5')
     }
 
     destroyed() {
@@ -543,7 +612,6 @@ class PrismTower {
         prism.scale = null
         prism.map = null
         prism.mapIndex = null
-        prism.teamColor = null
         prism.buildingType = null
         prism.receive_laser_num = null
         prism.isAutoRepairMode = null

@@ -7,6 +7,14 @@ window.requestAnimFrame = (function () {
         }
 })()
 
+let lastPrismTowerBuildTime = 0
+let AUTO_BUILD_PRISM_TOWER_INTERVAL_SECOND = 2
+let AUTO_BUILD_PRISM_TOWER_NUM = 5
+
+let lastTeslaCoilBuildTime = 0
+let AUTO_BUILD_TESLA_COIL_INTERVAL_SECOND = 2
+let AUTO_BUILD_TESLA_COIL_NUM = 5
+
 const DEFAULT_ILLO_ZOOM = 1
 
 const MAP_GRID_NUM = 15
@@ -132,7 +140,6 @@ document.getElementById('sell-button').addEventListener('click', () => {
 }, false)
 
 document.addEventListener("keydown", e => {
-    console.log(e)
     switch (e.keyCode) {
         // ←
         case 37:
@@ -419,6 +426,62 @@ function buildPrismTowerByGrid(idx) {
     prism.build()
 }
 
+function randomBuildTeslaCoil() {
+    let idx = findRandomGridIdx()
+    if (idx) {
+        buildTeslaCoilByGrid(idx)
+    }
+}
+
+function randomBuildPrismTower() {
+    let idx = findRandomGridIdx()
+    if (idx) {
+        buildPrismTowerByGrid(idx)
+    }
+}
+
+function findRandomGridIdx() {
+    let len = MAP_GRID_NUM
+    let startX = Math.floor(Math.random() * len)
+    let startY = Math.floor(Math.random() * len)
+    let startPoi = { x: startX, y: startY }
+
+    let buildingArr = map.isoArr
+    let startObj = buildingArr[startX][startY]
+    if (!startObj || startObj.isEnd()) {
+        return startPoi
+    }
+
+    let diers = [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }]
+    let visits = new Array(len)
+    for (let i = 0; i < visits.length; i++) {
+        visits[i] = new Array(len).fill(false)
+    }
+    visits[startPoi.x][startPoi.y] = true
+    let queue = []
+    queue.push(startPoi)
+    while (queue.length > 0) {
+        let poi = queue.shift()
+        for (let i = 0; i < diers.length; i++) {
+            const dier = diers[i]
+            let tx = poi.x + dier.x
+            let ty = poi.y + dier.y
+            if (tx >= 0 && tx < len &&
+                ty >= 0 && ty < len &&
+                !visits[tx][ty]) {
+                visits[tx][ty] = true
+                let newPoi = { x: tx, y: ty }
+                queue.push(newPoi)
+
+                let building = buildingArr[tx][ty]
+                if (!building || building.isEnd()) {
+                    return newPoi
+                }
+            }
+        }
+    }
+}
+
 function sellBuildingByGrid(idx) {
     if (!idx) return
     let obj = map.getObjByGrid(idx)
@@ -429,9 +492,28 @@ function sellBuildingByGrid(idx) {
 function render() {
     stats.begin()
 
-    illo.updateRenderGraph()
+    // time
     if (isPlaying) {
         ENV.time += ENV.timeScale
+    }
+
+    // illo render
+    illo.updateRenderGraph()
+
+    // auto random build
+    if ((ENV.time - lastPrismTowerBuildTime) / 60 > AUTO_BUILD_PRISM_TOWER_INTERVAL_SECOND ||
+        lastPrismTowerBuildTime === 0) {
+        for (let i = 0; i < AUTO_BUILD_PRISM_TOWER_NUM; i++) {
+            randomBuildPrismTower()
+        }
+        lastPrismTowerBuildTime = ENV.time
+    }
+    if ((ENV.time - lastTeslaCoilBuildTime) / 60 > AUTO_BUILD_TESLA_COIL_INTERVAL_SECOND ||
+        lastTeslaCoilBuildTime === 0) {
+        for (let i = 0; i < AUTO_BUILD_TESLA_COIL_NUM; i++) {
+            randomBuildTeslaCoil()
+        }
+        lastTeslaCoilBuildTime = ENV.time
     }
 
     stats.end()
