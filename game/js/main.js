@@ -9,7 +9,7 @@ window.requestAnimFrame = (function () {
 
 const DEFAULT_ILLO_ZOOM = 1
 
-const MAP_GRID_NUM = 10
+const MAP_GRID_NUM = 15
 const MAP_GRID_LENGTH = 125
 const MAP_COLOR = 'rgba(240, 200, 255, 0.95)'
 
