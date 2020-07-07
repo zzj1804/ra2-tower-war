@@ -1,5 +1,7 @@
 # 红色警戒2 光棱塔 VS 磁暴线圈
 ## 预览
+[在 codepen 上游玩](https://codepen.io/zzjcodepen/pen/OJMggjB)
+
 ![预览](img/preview.gif)
 ## 操作方法
 打开 game/indexl.html 游玩
