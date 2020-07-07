@@ -1,6 +1,6 @@
 # 红色警戒2 光棱塔 VS 磁暴线圈
 ## 预览
-[在 codepen 上游玩](https://codepen.io/zzjcodepen/pen/OJMggjB)
+[在线游玩](https://zzj1804.github.io/ra2-tower-war/game/)
 
 ![预览](img/preview.gif)
 ## 操作方法
