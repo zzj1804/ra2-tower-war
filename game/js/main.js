@@ -95,16 +95,16 @@ let doubleTouchStartPosA, doubleTouchStartPosB
 if (isTouch) {
     // doubletouch to zoom
     illo.element.addEventListener("touchstart", e => {
-        if (e.changedTouches.length < 2) return
-        doubleTouchStartPosA = { x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageY }
-        doubleTouchStartPosB = { x: e.changedTouches[1].pageX, y: e.changedTouches[1].pageY }
+        if (e.touches.length < 2) return
+        doubleTouchStartPosA = { x: e.touches[0].screenX, y: e.touches[0].screenY }
+        doubleTouchStartPosB = { x: e.touches[1].screenX, y: e.touches[1].screenY }
         isTouchToZoom = true
     }, false)
 
     illo.element.addEventListener("touchmove", e => {
-        if (e.changedTouches.length < 2 || !isTouchToZoom) return
-        let doubleTouchToPosA = { x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageY }
-        let doubleTouchToPosB = { x: e.changedTouches[1].pageX, y: e.changedTouches[1].pageY }
+        if (e.touches.length < 2 || !isTouchToZoom) return
+        let doubleTouchToPosA = { x: e.touches[0].screenX, y: e.touches[0].screenY }
+        let doubleTouchToPosB = { x: e.touches[1].screenX, y: e.touches[1].screenY }
 
         function getDistance(a, b) {
             let x = a.x - b.x
