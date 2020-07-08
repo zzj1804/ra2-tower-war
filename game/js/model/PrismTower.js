@@ -174,6 +174,12 @@ class PrismTower {
                     let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
+                    let absX = Math.abs(startPoi.x - tx)
+                    let absY = Math.abs(startPoi.y - ty)
+                    if (absX === absY && absX * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                        return false
+                    }
+
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() && !prism.isSameTeam(building.teamColor) &&
                         ZdogUtils.getDistance(prism.getTopPoint(), building.getCenterPoint()) <= PrismTower.ATTACK_RANGE) {
@@ -214,6 +220,12 @@ class PrismTower {
                     visits[tx][ty] = true
                     let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
+
+                    let absX = Math.abs(startPoi.x - tx)
+                    let absY = Math.abs(startPoi.y - ty)
+                    if (absX === absY && absX * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                        return totalNum
+                    }
 
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() &&

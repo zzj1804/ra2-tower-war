@@ -179,6 +179,12 @@ class TeslaCoil {
                     let newPoi = { x: tx, y: ty }
                     queue.push(newPoi)
 
+                    let absX = Math.abs(startPoi.x - tx)
+                    let absY = Math.abs(startPoi.y - ty)
+                    if (absX === absY && absX * coil.map.gridLength > TeslaCoil.ATTACK_RANGE) {
+                        return false
+                    }
+
                     let building = buildingArr[tx][ty]
                     if (building && !building.isEnd() && !coil.isSameTeam(building.teamColor) &&
                         ZdogUtils.getDistance(coil.getTopPoint(), building.getCenterPoint()) <= TeslaCoil.ATTACK_RANGE) {
