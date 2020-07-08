@@ -2,6 +2,8 @@
 ## 预览
 [在线游玩](https://zzj1804.github.io/ra2-tower-war/game/)
 
+[在 codepen 上游玩](https://codepen.io/zzjcodepen/pen/OJMggjB)
+
 ![预览](img/preview.gif)
 ## 操作方法
 打开 game/indexl.html 游玩
