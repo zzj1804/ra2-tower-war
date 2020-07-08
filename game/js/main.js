@@ -36,6 +36,8 @@ const stats = new Stats()
 
 let isPlaying = true
 
+const isTouch = 'ontouchstart' in window
+
 let map
 let video = document.createElement('video')
 video.muted = true
@@ -86,14 +88,54 @@ new Zdog.Dragger({
     onDragEnd: function () { }
 })
 
-// wheel to zoom
-illo.element.addEventListener("wheel", e => {
-    let rate = illo.zoom / 20
-    let zoom = illo.zoom - (e.deltaY > 0 ? 1 : -1) * rate
-    if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom
-    if (zoom < illoOption.minZoom) zoom = illoOption.minZoom
-    illo.zoom = zoom
-}, false)
+
+// 画布缩放
+let isTouchToZoom = false
+let doubleTouchStartPosA, doubleTouchStartPosB
+if (isTouch) {
+    // doubletouch to zoom
+    illo.element.addEventListener("touchstart", e => {
+        if (e.changedTouches.length < 2) return
+        doubleTouchStartPosA = { x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageY }
+        doubleTouchStartPosB = { x: e.changedTouches[1].pageX, y: e.changedTouches[1].pageY }
+        isTouchToZoom = true
+    }, false)
+
+    illo.element.addEventListener("touchmove", e => {
+        if (e.changedTouches.length < 2 || !isTouchToZoom) return
+        let doubleTouchToPosA = { x: e.changedTouches[0].pageX, y: e.changedTouches[0].pageY }
+        let doubleTouchToPosB = { x: e.changedTouches[1].pageX, y: e.changedTouches[1].pageY }
+
+        function getDistance(a, b) {
+            let x = a.x - b.x
+            let y = a.y - b.y
+            return Math.sqrt(x ** 2 + y ** 2)
+        }
+
+        let distanceChange = getDistance(doubleTouchStartPosA, doubleTouchStartPosB) - getDistance(doubleTouchToPosA, doubleTouchToPosB)
+
+        let rate = illo.zoom / 20
+        let zoom = illo.zoom - (distanceChange > 0 ? 1 : -1) * rate
+        if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom
+        if (zoom < illoOption.minZoom) zoom = illoOption.minZoom
+        illo.zoom = zoom
+    }, false)
+
+    illo.element.addEventListener("touchend", e => {
+        if (isTouchToZoom) {
+            isTouchToZoom = false
+        }
+    }, false)
+} else {
+    // wheel to zoom
+    illo.element.addEventListener("wheel", e => {
+        let rate = illo.zoom / 20
+        let zoom = illo.zoom - (e.deltaY > 0 ? 1 : -1) * rate
+        if (zoom > illoOption.maxZoom) zoom = illoOption.maxZoom
+        if (zoom < illoOption.minZoom) zoom = illoOption.minZoom
+        illo.zoom = zoom
+    }, false)
+}
 
 document.getElementById('center-button').addEventListener('click', () => {
     resetPosition()
