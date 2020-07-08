@@ -1,10 +1,11 @@
 class Smoke {
-    constructor(addTo, translate, scale, smokeNum, raiseSpeed, duration) {
+    constructor(addTo, translate, rotate, scale, smokeNum, raiseSpeed, duration) {
         let smoke = this
         smoke.isEnd = false
         smoke.smokeGroup = new Zdog.Group({
             addTo: addTo,
-            translate: translate
+            translate: translate,
+            rotate: rotate
         })
 
         smoke.modelArr = []

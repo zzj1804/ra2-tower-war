@@ -37,7 +37,7 @@ class PrismTower {
         prism.lean()
 
         // smoke cause perspective bug
-        // prism.smoke()
+        prism.smoke()
 
         switch (prism.status) {
             case PrismTower.STATUS.STANDBY:
@@ -276,8 +276,8 @@ class PrismTower {
 
     smoke() {
         let prism = this
-        if (prism.hp < PrismTower.MAX_HP * 0.7 && prism.anchor) {
-            new Smoke(prism.anchor, {}, 8, 5, 5, 5 * (1 - prism.hp / PrismTower.MAX_HP))
+        if (prism.hp < PrismTower.MAX_HP * 0.5 && prism.addTo) {
+            new Smoke(prism.addTo, prism.getCenterPoint(), {}, 10, 5, 5, 3 * (1 - prism.hp / PrismTower.MAX_HP))
         }
     }
 

@@ -37,7 +37,7 @@ class TeslaCoil {
         coil.lean()
 
         // smoke cause perspective bug
-        // coil.smoke()
+        coil.smoke()
 
         switch (coil.status) {
             case TeslaCoil.STATUS.STANDBY:
@@ -236,8 +236,8 @@ class TeslaCoil {
 
     smoke() {
         let coil = this
-        if (coil.hp < TeslaCoil.MAX_HP * 0.7 && coil.anchor) {
-            new Smoke(coil.anchor, {}, 8, 5, 5, 5 * (1 - coil.hp / TeslaCoil.MAX_HP))
+        if (coil.hp < TeslaCoil.MAX_HP * 0.5 && coil.addTo) {
+            new Smoke(coil.addTo, coil.getCenterPoint(), {}, 10, 5, 5, 3 * (1 - coil.hp / TeslaCoil.MAX_HP))
         }
     }
 
