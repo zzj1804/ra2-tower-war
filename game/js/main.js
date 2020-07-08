@@ -375,7 +375,7 @@ function switchBtnActive(btn, v) {
 
 function createOptionGUI() {
     let gui = new dat.GUI()
-    gui.open()
+    gui.close()
     let illoFolder = gui.addFolder('illo')
     illoFolder.open()
     // zoom
