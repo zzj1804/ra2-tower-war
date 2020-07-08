@@ -37,7 +37,7 @@ class PrismTower {
         prism.lean()
 
         // smoke cause perspective bug
-        prism.smoke()
+        // prism.smoke()
 
         switch (prism.status) {
             case PrismTower.STATUS.STANDBY:
@@ -176,11 +176,11 @@ class PrismTower {
 
                     let absX = Math.abs(startPoi.x - tx)
                     let absY = Math.abs(startPoi.y - ty)
-                    if (absX === absY && absX * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                    if (absX === absY && Math.sqrt(absX ** 2 + absY ** 2) * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
                         return false
                     }
 
-                    let building = buildingArr[tx][ty]
+                    let building = buildingArr[ty][tx]
                     if (building && !building.isEnd() && !prism.isSameTeam(building.teamColor) &&
                         ZdogUtils.getDistance(prism.getTopPoint(), building.getCenterPoint()) <= PrismTower.ATTACK_RANGE) {
                         prism.target = building
@@ -223,11 +223,11 @@ class PrismTower {
 
                     let absX = Math.abs(startPoi.x - tx)
                     let absY = Math.abs(startPoi.y - ty)
-                    if (absX === absY && absX * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
-                        return totalNum
+                    if (absX === absY && Math.sqrt(absX ** 2 + absY ** 2) * prism.map.gridLength > PrismTower.ATTACK_RANGE) {
+                        return false
                     }
 
-                    let building = buildingArr[tx][ty]
+                    let building = buildingArr[ty][tx]
                     if (building && !building.isEnd() &&
                         building.buildingType === PrismTower.BUILDING_TYPE &&
                         prism.isSameTeam(building.teamColor) &&

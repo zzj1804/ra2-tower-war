@@ -37,7 +37,7 @@ class TeslaCoil {
         coil.lean()
 
         // smoke cause perspective bug
-        coil.smoke()
+        // coil.smoke()
 
         switch (coil.status) {
             case TeslaCoil.STATUS.STANDBY:
@@ -181,11 +181,11 @@ class TeslaCoil {
 
                     let absX = Math.abs(startPoi.x - tx)
                     let absY = Math.abs(startPoi.y - ty)
-                    if (absX === absY && absX * coil.map.gridLength > TeslaCoil.ATTACK_RANGE) {
+                    if (absX === absY && Math.sqrt(absX ** 2 + absY ** 2) * coil.map.gridLength > TeslaCoil.ATTACK_RANGE) {
                         return false
                     }
 
-                    let building = buildingArr[tx][ty]
+                    let building = buildingArr[ty][tx]
                     if (building && !building.isEnd() && !coil.isSameTeam(building.teamColor) &&
                         ZdogUtils.getDistance(coil.getTopPoint(), building.getCenterPoint()) <= TeslaCoil.ATTACK_RANGE) {
                         coil.target = building
