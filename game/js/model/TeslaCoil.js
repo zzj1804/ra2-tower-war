@@ -37,7 +37,7 @@ class TeslaCoil {
         coil.lean()
 
         // smoke cause perspective bug
-        // coil.smoke()
+        coil.smoke()
 
         switch (coil.status) {
             case TeslaCoil.STATUS.STANDBY:

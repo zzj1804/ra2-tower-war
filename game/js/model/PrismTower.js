@@ -37,7 +37,7 @@ class PrismTower {
         prism.lean()
 
         // smoke cause perspective bug
-        // prism.smoke()
+        prism.smoke()
 
         switch (prism.status) {
             case PrismTower.STATUS.STANDBY:
