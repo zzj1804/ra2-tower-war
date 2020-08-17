@@ -37,7 +37,9 @@ class TeslaCoil {
         coil.lean()
 
         // smoke cause perspective bug
-        coil.smoke()
+        if (TeslaCoil.SMOKE) {
+            coil.smoke()
+        }
 
         switch (coil.status) {
             case TeslaCoil.STATUS.STANDBY:
@@ -519,6 +521,7 @@ class TeslaCoil {
     static ATTACK_RANGE = 600
     static AUTO_REPAIR_VAL = 1
     static RENDER_PERIOD = 0.1
+    static SMOKE = false
 
     static STATUS = {
         CREATED: 'created',

@@ -394,7 +394,7 @@ function createOptionGUI() {
     TeslaCoilFolder.add(TeslaCoil, 'ATTACK_RANGE', 0, 20000)
     TeslaCoilFolder.add(TeslaCoil, 'MAX_HP', 1, 50000)
     TeslaCoilFolder.add(TeslaCoil, 'AUTO_REPAIR_VAL', 0, 2000)
-
+    TeslaCoilFolder.add(TeslaCoil, 'SMOKE')
 
     // PrismTower
     let PrismTowerFolder = gui.addFolder('PrismTower')
@@ -406,6 +406,7 @@ function createOptionGUI() {
     PrismTowerFolder.add(PrismTower, 'AUTO_REPAIR_VAL', 0, 2000)
     PrismTowerFolder.add(PrismTower, 'MAX_RECEIVE_LASER_NUM', 0, 100)
     PrismTowerFolder.add(PrismTower, 'PER_RECEIVE_LASER_AP_AMPLIFICATION', 0, 10)
+    PrismTowerFolder.add(PrismTower, 'SMOKE')
     return gui
 }
 

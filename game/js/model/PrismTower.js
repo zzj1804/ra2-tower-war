@@ -37,7 +37,9 @@ class PrismTower {
         prism.lean()
 
         // smoke cause perspective bug
-        prism.smoke()
+        if (PrismTower.SMOKE) {
+            prism.smoke()  
+        }
 
         switch (prism.status) {
             case PrismTower.STATUS.STANDBY:
@@ -702,6 +704,7 @@ class PrismTower {
     static RENDER_PERIOD = 0.1
     static MAX_RECEIVE_LASER_NUM = 5
     static PER_RECEIVE_LASER_AP_AMPLIFICATION = 1.5
+    static SMOKE = false
 
     static STATUS = {
         CREATED: 'created',
